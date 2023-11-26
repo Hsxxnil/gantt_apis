@@ -2,7 +2,7 @@ image: golang:alpine
 
 pipelines:
   branches:
-    pre-production:
+    main:
       - parallel:
           - step:
               name: HTA_APIs - Develop - build and deploy
@@ -22,10 +22,10 @@ pipelines:
                     FUNCTION_NAME: "likbox-pmip-testing"
                     COMMAND: "update"
                     ZIP_FILE: "deploy/hta.zip"
-    pp_hta:
+    production:
       - parallel:
           - step:
-              name: HTA_APIs - pre-production - build and deploy
+              name: HTA_APIs - production - build and deploy
               script:
                 - apk add --no-cache git zip openssh-client
                 - rm -rf ./config
@@ -39,6 +39,6 @@ pipelines:
                     AWS_ACCESS_KEY_ID: $HTA_AWS_ACCESS_KEY_ID
                     AWS_SECRET_ACCESS_KEY: $HTA_AWS_SECRET_ACCESS_KEY
                     AWS_DEFAULT_REGION: $HTA_AWS_DEFAULT_REGION
-                    FUNCTION_NAME: "pm-pre-production"
+                    FUNCTION_NAME: "prod-hta-gantt"
                     COMMAND: "update"
                     ZIP_FILE: "deploy/hta.zip"
