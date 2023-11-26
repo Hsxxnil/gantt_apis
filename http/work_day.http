@@ -1,0 +1,59 @@
+### login
+POST {{host}}/hta-gantt/v1.0/login
+Content-Type: application/json
+
+{
+  "user_name": "admin",
+  "password": "12345"
+}
+
+> {% client.global.set("accessToken", response.body.body.access_token); %}
+
+### GetByList
+GET {{host}}/hta-gantt/v1.0/work-days?page=1&limit=20
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### GetByListNoPagination
+GET {{host}}/hta-gantt/v1.0/work-days/no-pagination
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### GetBySingle
+GET {{host}}/hta-gantt/v1.0/work-days/8225b397-0d74-492d-92c4-1670a314d4d4
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### Create
+POST {{host}}/hta-gantt/v1.0/work-days
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "workWeek": [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday"
+  ],
+  "workingTime": [
+    {
+      "from": 9,
+      "to": 18
+    }
+  ]
+}
+
+### Update
+PATCH {{host}}/hta-gantt/v1.0/work-days/7045c169-0e62-4fc3-80be-71fbdfb10c08
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "label": "123"
+}
+
+### Delete
+DELETE {{host}}/hta-gantt/v1.0/work-days/7045c169-0e62-4fc3-80be-71fbdfb10c08
+Accept: application/json

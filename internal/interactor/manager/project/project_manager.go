@@ -1,0 +1,314 @@
+package project
+
+import (
+	"encoding/json"
+	"errors"
+	eventMarkModel "hta/internal/interactor/models/event_marks"
+	projectResourceModel "hta/internal/interactor/models/project_resources"
+	projectTypeModel "hta/internal/interactor/models/project_types"
+	resourceModel "hta/internal/interactor/models/resources"
+	taskModel "hta/internal/interactor/models/tasks"
+	"hta/internal/interactor/pkg/util"
+	eventMarkService "hta/internal/interactor/service/event_mark"
+	projectResourceService "hta/internal/interactor/service/project_resource"
+	projectTypeService "hta/internal/interactor/service/project_type"
+	resourceService "hta/internal/interactor/service/resource"
+	roleService "hta/internal/interactor/service/role"
+	taskService "hta/internal/interactor/service/task"
+
+	"gorm.io/gorm"
+
+	projectModel "hta/internal/interactor/models/projects"
+	projectService "hta/internal/interactor/service/project"
+
+	"hta/internal/interactor/pkg/util/code"
+	"hta/internal/interactor/pkg/util/log"
+)
+
+type Manager interface {
+	Create(trx *gorm.DB, input *projectModel.Create) (int, any)
+	GetByList(input *projectModel.Fields) (int, any)
+	GetByListNoPagination(input *projectModel.Field) (int, any)
+	GetBySingle(input *projectModel.Field) (int, any)
+	Delete(trx *gorm.DB, input *projectModel.Field) (int, any)
+	Update(trx *gorm.DB, input *projectModel.Update) (int, any)
+}
+
+type manager struct {
+	ProjectService         projectService.Service
+	TaskService            taskService.Service
+	ResourceService        resourceService.Service
+	ProjectTypeService     projectTypeService.Service
+	ProjectResourceService projectResourceService.Service
+	EventMarkService       eventMarkService.Service
+	RoleService            roleService.Service
+}
+
+func Init(db *gorm.DB) Manager {
+	return &manager{
+		ProjectService:         projectService.Init(db),
+		TaskService:            taskService.Init(db),
+		ResourceService:        resourceService.Init(db),
+		ProjectTypeService:     projectTypeService.Init(db),
+		ProjectResourceService: projectResourceService.Init(db),
+		EventMarkService:       eventMarkService.Init(db),
+		RoleService:            roleService.Init(db),
+	}
+}
+
+func (m *manager) Create(trx *gorm.DB, input *projectModel.Create) (int, any) {
+	defer trx.Rollback()
+
+	projectBase, err := m.ProjectService.WithTrx(trx).Create(input)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// 同步新增project_resource關聯
+	var resourceList []*projectResourceModel.Create
+	if len(input.Resource) > 0 {
+		for _, resource := range input.Resource {
+			projectResource := &projectResourceModel.Create{
+				ProjectUUID:  *projectBase.ProjectUUID,
+				ResourceUUID: resource.ResourceUUID,
+				Role:         resource.Role,
+				CreatedBy:    input.CreatedBy,
+			}
+			resourceList = append(resourceList, projectResource)
+		}
+
+		_, err := m.ProjectResourceService.WithTrx(trx).CreateAll(resourceList)
+		if err != nil {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
+	trx.Commit()
+	return code.Successful, code.GetCodeMessage(code.Successful, projectBase.ProjectUUID)
+}
+
+func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
+	output := &projectModel.List{}
+	output.Limit = input.Limit
+	output.Page = input.Page
+	// 搜尋專案類別
+	if input.FilterType != "" {
+		_, projectTypeBase, _ := m.ProjectTypeService.GetByListNoPagination(&projectTypeModel.Field{
+			Name: util.PointerString(input.FilterType),
+		})
+		if len(projectTypeBase) > 0 {
+			for _, projectType := range projectTypeBase {
+				input.FilterTypes = append(input.FilterTypes, *projectType.ID)
+			}
+		} else {
+			input.FilterTypes = nil
+		}
+	}
+
+	// 搜尋專案負責人
+	if input.FilterManager != "" {
+		_, resourceBase, _ := m.ResourceService.GetByListNoPagination(&resourceModel.Field{
+			ResourceName: util.PointerString(input.FilterManager),
+		})
+		if len(resourceBase) > 0 {
+			for _, resource := range resourceBase {
+				input.FilterManagers = append(input.FilterManagers, *resource.ResourceUUID)
+			}
+		} else {
+			input.FilterManagers = nil
+		}
+	}
+
+	quantity, projectBase, err := m.ProjectService.GetByList(input)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+	output.Total.Total = quantity
+	output.Pages = util.Pagination(quantity, output.Limit)
+	projectByte, err := json.Marshal(projectBase)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	err = json.Unmarshal(projectByte, &output.Projects)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	for i, project := range output.Projects {
+		project.Type = *projectBase[i].ProjectTypes.Name
+		project.Manager = *projectBase[i].Resources.ResourceName
+		project.CreatedBy = *projectBase[i].CreatedByUsers.Name
+		project.UpdatedBy = *projectBase[i].UpdatedByUsers.Name
+	}
+
+	return code.Successful, code.GetCodeMessage(code.Successful, output)
+}
+
+func (m *manager) GetByListNoPagination(input *projectModel.Field) (int, any) {
+	output := &projectModel.List{}
+	projectBase, err := m.ProjectService.GetByListNoPagination(input)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+	projectByte, err := json.Marshal(projectBase)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	err = json.Unmarshal(projectByte, &output.Projects)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	for i, project := range output.Projects {
+		project.Type = *projectBase[i].ProjectTypes.Name
+		project.Manager = *projectBase[i].Resources.ResourceName
+		project.CreatedBy = *projectBase[i].CreatedByUsers.Name
+		project.UpdatedBy = *projectBase[i].UpdatedByUsers.Name
+	}
+
+	return code.Successful, code.GetCodeMessage(code.Successful, output)
+}
+
+func (m *manager) GetBySingle(input *projectModel.Field) (int, any) {
+	projectBase, err := m.ProjectService.GetBySingle(input)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, err.Error())
+		}
+
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	output := &projectModel.Single{}
+	projectByte, _ := json.Marshal(projectBase)
+	err = json.Unmarshal(projectByte, &output)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	output.Type = *projectBase.ProjectTypes.Name
+	output.Manager = *projectBase.Resources.ResourceName
+	output.CreatedBy = *projectBase.CreatedByUsers.Name
+	output.UpdatedBy = *projectBase.UpdatedByUsers.Name
+
+	return code.Successful, code.GetCodeMessage(code.Successful, output)
+}
+
+func (m *manager) Delete(trx *gorm.DB, input *projectModel.Field) (int, any) {
+	defer trx.Rollback()
+
+	_, err := m.ProjectService.GetBySingle(&projectModel.Field{
+		ProjectUUID: input.ProjectUUID,
+	})
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, err.Error())
+		}
+
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	err = m.ProjectService.WithTrx(trx).Delete(input)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// 同步刪除task
+	err = m.TaskService.WithTrx(trx).Delete(&taskModel.Field{
+		ProjectUUID: util.PointerString(input.ProjectUUID),
+	})
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// 同步刪除project_resource關聯
+	err = m.ProjectResourceService.WithTrx(trx).Delete(&projectResourceModel.Field{
+		ProjectUUID: util.PointerString(input.ProjectUUID),
+	})
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// 同步刪除event_marks
+	err = m.EventMarkService.Delete(&eventMarkModel.Field{
+		ProjectUUID: util.PointerString(input.ProjectUUID),
+	})
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	trx.Commit()
+	return code.Successful, code.GetCodeMessage(code.Successful, "Delete ok!")
+}
+
+func (m *manager) Update(trx *gorm.DB, input *projectModel.Update) (int, any) {
+	defer trx.Rollback()
+
+	projectBase, err := m.ProjectService.GetBySingle(&projectModel.Field{
+		ProjectUUID: input.ProjectUUID,
+	})
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, err.Error())
+		}
+
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	err = m.ProjectService.Update(input)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// 更新resources
+	var resourceList []*projectResourceModel.Create
+	if len(input.Resource) > 0 {
+		// 同步刪除project_resource關聯
+		err = m.ProjectResourceService.WithTrx(trx).Delete(&projectResourceModel.Field{
+			ProjectUUID: util.PointerString(input.ProjectUUID),
+		})
+		if err != nil {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+
+		// 同步新增project_resource關聯
+		for _, resource := range input.Resource {
+			projectResource := &projectResourceModel.Create{
+				ProjectUUID:  *projectBase.ProjectUUID,
+				ResourceUUID: resource.ResourceUUID,
+				Role:         resource.Role,
+				CreatedBy:    *input.UpdatedBy,
+			}
+			resourceList = append(resourceList, projectResource)
+		}
+
+		_, err := m.ProjectResourceService.WithTrx(trx).CreateAll(resourceList)
+		if err != nil {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
+	trx.Commit()
+	return code.Successful, code.GetCodeMessage(code.Successful, projectBase.ProjectUUID)
+}

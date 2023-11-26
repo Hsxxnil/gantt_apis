@@ -1,0 +1,82 @@
+### login
+POST {{host}}/hta-gantt/v1.0/login
+Content-Type: application/json
+
+{
+  "user_name": "admin",
+  "password": "3939889"
+}
+
+> {% client.global.set("accessToken", response.body.body.access_token); %}
+
+### GetByList
+POST {{host}}/hta-gantt/v1.0/resources/list?page=1&limit=20
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "sort": {
+    "field": "resource_group",
+    "direction": "asc"
+  },
+  "filter": {
+    "resource_name": "",
+    "resource_group": [
+    ],
+    "email": "",
+    "phone": ""
+  }
+}
+
+### GetByListNoPagination
+GET {{host}}/hta-gantt/v1.0/resources/no-pagination
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### GetBySingle
+GET {{host}}/hta-gantt/v1.0/resources/bfd4ba52-999a-49be-b7e9-2c2915199afa
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### Create
+POST {{host}}/hta-gantt/v1.0/resources
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "resource_name": "test",
+  "role": "test",
+  "email": "test",
+  "phone": "test",
+  "standard_cost": 0,
+  "total_cost": 0,
+  "total_load": 0,
+  "unit": 0,
+  "tags": [
+    "aBC",
+    "576"
+  ]
+}
+
+### Update
+PATCH {{host}}/hta-gantt/v1.0/resources/726b4aaf-378c-4abd-9b70-d1b7ec283d27
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "resource_id": 99
+}
+
+### Delete
+DELETE {{host}}/hta-gantt/v1.0/resources/726b4aaf-378c-4abd-9b70-d1b7ec283d27
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### Import
+POST {{host}}/hta-gantt/v1.0/resources/import
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "base64":"57eo6JmfLOWnk+WQjSzpoJDoqK3op5LoibIsRS1tYWlsLOmbu+ipsSxTdGFuZGFyZCByYXRlLFRvdGFsIGNvc3QsVG90YWwgbG9hZCxHcm91cAowLHJlc291cmNlIDEsRGVmYXVsdDowLHJlc291cmNlMUB0ZXN0LmNvbSwsMCwwLDAsCjEscmVzb3VyY2UgMixEZWZhdWx0OjAscmVzb3VyY2UyQHRlc3QuY29tLCwwLDAsMCwKMixyZXNvdXJjZSAzLERlZmF1bHQ6MCxyZXNvdXJjZTNAdGVzdC5jb20sLDAsMCwwLA=="
+}

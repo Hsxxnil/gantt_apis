@@ -1,0 +1,8 @@
+drop index idx_task_resources_id;
+drop index idx_task_resources_task_uuid;
+drop index idx_task_resources_project_resource_uuid;
+drop index idx_task_resources_created_at;
+drop index idx_task_resources_created_by;
+drop index idx_task_resources_updated_at;
+drop index idx_task_resources_updated_by;
+drop index idx_task_resources_project_uuid;

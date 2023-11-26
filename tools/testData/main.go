@@ -1,0 +1,4 @@
+package rbac
+
+func main() {
+}

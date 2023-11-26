@@ -1,0 +1,49 @@
+### login
+POST {{host}}/hta-gantt/v1.0/login
+Content-Type: application/json
+
+{
+  "user_name": "admin",
+  "password": "12345"
+}
+
+> {% client.global.set("accessToken", response.body.body.access_token); %}
+
+### GetByList
+GET {{host}}/hta-gantt/v1.0/event-marks?page=1&limit=20
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### GetByListNoPagination
+GET {{host}}/hta-gantt/v1.0/event-marks/no-pagination
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### GetBySingle
+GET {{host}}/hta-gantt/v1.0/event-marks/8225b397-0d74-492d-92c4-1670a314d4d4
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### Create
+POST {{host}}/hta-gantt/v1.0/event-marks
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "label": "二月事件",
+  "day": "2023-02-01T00:00:00Z",
+  "project_uuid": "a2970135-0ca7-4f26-a9fc-fb2a364ece71"
+}
+
+### Update
+PATCH {{host}}/hta-gantt/v1.0/event-marks/7045c169-0e62-4fc3-80be-71fbdfb10c08
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "label": "123"
+}
+
+### Delete
+DELETE {{host}}/hta-gantt/v1.0/event-marks/7045c169-0e62-4fc3-80be-71fbdfb10c08
+Accept: application/json

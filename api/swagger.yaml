@@ -1,0 +1,4764 @@
+basePath: /hta-gantt/v1.0
+definitions:
+  code.ErrorMessage:
+    properties:
+      code:
+        description: 回傳代碼
+        type: integer
+      detailed:
+        description: 詳細錯誤內容
+      message:
+        description: 錯誤回傳訊息
+        type: string
+      timestamp:
+        description: 錯誤時間
+        example: "2021-07-29T07:23:47Z"
+        type: string
+    type: object
+  code.SuccessfulMessage:
+    properties:
+      body:
+        description: 正確回傳內容
+      code:
+        description: 回傳代碼
+        type: integer
+      timestamp:
+        description: 錯誤時間
+        example: "2021-07-29T07:23:47Z"
+        type: string
+    type: object
+  event_marks.Create:
+    properties:
+      day:
+        description: 日期
+        type: string
+      label:
+        description: 名稱
+        type: string
+      project_uuid:
+        description: 專案UUID
+        type: string
+    required:
+    - project_uuid
+    type: object
+  event_marks.Single:
+    properties:
+      created_at:
+        description: 創建時間
+        type: string
+      created_by:
+        description: 創建者
+        type: string
+      day:
+        description: 日期
+        type: string
+      deleted_at:
+        description: 刪除時間
+        type: string
+      id:
+        description: 表ID
+        type: string
+      label:
+        description: 名稱
+        type: string
+      project_uuid:
+        description: 專案UUID
+        type: string
+      updated_at:
+        description: 更新時間
+        type: string
+      updated_by:
+        description: 更新者
+        type: string
+    type: object
+  event_marks.Update:
+    properties:
+      day:
+        description: 日期
+        type: string
+      label:
+        description: 名稱
+        type: string
+      project_uuid:
+        description: 專案UUID
+        type: string
+    type: object
+  holidays.Create:
+    properties:
+      cssClass:
+        description: 前端css
+        type: string
+      from:
+        description: 起始日期
+        type: string
+      label:
+        description: 名稱
+        type: string
+      to:
+        description: 結束日期
+        type: string
+    type: object
+  holidays.List:
+    properties:
+      holidays:
+        description: 多筆
+        items:
+          properties:
+            created_at:
+              description: 創建時間
+              type: string
+            created_by:
+              description: 創建者
+              type: string
+            cssClass:
+              description: 前端css
+              type: string
+            deleted_at:
+              description: 刪除時間
+              type: string
+            from:
+              description: 起始日期
+              type: string
+            id:
+              description: 表ID
+              type: string
+            label:
+              description: 名稱
+              type: string
+            to:
+              description: 結束日期
+              type: string
+            updated_at:
+              description: 更新時間
+              type: string
+            updated_by:
+              description: 更新者
+              type: string
+          type: object
+        type: array
+      limit:
+        description: 筆數(請從1開始帶入,最高上限20)
+        type: integer
+      page:
+        description: 頁數(請從1開始帶入)
+        type: integer
+      pages:
+        description: 總頁數
+        type: integer
+      total:
+        description: 總筆數
+        type: integer
+    required:
+    - limit
+    - page
+    type: object
+  holidays.Single:
+    properties:
+      created_at:
+        description: 創建時間
+        type: string
+      created_by:
+        description: 創建者
+        type: string
+      cssClass:
+        description: 前端css
+        type: string
+      deleted_at:
+        description: 刪除時間
+        type: string
+      from:
+        description: 起始日期
+        type: string
+      id:
+        description: 表ID
+        type: string
+      label:
+        description: 名稱
+        type: string
+      to:
+        description: 結束日期
+        type: string
+      updated_at:
+        description: 更新時間
+        type: string
+      updated_by:
+        description: 更新者
+        type: string
+    type: object
+  holidays.Update:
+    properties:
+      cssClass:
+        description: 前端css
+        type: string
+      from:
+        description: 起始日期
+        type: string
+      label:
+        description: 名稱
+        type: string
+      to:
+        description: 結束日期
+        type: string
+    type: object
+  jwx.Refresh:
+    properties:
+      refresh_token:
+        description: 刷新令牌
+        type: string
+    required:
+    - refresh_token
+    type: object
+  jwx.Token:
+    properties:
+      access_token:
+        description: 授權令牌
+        type: string
+      refresh_token:
+        description: 刷新令牌
+        type: string
+      role:
+        description: 角色
+        type: string
+      user_id:
+        description: 使用者ID
+        type: string
+    type: object
+  logins.Login:
+    properties:
+      password:
+        description: 密碼
+        type: string
+      user_name:
+        description: 使用者名稱
+        type: string
+    required:
+    - password
+    - user_name
+    type: object
+  policies.PolicyRule:
+    properties:
+      method:
+        type: string
+      path:
+        type: string
+      ptype:
+        type: string
+      role_name:
+        type: string
+    required:
+    - method
+    - path
+    - ptype
+    - role_name
+    type: object
+  policies.Single:
+    properties:
+      method:
+        type: string
+      path:
+        type: string
+      role_name:
+        type: string
+    type: object
+  project_resources.Filter:
+    properties:
+      resource_group:
+        description: 群組
+        type: string
+      resource_name:
+        description: 名字
+        type: string
+      role:
+        description: 角色
+        type: string
+    type: object
+  project_resources.List:
+    properties:
+      limit:
+        description: 筆數(請從1開始帶入,最高上限20)
+        type: integer
+      page:
+        description: 頁數(請從1開始帶入)
+        type: integer
+      pages:
+        description: 總頁數
+        type: integer
+      project_resources:
+        description: 多筆
+        items:
+          $ref: '#/definitions/project_resources.Single'
+        type: array
+      total:
+        description: 總筆數
+        type: integer
+    required:
+    - limit
+    - page
+    type: object
+  project_resources.Single:
+    properties:
+      created_at:
+        description: 創建時間
+        type: string
+      created_by:
+        description: 創建者
+        type: string
+      deleted_at:
+        description: 刪除時間
+        type: string
+      email:
+        description: 信箱
+        type: string
+      id:
+        description: 表ID
+        type: string
+      is_expand:
+        type: boolean
+      phone:
+        description: 電話
+        type: string
+      project_uuid:
+        description: 專案UUID
+        type: string
+      resource_group:
+        description: 群組
+        type: string
+      resource_id:
+        description: 舊編號 ＆ 頁面ID
+        type: integer
+      resource_name:
+        description: 名字
+        type: string
+      resource_uuid:
+        description: 資源UUID
+        type: string
+      role:
+        description: 專案角色
+        type: string
+      standard_cost:
+        type: number
+      total_cost:
+        type: number
+      total_load:
+        description: 總負載
+        type: number
+      updated_at:
+        description: 更新時間
+        type: string
+      updated_by:
+        description: 更新者
+        type: string
+    type: object
+  project_types.Create:
+    properties:
+      name:
+        description: 名稱
+        type: string
+    type: object
+  project_types.List:
+    properties:
+      limit:
+        description: 筆數(請從1開始帶入,最高上限20)
+        type: integer
+      page:
+        description: 頁數(請從1開始帶入)
+        type: integer
+      pages:
+        description: 總頁數
+        type: integer
+      project_types:
+        description: 多筆
+        items:
+          properties:
+            created_at:
+              description: 創建時間
+              type: string
+            created_by:
+              description: 創建者
+              type: string
+            deleted_at:
+              description: 刪除時間
+              type: string
+            id:
+              description: 表ID
+              type: string
+            name:
+              description: 名稱
+              type: string
+            updated_at:
+              description: 更新時間
+              type: string
+            updated_by:
+              description: 更新者
+              type: string
+          type: object
+        type: array
+      total:
+        description: 總筆數
+        type: integer
+    required:
+    - limit
+    - page
+    type: object
+  project_types.Single:
+    properties:
+      created_at:
+        description: 創建時間
+        type: string
+      created_by:
+        description: 創建者
+        type: string
+      deleted_at:
+        description: 刪除時間
+        type: string
+      id:
+        description: 表ID
+        type: string
+      name:
+        description: 名稱
+        type: string
+      updated_at:
+        description: 更新時間
+        type: string
+      updated_by:
+        description: 更新者
+        type: string
+    type: object
+  project_types.Update:
+    properties:
+      name:
+        description: 名稱
+        type: string
+    type: object
+  projects.Create:
+    properties:
+      client:
+        description: 客戶
+        type: string
+      code:
+        description: 代號
+        type: string
+      end_date:
+        description: 結束日期
+        type: string
+      manager:
+        description: 負責人
+        type: string
+      project_name:
+        description: 名稱
+        type: string
+      resource:
+        description: 資源
+        items:
+          $ref: '#/definitions/projects.ProjectResource'
+        type: array
+      start_date:
+        description: 起始日期
+        type: string
+      status:
+        description: 狀態
+        type: string
+      type:
+        description: 類別
+        type: string
+    type: object
+  projects.Filter:
+    properties:
+      client:
+        description: 客戶
+        type: string
+      code:
+        description: 代號
+        type: string
+      end_date:
+        description: 結束日期
+        type: string
+      manager:
+        description: 負責人
+        type: string
+      project_name:
+        description: 名稱
+        type: string
+      start_date:
+        description: 起始日期
+        type: string
+      status:
+        description: 狀態
+        type: string
+      type:
+        description: 類別
+        type: string
+    type: object
+  projects.List:
+    properties:
+      limit:
+        description: 筆數(請從1開始帶入,最高上限20)
+        type: integer
+      page:
+        description: 頁數(請從1開始帶入)
+        type: integer
+      pages:
+        description: 總頁數
+        type: integer
+      projects:
+        description: 多筆
+        items:
+          properties:
+            client:
+              description: 客戶
+              type: string
+            code:
+              description: 代號
+              type: string
+            created_at:
+              description: 創建時間
+              type: string
+            created_by:
+              description: 創建者
+              type: string
+            deleted_at:
+              description: 刪除時間
+              type: string
+            end_date:
+              description: 結束日期
+              type: string
+            manager:
+              description: 負責人
+              type: string
+            project_id:
+              description: 前端編號 (非表ID)
+              type: string
+            project_name:
+              description: 名稱
+              type: string
+            project_uuid:
+              description: 表ID
+              type: string
+            start_date:
+              description: 起始日期
+              type: string
+            status:
+              description: 狀態
+              type: string
+            type:
+              description: 類別
+              type: string
+            updated_at:
+              description: 更新時間
+              type: string
+            updated_by:
+              description: 更新者
+              type: string
+          type: object
+        type: array
+      total:
+        description: 總筆數
+        type: integer
+    required:
+    - limit
+    - page
+    type: object
+  projects.ProjectResource:
+    properties:
+      resource_uuid:
+        description: 資源UUID
+        type: string
+      role:
+        description: 專案角色
+        type: string
+    type: object
+  projects.Single:
+    properties:
+      client:
+        description: 客戶
+        type: string
+      code:
+        description: 代號
+        type: string
+      created_at:
+        description: 創建時間
+        type: string
+      created_by:
+        description: 創建者
+        type: string
+      deleted_at:
+        description: 刪除時間
+        type: string
+      end_date:
+        description: 結束日期
+        type: string
+      manager:
+        description: 負責人
+        type: string
+      project_id:
+        description: 前端編號 (非表ID)
+        type: string
+      project_name:
+        description: 名稱
+        type: string
+      project_uuid:
+        description: 表ID
+        type: string
+      start_date:
+        description: 起始日期
+        type: string
+      status:
+        description: 狀態
+        type: string
+      type:
+        description: 類別
+        type: string
+      updated_at:
+        description: 更新時間
+        type: string
+      updated_by:
+        description: 更新者
+        type: string
+    type: object
+  projects.Update:
+    properties:
+      client:
+        description: 客戶
+        type: string
+      code:
+        description: 代號
+        type: string
+      end_date:
+        description: 結束日期
+        type: string
+      manager:
+        description: 負責人
+        type: string
+      project_name:
+        description: 名稱
+        type: string
+      resource:
+        description: 資源
+        items:
+          $ref: '#/definitions/projects.ProjectResource'
+        type: array
+      start_date:
+        description: 起始日期
+        type: string
+      status:
+        description: 狀態
+        type: string
+      type:
+        description: 類別
+        type: string
+    type: object
+  resources.Create:
+    properties:
+      email:
+        description: 信箱
+        type: string
+      is_expand:
+        type: boolean
+      phone:
+        description: 電話
+        type: string
+      resource_group:
+        description: 群組
+        type: string
+      resource_name:
+        description: 名字
+        type: string
+      standard_cost:
+        minimum: 0
+        type: number
+      tags:
+        description: 標籤
+        items:
+          type: string
+        type: array
+      total_cost:
+        minimum: 0
+        type: number
+      total_load:
+        description: 總負載
+        minimum: 0
+        type: number
+    type: object
+  resources.Filter:
+    properties:
+      email:
+        description: 信箱
+        type: string
+      phone:
+        description: 電話
+        type: string
+      resource_group:
+        description: 群組
+        items:
+          type: string
+        type: array
+      resource_name:
+        description: 名字
+        type: string
+    type: object
+  resources.Import:
+    properties:
+      base64:
+        description: Base64
+        type: string
+    type: object
+  resources.List:
+    properties:
+      limit:
+        description: 筆數(請從1開始帶入,最高上限20)
+        type: integer
+      page:
+        description: 頁數(請從1開始帶入)
+        type: integer
+      pages:
+        description: 總頁數
+        type: integer
+      resources:
+        description: 多筆
+        items:
+          properties:
+            created_at:
+              description: 創建時間
+              type: string
+            created_by:
+              description: 創建者
+              type: string
+            deleted_at:
+              description: 刪除時間
+              type: string
+            email:
+              description: 信箱
+              type: string
+            is_expand:
+              type: boolean
+            phone:
+              description: 電話
+              type: string
+            resource_group:
+              description: v
+              type: string
+            resource_id:
+              description: 舊編號 ＆ 頁面ID
+              type: integer
+            resource_name:
+              description: 名字
+              type: string
+            resource_uuid:
+              description: 表ID
+              type: string
+            standard_cost:
+              type: number
+            tags:
+              description: 標籤
+              items:
+                type: string
+              type: array
+            total_cost:
+              type: number
+            total_load:
+              description: 總負載
+              type: number
+            updated_at:
+              description: 更新時間
+              type: string
+            updated_by:
+              description: 更新者
+              type: string
+          type: object
+        type: array
+      total:
+        description: 總筆數
+        type: integer
+    required:
+    - limit
+    - page
+    type: object
+  resources.Single:
+    properties:
+      created_at:
+        description: 創建時間
+        type: string
+      created_by:
+        description: 創建者
+        type: string
+      deleted_at:
+        description: 刪除時間
+        type: string
+      email:
+        description: 信箱
+        type: string
+      is_expand:
+        type: boolean
+      phone:
+        description: 電話
+        type: string
+      resource_group:
+        description: 群組
+        type: string
+      resource_id:
+        description: 舊編號 ＆ 頁面ID
+        type: integer
+      resource_name:
+        description: 名字
+        type: string
+      resource_uuid:
+        description: 表ID
+        type: string
+      standard_cost:
+        type: number
+      tags:
+        description: 標籤
+        items:
+          type: string
+        type: array
+      total_cost:
+        type: number
+      total_load:
+        description: 總負載
+        type: number
+      updated_at:
+        description: 更新時間
+        type: string
+      updated_by:
+        description: 更新者
+        type: string
+    type: object
+  resources.TaskSingle:
+    properties:
+      email:
+        description: 信箱
+        type: string
+      is_expand:
+        type: boolean
+      phone:
+        description: 電話
+        type: string
+      resource_group:
+        description: 群組
+        type: string
+      resource_id:
+        description: 舊編號 ＆ 頁面ID
+        type: integer
+      resource_name:
+        description: 名字
+        type: string
+      resource_uuid:
+        description: 表ID
+        type: string
+      role:
+        description: 專案角色
+        type: string
+      standard_cost:
+        type: number
+      total_cost:
+        type: number
+      total_load:
+        description: 總負載
+        type: number
+      unit:
+        description: 單位
+        type: number
+    type: object
+  resources.Update:
+    properties:
+      email:
+        description: 信箱
+        type: string
+      is_expand:
+        type: boolean
+      phone:
+        description: 電話
+        type: string
+      resource_group:
+        description: 群組
+        type: string
+      resource_name:
+        description: 名字
+        type: string
+      standard_cost:
+        minimum: 0
+        type: number
+      tags:
+        description: 標籤
+        items:
+          type: string
+        type: array
+      total_cost:
+        minimum: 0
+        type: number
+      total_load:
+        description: 總負載
+        minimum: 0
+        type: number
+    type: object
+  roles.Create:
+    properties:
+      display_name:
+        description: 角色顯示名稱
+        type: string
+      name:
+        description: 角色名稱
+        type: string
+    required:
+    - display_name
+    - name
+    type: object
+  roles.List:
+    properties:
+      limit:
+        description: 筆數(請從1開始帶入,最高上限20)
+        type: integer
+      page:
+        description: 頁數(請從1開始帶入)
+        type: integer
+      pages:
+        description: 總頁數
+        type: integer
+      roles:
+        description: 多筆
+        items:
+          properties:
+            created_at:
+              description: 創建時間
+              type: string
+            created_by:
+              description: 創建者
+              type: string
+            deleted_at:
+              description: 刪除時間
+              type: string
+            display_name:
+              description: 角色顯示名稱
+              type: string
+            id:
+              description: 表ID
+              type: string
+            is_enable:
+              description: 角色是否啟用
+              type: boolean
+            name:
+              description: 角色名稱
+              type: string
+            updated_at:
+              description: 更新時間
+              type: string
+            updated_by:
+              description: 更新者
+              type: string
+          type: object
+        type: array
+      total:
+        description: 總筆數
+        type: integer
+    required:
+    - limit
+    - page
+    type: object
+  roles.Single:
+    properties:
+      created_at:
+        description: 創建時間
+        type: string
+      created_by:
+        description: 創建者
+        type: string
+      deleted_at:
+        description: 刪除時間
+        type: string
+      display_name:
+        description: 角色顯示名稱
+        type: string
+      id:
+        description: 表ID
+        type: string
+      is_enable:
+        description: 角色是否啟用
+        type: boolean
+      name:
+        description: 角色名稱
+        type: string
+      updated_at:
+        description: 更新時間
+        type: string
+      updated_by:
+        description: 更新者
+        type: string
+    type: object
+  roles.Update:
+    properties:
+      display_name:
+        description: 角色顯示名稱
+        type: string
+      is_enable:
+        description: 角色是否啟用
+        type: boolean
+      name:
+        description: 角色名稱
+        type: string
+    type: object
+  tasks.Create:
+    properties:
+      assignments:
+        description: 未知
+        type: string
+      baseline_end_date:
+        description: 基準線結束日期
+        type: string
+      baseline_start_date:
+        description: 基準線起始日期
+        type: string
+      coordinator:
+        description: 協調員ID(resource_uuid)
+        type: string
+      cost:
+        description: 花費時間
+        minimum: 0
+        type: integer
+      duration:
+        description: 期間
+        minimum: 0
+        type: number
+      end_date:
+        description: 結束日期
+        type: string
+      indicators:
+        description: 任務標示
+        items:
+          $ref: '#/definitions/tasks.Indicators'
+        type: array
+      is_subtask:
+        description: 是否為任務
+        type: boolean
+      notes:
+        description: 備註
+        type: string
+      outline_number:
+        description: 1.1.2、1.2、1.2.1
+        type: string
+      parent_uuid:
+        description: 父層級UUID
+        type: string
+      predecessor:
+        description: 前任
+        type: string
+      progress:
+        description: 完成百分比
+        minimum: 0
+        type: integer
+      project_uuid:
+        description: 專案UUID
+        type: string
+      resources:
+        description: 人力資源
+        items:
+          $ref: '#/definitions/resources.TaskSingle'
+        type: array
+      segments:
+        description: 任務分段
+        items:
+          $ref: '#/definitions/tasks.Segments'
+        type: array
+      start_date:
+        description: 起始日期
+        type: string
+      subtasks:
+        description: 子任務
+        items:
+          $ref: '#/definitions/tasks.Create'
+        type: array
+      task_color:
+        description: 紀錄標的顏色
+        type: string
+      task_id:
+        description: 前端編號 (非表ID)
+        type: string
+      task_name:
+        description: 任務名稱
+        type: string
+      web_link:
+        description: 預留：外部連結
+        type: string
+    required:
+    - project_uuid
+    - task_id
+    type: object
+  tasks.Filter:
+    properties:
+      is_milestone:
+        description: 是否有里程被
+        type: boolean
+    type: object
+  tasks.Import:
+    properties:
+      base64:
+        description: Base64
+        type: string
+      file_type:
+        description: 檔案類型 1:gantt project 2:saas pmi
+        type: integer
+      project_uuid:
+        description: 專案UUID
+        type: string
+    required:
+    - file_type
+    - project_uuid
+    type: object
+  tasks.Indicators:
+    properties:
+      date:
+        description: 日期
+        type: string
+      iconClass:
+        type: string
+      name:
+        description: 名稱
+        type: string
+      tooltip:
+        description: 工具提示
+        type: string
+    type: object
+  tasks.List:
+    properties:
+      event_marks:
+        description: event_marks
+        items:
+          $ref: '#/definitions/event_marks.Single'
+        type: array
+      limit:
+        description: 筆數(請從1開始帶入,最高上限20)
+        type: integer
+      page:
+        description: 頁數(請從1開始帶入)
+        type: integer
+      pages:
+        description: 總頁數
+        type: integer
+      tasks:
+        description: 多筆
+        items:
+          $ref: '#/definitions/tasks.Single'
+        type: array
+      total:
+        description: 總筆數
+        type: integer
+    required:
+    - limit
+    - page
+    type: object
+  tasks.ProjectIDs:
+    properties:
+      filter:
+        allOf:
+        - $ref: '#/definitions/tasks.Filter'
+        description: 搜尋欄位
+      projects:
+        description: 多筆
+        items:
+          type: string
+        type: array
+    type: object
+  tasks.Segments:
+    properties:
+      duration:
+        description: 期間
+        type: number
+      start_date:
+        description: 開始日期
+        type: string
+    type: object
+  tasks.Single:
+    properties:
+      assignments:
+        description: 未知
+        type: string
+      baseline_end_date:
+        description: 基準線結束日期
+        type: string
+      baseline_start_date:
+        description: 基準線起始日期
+        type: string
+      coordinator:
+        description: 協調員ID(resource_uuid)
+        type: string
+      coordinator_name:
+        description: 協調員姓名
+        type: string
+      cost:
+        description: 花費時間
+        type: integer
+      created_at:
+        description: 創建時間
+        type: string
+      created_by:
+        description: 創建者
+        type: string
+      deleted_at:
+        description: 刪除時間
+        type: string
+      duration:
+        description: 期間
+        type: number
+      end_date:
+        description: 結束日期
+        type: string
+      indicators:
+        description: 任務標示
+        items:
+          $ref: '#/definitions/tasks.Indicators'
+        type: array
+      is_subtask:
+        description: 是否為任務
+        type: boolean
+      notes:
+        description: 備註
+        type: string
+      outline_number:
+        description: 1.1.2、1.2、1.2.1
+        type: string
+      predecessor:
+        description: 前任
+        type: string
+      progress:
+        description: 完成百分比
+        type: integer
+      project_uuid:
+        description: 專案UUID
+        type: string
+      resources:
+        description: 人力資源(陣列)
+        items:
+          $ref: '#/definitions/resources.TaskSingle'
+        type: array
+      segments:
+        description: 任務分段(陣列)
+        items:
+          $ref: '#/definitions/tasks.Segments'
+        type: array
+      start_date:
+        description: 起始日期
+        type: string
+      subtasks:
+        description: 子任務
+        items:
+          $ref: '#/definitions/tasks.Single'
+        type: array
+      task_color:
+        description: 紀錄標的顏色
+        type: string
+      task_id:
+        description: 前端編號 (非表ID)
+        type: string
+      task_name:
+        description: 任務名稱
+        type: string
+      task_old_id:
+        description: 前端編號 (非表ID)
+        type: integer
+      task_uuid:
+        description: 表ID
+        type: string
+      updated_at:
+        description: 更新時間
+        type: string
+      updated_by:
+        description: 更新者
+        type: string
+      web_link:
+        description: 預留：外部連結
+        type: string
+    type: object
+  tasks.Update:
+    properties:
+      assignments:
+        description: 未知
+        type: string
+      baseline_end_date:
+        description: 基準線結束日期
+        type: string
+      baseline_start_date:
+        description: 基準線起始日期
+        type: string
+      coordinator:
+        description: 協調員ID(resource_uuid)
+        type: string
+      cost:
+        description: 花費時間
+        minimum: 0
+        type: integer
+      duration:
+        description: 期間
+        minimum: 0
+        type: number
+      end_date:
+        description: 結束日期
+        type: string
+      indicators:
+        description: 任務標示
+        items:
+          $ref: '#/definitions/tasks.Indicators'
+        type: array
+      is_subtask:
+        description: 是否為任務
+        type: boolean
+      notes:
+        description: 備註
+        type: string
+      outline_number:
+        description: 1.1.2、1.2、1.2.1
+        type: string
+      predecessor:
+        description: 前任
+        type: string
+      progress:
+        description: 完成百分比
+        minimum: 0
+        type: integer
+      project_uuid:
+        description: 專案UUID
+        type: string
+      resources:
+        description: 人力資源
+        items:
+          $ref: '#/definitions/resources.TaskSingle'
+        type: array
+      segments:
+        description: 任務分段
+        items:
+          $ref: '#/definitions/tasks.Segments'
+        type: array
+      start_date:
+        description: 起始日期
+        type: string
+      subtasks:
+        description: 子任務
+        items:
+          $ref: '#/definitions/tasks.Update'
+        type: array
+      task_color:
+        description: 紀錄標的顏色
+        type: string
+      task_name:
+        description: 任務名稱
+        type: string
+      web_link:
+        description: 預留：外部連結
+        type: string
+    type: object
+  users.Create:
+    properties:
+      email:
+        description: 使用者電子郵件
+        type: string
+      name:
+        description: 使用者中文名稱
+        type: string
+      password:
+        description: 使用者密碼
+        type: string
+      phone_number:
+        description: 使用者電話
+        type: string
+      resource_uuid:
+        description: 資源UUID
+        type: string
+      role_id:
+        description: 角色ID
+        type: string
+      user_name:
+        description: 使用者名稱
+        type: string
+    required:
+    - name
+    - password
+    - role_id
+    - user_name
+    type: object
+  users.List:
+    properties:
+      limit:
+        description: 筆數(請從1開始帶入,最高上限20)
+        type: integer
+      page:
+        description: 頁數(請從1開始帶入)
+        type: integer
+      pages:
+        description: 總頁數
+        type: integer
+      total:
+        description: 總筆數
+        type: integer
+      users:
+        description: 多筆
+        items:
+          properties:
+            created_at:
+              description: 創建時間
+              type: string
+            created_by:
+              description: 創建者
+              type: string
+            deleted_at:
+              description: 刪除時間
+              type: string
+            email:
+              description: 使用者電子郵件
+              type: string
+            id:
+              description: 表ID
+              type: string
+            name:
+              description: 使用者中文名稱
+              type: string
+            phone_number:
+              description: 使用者電話
+              type: string
+            resource_uuid:
+              description: 資源UUID
+              type: string
+            role:
+              description: 角色
+              type: string
+            role_id:
+              description: 角色ID
+              type: string
+            updated_at:
+              description: 更新時間
+              type: string
+            updated_by:
+              description: 更新者
+              type: string
+            user_name:
+              description: 使用者名稱
+              type: string
+          type: object
+        type: array
+    required:
+    - limit
+    - page
+    type: object
+  users.ListNoPagination:
+    properties:
+      users:
+        description: 多筆
+        items:
+          properties:
+            id:
+              description: 表ID
+              type: string
+            name:
+              description: 使用者中文名稱
+              type: string
+          type: object
+        type: array
+    type: object
+  users.Single:
+    properties:
+      created_at:
+        description: 創建時間
+        type: string
+      created_by:
+        description: 創建者
+        type: string
+      deleted_at:
+        description: 刪除時間
+        type: string
+      email:
+        description: 使用者電子郵件
+        type: string
+      id:
+        description: 表ID
+        type: string
+      name:
+        description: 使用者中文名稱
+        type: string
+      phone_number:
+        description: 使用者電話
+        type: string
+      resource_uuid:
+        description: 資源UUID
+        type: string
+      role:
+        description: 角色
+        type: string
+      role_id:
+        description: 角色ID
+        type: string
+      updated_at:
+        description: 更新時間
+        type: string
+      updated_by:
+        description: 更新者
+        type: string
+      user_name:
+        description: 使用者名稱
+        type: string
+    type: object
+  users.Update:
+    properties:
+      email:
+        description: 使用者電子郵件
+        type: string
+      name:
+        description: 使用者中文名稱
+        type: string
+      password:
+        description: 使用者密碼
+        type: string
+      phone_number:
+        description: 使用者電話
+        type: string
+      resource_uuid:
+        description: 資源UUID
+        type: string
+      role_id:
+        description: 角色ID
+        type: string
+      user_name:
+        description: 使用者名稱
+        type: string
+    type: object
+  work_days.Create:
+    properties:
+      workWeek:
+        description: 工作日
+        items:
+          type: string
+        type: array
+      workingTime:
+        description: 工作時間
+        items:
+          $ref: '#/definitions/work_days.WorkingTimes'
+        type: array
+    type: object
+  work_days.List:
+    properties:
+      limit:
+        description: 筆數(請從1開始帶入,最高上限20)
+        type: integer
+      page:
+        description: 頁數(請從1開始帶入)
+        type: integer
+      pages:
+        description: 總頁數
+        type: integer
+      total:
+        description: 總筆數
+        type: integer
+      work_days:
+        description: 多筆
+        items:
+          properties:
+            created_at:
+              description: 創建時間
+              type: string
+            created_by:
+              description: 創建者
+              type: string
+            deleted_at:
+              description: 刪除時間
+              type: string
+            id:
+              description: 表ID
+              type: string
+            updated_at:
+              description: 更新時間
+              type: string
+            updated_by:
+              description: 更新者
+              type: string
+            workWeek:
+              description: 工作日
+              items:
+                type: string
+              type: array
+            workingTime:
+              description: 工作時間
+              items:
+                $ref: '#/definitions/work_days.WorkingTimes'
+              type: array
+          type: object
+        type: array
+    required:
+    - limit
+    - page
+    type: object
+  work_days.Single:
+    properties:
+      created_at:
+        description: 創建時間
+        type: string
+      created_by:
+        description: 創建者
+        type: string
+      deleted_at:
+        description: 刪除時間
+        type: string
+      id:
+        description: 表ID
+        type: string
+      updated_at:
+        description: 更新時間
+        type: string
+      updated_by:
+        description: 更新者
+        type: string
+      workWeek:
+        description: 工作日
+        items:
+          type: string
+        type: array
+      workingTime:
+        description: 工作時間
+        items:
+          $ref: '#/definitions/work_days.WorkingTimes'
+        type: array
+    type: object
+  work_days.Update:
+    properties:
+      workWeek:
+        description: 工作日
+        items:
+          type: string
+        type: array
+      workingTime:
+        description: 工作時間
+        items:
+          $ref: '#/definitions/work_days.WorkingTimes'
+        type: array
+    type: object
+  work_days.WorkingTimes:
+    properties:
+      from:
+        description: 開始時間
+        type: number
+      to:
+        description: 結束時間
+        type: number
+    type: object
+host: pmip.t.api.likbox.com
+info:
+  contact: {}
+  description: HTA2 GANTT APIs
+  license:
+    name: AGPL 3.0
+    url: https://www.gnu.org/licenses/agpl-3.0.en.html
+  title: HTA GANTT APIs
+  version: "0.1"
+paths:
+  /event-marks:
+    post:
+      consumes:
+      - application/json
+      description: 新增事件標記
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 新增事件標記
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/event_marks.Create'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 新增事件標記
+      tags:
+      - event_mark
+  /event-marks/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 刪除單一事件標記
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 事件標記UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 刪除單一事件標記
+      tags:
+      - event_mark
+    patch:
+      consumes:
+      - application/json
+      description: 更新單一事件標記
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 事件標記UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 更新事件標記
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/event_marks.Update'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 更新單一事件標記
+      tags:
+      - event_mark
+  /holidays:
+    get:
+      consumes:
+      - application/json
+      description: 取得全部假期
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 目前頁數,請從1開始帶入
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 一次回傳比數,請從1開始帶入,最高上限20
+        in: query
+        name: limit
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/holidays.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得全部假期
+      tags:
+      - holiday
+    post:
+      consumes:
+      - application/json
+      description: 新增假期
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 新增假期
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/holidays.Create'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 新增假期
+      tags:
+      - holiday
+  /holidays/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 刪除單一假期
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 假期UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 刪除單一假期
+      tags:
+      - holiday
+    get:
+      consumes:
+      - application/json
+      description: 取得單一假期
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 假期UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/holidays.Single'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得單一假期
+      tags:
+      - holiday
+    patch:
+      consumes:
+      - application/json
+      description: 更新單一假期
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 假期UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 更新假期
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/holidays.Update'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 更新單一假期
+      tags:
+      - holiday
+  /holidays/no-pagination:
+    get:
+      consumes:
+      - application/json
+      description: 取得全部假期
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/tasks.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得全部假期(不用page&limit)
+      tags:
+      - holiday
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: 使用者登入
+      parameters:
+      - description: 登入帶入
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/logins.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/jwx.Token'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 使用者登入
+      tags:
+      - login
+  /project-resources:
+    post:
+      consumes:
+      - application/json
+      description: 取得全部專案資源
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 目前頁數,請從1開始帶入
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 一次回傳比數,請從1開始帶入,最高上限20
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: 搜尋
+        in: body
+        name: '*'
+        schema:
+          $ref: '#/definitions/project_resources.Filter'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/project_resources.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得全部專案資源
+      tags:
+      - project_resource
+  /project-resources/{id}:
+    get:
+      consumes:
+      - application/json
+      description: 取得單一專案資源
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 專案資源UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/project_resources.Single'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得單一專案資源
+      tags:
+      - project_resource
+  /project-resources/get-by-project:
+    post:
+      consumes:
+      - application/json
+      description: 透過過專案ID取得專案資源
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 專案UUID
+        in: path
+        name: project-uuid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/tasks.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 透過過專案ID取得專案資源(不用page&limit)
+      tags:
+      - project_resource
+  /project-types:
+    get:
+      consumes:
+      - application/json
+      description: 取得全部專案類別
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 目前頁數,請從1開始帶入
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 一次回傳比數,請從1開始帶入,最高上限20
+        in: query
+        name: limit
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/project_types.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得全部專案類別
+      tags:
+      - project_type
+    post:
+      consumes:
+      - application/json
+      description: 新增專案類別
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 新增專案類別
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/project_types.Create'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 新增專案類別
+      tags:
+      - project_type
+  /project-types/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 刪除單一專案類別
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 專案類別UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 刪除單一專案類別
+      tags:
+      - project_type
+    get:
+      consumes:
+      - application/json
+      description: 取得單一專案類別
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 專案類別UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/project_types.Single'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得單一專案類別
+      tags:
+      - project_type
+    patch:
+      consumes:
+      - application/json
+      description: 更新單一專案類別
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 專案類別UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 更新專案類別
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/project_types.Update'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 更新單一專案類別
+      tags:
+      - project_type
+  /project-types/no-pagination:
+    get:
+      consumes:
+      - application/json
+      description: 取得全部專案類別
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/tasks.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得全部專案類別(不用page&limit)
+      tags:
+      - project_type
+  /projects:
+    post:
+      consumes:
+      - application/json
+      description: 新增專案
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 新增專案
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/projects.Create'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 新增專案
+      tags:
+      - project
+  /projects/{project-uuid}:
+    delete:
+      consumes:
+      - application/json
+      description: 刪除單一專案
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 專案UUID
+        in: path
+        name: project-uuid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 刪除單一專案
+      tags:
+      - project
+    get:
+      consumes:
+      - application/json
+      description: 取得單一專案
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 專案UUID
+        in: path
+        name: project-uuid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/projects.Single'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得單一專案
+      tags:
+      - project
+    patch:
+      consumes:
+      - application/json
+      description: 更新單一專案
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 專案UUID
+        in: path
+        name: project-uuid
+        required: true
+        type: string
+      - description: 更新專案
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/projects.Update'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 更新單一專案
+      tags:
+      - project
+  /projects/list:
+    post:
+      consumes:
+      - application/json
+      description: 取得全部專案
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 目前頁數,請從1開始帶入
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 一次回傳比數,請從1開始帶入,最高上限20
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: 搜尋
+        in: body
+        name: '*'
+        schema:
+          $ref: '#/definitions/projects.Filter'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/projects.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得全部專案
+      tags:
+      - project
+  /projects/no-pagination:
+    get:
+      consumes:
+      - application/json
+      description: 取得全部專案
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/projects.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得全部專案(不用page&limit)
+      tags:
+      - project
+  /refresh:
+    post:
+      consumes:
+      - application/json
+      description: 換新的令牌
+      parameters:
+      - description: 登入帶入
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/jwx.Refresh'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/jwx.Token'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 換新的令牌
+      tags:
+      - login
+  /resources:
+    post:
+      consumes:
+      - application/json
+      description: 新增資源
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 新增資源
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/resources.Create'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 新增資源
+      tags:
+      - resource
+  /resources/{resource-uuid}:
+    delete:
+      consumes:
+      - application/json
+      description: 刪除單一資源
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 資源UUID
+        in: path
+        name: resource-uuid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 刪除單一資源
+      tags:
+      - resource
+    get:
+      consumes:
+      - application/json
+      description: 取得單一資源
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 資源UUID
+        in: path
+        name: resource-uuid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/resources.Single'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得單一資源
+      tags:
+      - resource
+    patch:
+      consumes:
+      - application/json
+      description: 更新單一資源
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 資源UUID
+        in: path
+        name: resource-uuid
+        required: true
+        type: string
+      - description: 更新資源
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/resources.Update'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 更新單一資源
+      tags:
+      - resource
+  /resources/import:
+    post:
+      consumes:
+      - application/json
+      description: 匯入資源
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 匯入資源
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/resources.Import'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 匯入資源
+      tags:
+      - resource
+  /resources/list:
+    post:
+      consumes:
+      - application/json
+      description: 取得全部資源
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 目前頁數,請從1開始帶入
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 一次回傳比數,請從1開始帶入,最高上限20
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: 搜尋
+        in: body
+        name: '*'
+        schema:
+          $ref: '#/definitions/resources.Filter'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/resources.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得全部資源
+      tags:
+      - resource
+  /resources/no-pagination:
+    get:
+      consumes:
+      - application/json
+      description: 取得全部資源
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/resources.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得全部資源(不用page&limit)
+      tags:
+      - resource
+  /roles:
+    get:
+      consumes:
+      - application/json
+      description: 取得全部角色
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 目前頁數,請從1開始帶入
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 一次回傳比數,請從1開始帶入,最高上限20
+        in: query
+        name: limit
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/roles.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得全部角色
+      tags:
+      - role
+    post:
+      consumes:
+      - application/json
+      description: 新增角色
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 新增角色
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/roles.Create'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 新增角色
+      tags:
+      - role
+  /roles/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 刪除單一角色
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 角色ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 更新角色
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/roles.Update'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 刪除單一角色
+      tags:
+      - role
+    get:
+      consumes:
+      - application/json
+      description: 取得單一角色
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 角色ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/roles.Single'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得單一角色
+      tags:
+      - role
+    patch:
+      consumes:
+      - application/json
+      description: 更新單一角色
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 角色ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 更新角色
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/roles.Update'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 更新單一角色
+      tags:
+      - role
+  /tasks:
+    delete:
+      consumes:
+      - application/json
+      description: 刪除單一任務
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 任務UUID
+        in: path
+        name: task-uuid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 刪除單一任務
+      tags:
+      - task
+    post:
+      consumes:
+      - application/json
+      description: 新增單一任務
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 新增任務
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/tasks.Create'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 新增單一任務
+      tags:
+      - task
+  /tasks/{task-uuid}:
+    get:
+      consumes:
+      - application/json
+      description: 取得單一任務
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 任務UUID
+        in: path
+        name: task-uuid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/tasks.Single'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得單一任務
+      tags:
+      - task
+    patch:
+      consumes:
+      - application/json
+      description: 更新單一任務
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 任務UUID
+        in: path
+        name: task-uuid
+        required: true
+        type: string
+      - description: 更新任務
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/tasks.Update'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 更新單一任務
+      tags:
+      - task
+  /tasks/create-all:
+    post:
+      consumes:
+      - application/json
+      description: 新增全任務
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 新增任務
+        in: body
+        name: '*'
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/tasks.Create'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 新增全任務
+      tags:
+      - task
+  /tasks/get-by-projects:
+    post:
+      consumes:
+      - application/json
+      description: 取得多個專案含任務(不用page&limit)
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 專案UUIDs
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/tasks.ProjectIDs'
+      - description: 搜尋
+        in: body
+        name: '*'
+        schema:
+          $ref: '#/definitions/tasks.Filter'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/tasks.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得多個專案含任務(不用page&limit)
+      tags:
+      - task
+  /tasks/import:
+    post:
+      consumes:
+      - application/json
+      description: 匯入專案
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 匯入專案
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/tasks.Import'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 匯入專案
+      tags:
+      - task
+  /tasks/no-pagination/no-sub-filter:
+    get:
+      consumes:
+      - application/json
+      description: 取得全部不算階層的任務(不用page&limit)
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/tasks.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得全部不算階層的任務(不用page&limit)
+      tags:
+      - task
+  /tasks/update-all:
+    patch:
+      consumes:
+      - application/json
+      description: 更新全任務
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 更新任務
+        in: body
+        name: '*'
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/tasks.Update'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 更新全任務
+      tags:
+      - task
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: 取得全部使用者(不用page和limit)
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/users.ListNoPagination'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得全部使用者(不用page和limit)
+      tags:
+      - user
+    post:
+      consumes:
+      - application/json
+      description: 新增使用者
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 新增使用者
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/users.Create'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 新增使用者
+      tags:
+      - user
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 刪除單一使用者
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 使用者ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 更新使用者
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/users.Update'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 刪除單一使用者
+      tags:
+      - user
+    get:
+      consumes:
+      - application/json
+      description: 取得單一使用者
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 使用者ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/users.Single'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得單一使用者
+      tags:
+      - user
+    patch:
+      consumes:
+      - application/json
+      description: 更新單一使用者
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 使用者ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 更新使用者
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/users.Update'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 更新單一使用者
+      tags:
+      - user
+  /users/list:
+    post:
+      consumes:
+      - application/json
+      description: 取得全部使用者
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 目前頁數,請從1開始帶入
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 一次回傳比數,請從1開始帶入,最高上限20
+        in: query
+        name: limit
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/users.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得全部使用者
+      tags:
+      - user
+  /v1.0/policies:
+    delete:
+      consumes:
+      - application/json
+      description: 刪除策略
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 刪除策略
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/policies.PolicyRule'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 刪除策略
+      tags:
+      - policies
+    get:
+      consumes:
+      - application/json
+      description: 取得策略
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  items:
+                    $ref: '#/definitions/policies.Single'
+                  type: array
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得策略
+      tags:
+      - policies
+    post:
+      consumes:
+      - application/json
+      description: 新增策略
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 新增策略
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/policies.PolicyRule'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 新增策略
+      tags:
+      - policies
+  /work-days:
+    get:
+      consumes:
+      - application/json
+      description: 取得全部工作時間
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 目前頁數,請從1開始帶入
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 一次回傳比數,請從1開始帶入,最高上限20
+        in: query
+        name: limit
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/work_days.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得全部工作時間
+      tags:
+      - work_day
+    post:
+      consumes:
+      - application/json
+      description: 新增工作時間
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 新增工作時間
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/work_days.Create'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 新增工作時間
+      tags:
+      - work_day
+  /work-days/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 刪除單一工作時間
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 工作時間UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 刪除單一工作時間
+      tags:
+      - work_day
+    get:
+      consumes:
+      - application/json
+      description: 取得單一工作時間
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 工作時間UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/work_days.Single'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得單一工作時間
+      tags:
+      - work_day
+    patch:
+      consumes:
+      - application/json
+      description: 更新單一工作時間
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 工作時間UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 更新工作時間
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/work_days.Update'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 更新單一工作時間
+      tags:
+      - work_day
+  /work-days/no-pagination:
+    get:
+      consumes:
+      - application/json
+      description: 取得全部工作時間
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/tasks.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得全部工作時間(不用page&limit)
+      tags:
+      - work_day
+schemes:
+- https
+swagger: "2.0"

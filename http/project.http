@@ -1,0 +1,67 @@
+### login
+POST {{host}}/hta-gantt/v1.0/login
+Content-Type: application/json
+
+{
+  "user_name": "admin",
+  "password": "3939889"
+}
+
+> {% client.global.set("accessToken", response.body.body.access_token); %}
+
+### GetByList
+POST {{host}}/hta-gantt/v1.0/projects/list?page=1&limit=20
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "filter": {
+    "status": "re",
+    "type": "re",
+    "client": "re",
+    "project_name": "re",
+    "manager": "re",
+    "code": "re"
+  }
+}
+
+### GetByListNoPagination
+GET {{host}}/hta-gantt/v1.0/projects/no-pagination
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### GetBySingle
+GET {{host}}/hta-gantt/v1.0/projects/ed76ede3-7956-4d18-a1ed-6d7df3943b77
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### Create
+POST {{host}}/hta-gantt/v1.0/projects
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "project_name": "test",
+  "type": "1a5c6ba3-a97c-4d81-ab44-4755e9d6ae4e",
+  "manager": "8b5ca145-665f-4039-b7e1-50ae94dfb5eb",
+  "code": "123456"
+}
+
+### Update
+PATCH {{host}}/hta-gantt/v1.0/projects/5e13ee25-536a-40f7-8585-2aea56ba0191
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "project_name": "123",
+  "resource": [
+    {
+      "resource_uuid": "8b5ca145-665f-4039-b7e1-50ae94dfb5eb",
+      "role": "PM"
+    }
+  ]
+}
+
+### Delete
+DELETE {{host}}/hta-gantt/v1.0/projects/5e13ee25-536a-40f7-8585-2aea56ba0191
+Accept: application/json

@@ -1,0 +1,50 @@
+SCRIPTS = $(shell cd /d %cd% && echo %cd%\scripts)
+PROJECT = $(shell cd /d %cd% && echo %cd%)
+GO = go
+OUTPUTS = $(shell cd /d %cd% && echo %cd%\deploy)
+TAG ?= debug
+
+## 首次使用專案模版時, 必要執行一次
+setup:
+	copy $(PROJECT)\config\config.go.example $(PROJECT)\config\debug_config.go
+	copy $(PROJECT)\config\config.go.example $(PROJECT)\config\production_config.go
+	copy $(PROJECT)\air.example.windows $(PROJECT)\.air.toml
+	curl -fLo air.exe https://github.com/cosmtrek/air/releases/download/v1.43.0/air_1.43.0_windows_amd64.exe
+
+## 映射遠端Ports至本地端Ports
+ssh:
+	go run -tags $(TAG) $(PROJECT)\tools\ssh\ssh.go
+
+## 開發中
+air:
+	air
+
+migration:
+	go run -tags $(TAG) $(PROJECT)\tools\migration\migration.go
+
+## by Fleet
+format:
+	goimports -w $(PROJECT)
+
+## 以下由CI\CD人員維護!!!
+authority:
+	GOOS=linux GOARCH=amd64 $(GO) build -tags $(TAG) -o $(OUTPUTS)\authority cmd\lambda\authority.go
+	zip -D -j -r $(OUTPUTS)\authority.zip $(OUTPUTS)\authority
+
+clean:
+	rm -rf $(OUTPUTS)
+
+task:
+	make clean
+	make authority
+
+changeLog:
+	git-chglog > .\changeLog.md
+
+update_lib:
+	rem brew install golang-migrate
+	rem brew install golangci-lint
+	go install github.com\swaggo\swag\cmd\swag@latest
+	go install github.com\cosmtrek\air@latest
+	go get -u
+	rem go get -u ...

@@ -1,0 +1,39 @@
+### login
+POST {{host}}/hta-gantt/v1.0/login
+Content-Type: application/json
+
+{
+  "user_name": "admin",
+  "password": "12345"
+}
+
+> {% client.global.set("accessToken", response.body.body.access_token); %}
+
+### GetAllPolicies
+GET {{host}}/hta-gantt/v1.0/policies
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### AddPolicy
+POST {{host}}/hta-gantt/v1.0/policies
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "ptype": "p",
+  "role_name": "admin",
+  "path": "/hta-gantt/*",
+  "method": "PATCH"
+}
+
+### DeletePolicy
+DELETE {{host}}/hta-gantt/v1.0/policies
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "ptype": "p",
+  "role_name": "admin",
+  "path": "/hta-gantt/*",
+  "method": "GET"
+}

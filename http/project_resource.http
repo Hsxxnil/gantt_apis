@@ -1,0 +1,42 @@
+### login
+POST {{host}}/hta-gantt/v1.0/login
+Content-Type: application/json
+
+{
+  "user_name": "admin",
+  "password": "3939889"
+}
+
+> {%
+    client.global.set("accessToken", response.body.body.access_token);
+%}
+
+### GetByList
+POST {{host}}/hta-gantt/v1.0/project-resources?page=1&limit=20
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "filter": {
+    "resource_name": "卓明煌",
+    "role": "",
+    "resource_group": ""
+  }
+}
+
+### GetByProjectList
+POST {{host}}/hta-gantt/v1.0/project-resources/get-by-project
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "projects": [
+    "7cf7318c-3c01-48b9-ba6d-3f7a628a2dcd",
+    "b46a49ce-b317-4279-8ae9-12f6baab3942"
+  ]
+}
+
+### GetBySingle
+GET {{host}}/hta-gantt/v1.0/project-resources/3341cbab-a72b-44ce-9945-9cb08d2ecfe6
+Accept: application/json
+Authorization: Bearer {{accessToken}}

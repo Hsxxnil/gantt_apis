@@ -1,0 +1,9 @@
+drop index idx_holidays_id;
+drop index idx_holidays_name;
+drop index idx_holidays_start_date;
+drop index idx_holidays_end_date;
+drop index idx_holidays_created_at;
+drop index idx_holidays_created_by;
+drop index idx_holidays_updated_at;
+drop index idx_holidays_updated_by;
+drop index idx_holidays_project_uuid;

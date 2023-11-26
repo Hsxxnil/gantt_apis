@@ -1,0 +1,44 @@
+image: golang:alpine
+
+pipelines:
+  branches:
+    pre-production:
+      - parallel:
+          - step:
+              name: HTA_APIs - Develop - build and deploy
+              script:
+                - apk add --no-cache git zip openssh-client
+                - rm -rf ./config
+                - git clone git@bitbucket.org:wisdomfish/hta2_config.git ./config
+                - ls ./config
+                - GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -tags debug -ldflags="-w -s" -o deploy/hta cmd/hta/hta.go
+                - zip -D -j -r deploy/hta.zip deploy/hta
+                - rm -rf  /opt/atlassian/pipelines/agent/build/.bitbucket/pipelines/generated/pipeline/pipes
+                - pipe: atlassian/aws-lambda-deploy:1.10.1
+                  variables:
+                    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                    AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                    FUNCTION_NAME: "likbox-pmip-testing"
+                    COMMAND: "update"
+                    ZIP_FILE: "deploy/hta.zip"
+    pp_hta:
+      - parallel:
+          - step:
+              name: HTA_APIs - pre-production - build and deploy
+              script:
+                - apk add --no-cache git zip openssh-client
+                - rm -rf ./config
+                - git clone git@bitbucket.org:wisdomfish/hta2_config.git ./config
+                - ls ./config
+                - GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -tags debug -ldflags="-w -s" -o deploy/hta cmd/hta/hta.go
+                - zip -D -j -r deploy/hta.zip deploy/hta
+                - rm -rf  /opt/atlassian/pipelines/agent/build/.bitbucket/pipelines/generated/pipeline/pipes
+                - pipe: atlassian/aws-lambda-deploy:1.10.1
+                  variables:
+                    AWS_ACCESS_KEY_ID: $HTA_AWS_ACCESS_KEY_ID
+                    AWS_SECRET_ACCESS_KEY: $HTA_AWS_SECRET_ACCESS_KEY
+                    AWS_DEFAULT_REGION: $HTA_AWS_DEFAULT_REGION
+                    FUNCTION_NAME: "pm-pre-production"
+                    COMMAND: "update"
+                    ZIP_FILE: "deploy/hta.zip"

@@ -1,0 +1,9 @@
+drop index idx_resources_resource_uuid;
+drop index idx_resources_resource_name;
+drop index idx_resources_email;
+drop index idx_resources_resource_group;
+drop index idx_resources_phone;
+drop index idx_resources_created_at;
+drop index idx_resources_created_by;
+drop index idx_resources_updated_at;
+drop index idx_resources_updated_by;

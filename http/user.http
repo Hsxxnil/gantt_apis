@@ -1,0 +1,53 @@
+### login
+POST {{host}}/hta-gantt/v1.0/login
+Content-Type: application/json
+
+{
+  "user_name": "admin",
+  "password": "3939889"
+}
+
+> {%
+    client.global.set("accessToken", response.body.body.access_token);
+%}
+
+### GetByList
+POST {{host}}/hta-gantt/v1.0/users/list?page=1&limit=20
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### GetByListNoPagination
+GET {{host}}/hta-gantt/v1.0/users?page=1&limit=20
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### GetBySingle
+GET {{host}}/hta-gantt/v1.0/users/85cee689-bcb2-461f-8b0a-ea6922f1cb07
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### Create
+POST {{host}}/hta-gantt/v1.0/users
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "user_name": "user1",
+  "name": "使用者1",
+  "password": "12345",
+  "role_id": "bcf2a32f-e801-4ae8-bc03-07c593ce626f"
+}
+
+### Update
+PATCH {{host}}/hta-gantt/v1.0/users/fef3c69f-7375-45ed-986f-2b07eabca892
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "role_id": "428cc181-d78e-4bcd-bce3-2f2823e864ce"
+}
+
+### Delete
+DELETE {{host}}/hta-gantt/v1.0/users/fef3c69f-7375-45ed-986f-2b07eabca892
+Accept: application/json
+Authorization: Bearer {{accessToken}}
