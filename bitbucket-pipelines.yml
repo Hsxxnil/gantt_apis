@@ -31,7 +31,7 @@ pipelines:
                 - rm -rf ./config
                 - git clone git@bitbucket.org:wisdomfish/hta2_config.git ./config
                 - ls ./config
-                - GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -tags debug -ldflags="-w -s" -o deploy/hta cmd/hta/hta.go
+                - GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -tags production -ldflags="-w -s" -o deploy/hta cmd/hta/hta.go
                 - zip -D -j -r deploy/hta.zip deploy/hta
                 - rm -rf  /opt/atlassian/pipelines/agent/build/.bitbucket/pipelines/generated/pipeline/pipes
                 - pipe: atlassian/aws-lambda-deploy:1.10.1
