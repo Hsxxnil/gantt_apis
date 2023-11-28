@@ -11,17 +11,6 @@ Content-Type: application/json
     client.global.set("accessToken", response.body.body.access_token);
 %}
 
-### GetByProjectUUID
-POST {{host}}/hta-gantt/v1.0/tasks/get-by-project/5668d036-4b24-4e26-b74b-39dfc50e6b7f
-Content-Type: application/json
-Authorization: Bearer {{accessToken}}
-
-{
-  "filter": {
-    "is_milestone": false
-  }
-}
-
 ### GetByProjectUUIDList
 POST {{host}}/hta-gantt/v1.0/tasks/get-by-projects
 Content-Type: application/json
@@ -32,7 +21,8 @@ Authorization: Bearer {{accessToken}}
     "is_milestone": false
   },
   "projects": [
-    "edd5ef96-981b-4e87-a337-47c05571744e"
+    "ab892b83-b7a5-428d-b54c-32b15b68890f",
+    "9eaeddf3-e512-4df4-9de2-bd34b8d1041a"
   ]
 }
 
@@ -110,112 +100,39 @@ Authorization: Bearer {{accessToken}}
 
 [
   {
-    "task_name": "A",
-    "project_uuid": "42672d08-33b1-476f-87d1-966d2292508c",
+    "task_uuid": "d0da1f26-5d65-466b-a3be-6399f597253a",
+    "task_old_id": 37037,
     "task_id": "1",
-    "progress": 0,
-    "end_date": "2023-11-03T09:00:00.000Z",
-    "baseline_start_date": null,
-    "baseline_end_date": null,
-    "notes": null,
-    "indicators": null,
-    "duration": null,
-    "predecessor": "",
-    "resources": [
-      {
-        "id": "b7aacc38-b251-4388-8065-03e23c301309",
-        "project_uuid": "42672d08-33b1-476f-87d1-966d2292508c",
-        "resource_uuid": "35b332fc-6a6a-4eeb-9a64-904950df26d4",
-        "resource_id": 100,
-        "resource_name": "resource 2",
-        "email": "resource2@test.com",
-        "created_by": "管理員",
-        "updated_by": "管理員",
-        "created_at": "2023-11-17T03:26:32.93524Z",
-        "updated_at": "2023-11-17T03:26:32.93524Z",
-        "project_resource_uuid": "b7aacc38-b251-4388-8065-03e23c301309",
-        "unit": 100
-      }
-    ],
-    "start_date": "2023-11-01T00:00:00.000Z",
-    "subtasks": [
-      {
-        "task_name": "V",
-        "project_uuid": "42672d08-33b1-476f-87d1-966d2292508c",
-        "task_id": "2",
-        "progress": 0,
-        "end_date": "2023-11-03T09:00:00.000Z",
-        "baseline_start_date": null,
-        "baseline_end_date": null,
-        "notes": null,
-        "indicators": null,
-        "duration": null,
-        "predecessor": "",
-        "resources": [
-          {
-            "id": "cc7e9606-8e0c-42d9-85ea-a415bf3b73cb",
-            "project_uuid": "42672d08-33b1-476f-87d1-966d2292508c",
-            "resource_uuid": "c26173ef-e9cf-42f7-9d25-88b26d357a92",
-            "resource_id": 101,
-            "resource_name": "resource 3",
-            "email": "resource3@test.com",
-            "created_by": "管理員",
-            "updated_by": "管理員",
-            "created_at": "2023-11-17T03:26:32.935241Z",
-            "updated_at": "2023-11-17T03:26:32.935241Z",
-            "project_resource_uuid": "cc7e9606-8e0c-42d9-85ea-a415bf3b73cb",
-            "unit": 100
-          },
-          {
-            "id": "b7aacc38-b251-4388-8065-03e23c301309",
-            "project_uuid": "42672d08-33b1-476f-87d1-966d2292508c",
-            "resource_uuid": "35b332fc-6a6a-4eeb-9a64-904950df26d4",
-            "resource_id": 100,
-            "resource_name": "resource 2",
-            "email": "resource2@test.com",
-            "created_by": "管理員",
-            "updated_by": "管理員",
-            "created_at": "2023-11-17T03:26:32.93524Z",
-            "updated_at": "2023-11-17T03:26:32.93524Z",
-            "project_resource_uuid": "b7aacc38-b251-4388-8065-03e23c301309",
-            "unit": 100
-          }
-        ],
-        "start_date": "2023-11-01T00:00:00.000Z",
-        "subtasks": [
-          {
-            "task_name": "DP點膠",
-            "project_uuid": "42672d08-33b1-476f-87d1-966d2292508c",
-            "task_id": "3",
-            "progress": 0,
-            "end_date": "2023-11-03T09:00:00.000Z",
-            "baseline_start_date": "2023-11-01T00:00:00.000Z",
-            "baseline_end_date": "2023-11-03T09:00:00.000Z",
-            "notes": null,
-            "indicators": null,
-            "duration": 3,
-            "predecessor": "",
-            "resources": [
-              {
-                "id": "cc7e9606-8e0c-42d9-85ea-a415bf3b73cb",
-                "project_uuid": "42672d08-33b1-476f-87d1-966d2292508c",
-                "resource_uuid": "c26173ef-e9cf-42f7-9d25-88b26d357a92",
-                "resource_id": 101,
-                "resource_name": "resource 3",
-                "email": "resource3@test.com",
-                "created_by": "管理員",
-                "updated_by": "管理員",
-                "created_at": "2023-11-17T03:26:32.935241Z",
-                "updated_at": "2023-11-17T03:26:32.935241Z",
-                "project_resource_uuid": "cc7e9606-8e0c-42d9-85ea-a415bf3b73cb",
-                "unit": 100
-              }
-            ],
-            "start_date": "2023-11-01T00:00:00.000Z"
-          }
-        ]
-      }
-    ]
+    "task_name": "A",
+    "start_date": "2023-11-21T00:00:00Z",
+    "end_date": "2023-11-27T09:00:00Z",
+    "baseline_start_date": "2023-11-21T00:00:00Z",
+    "baseline_end_date": "2023-11-27T09:00:00Z",
+    "duration": 5,
+    "outline_number": "1",
+    "predecessor": "2 FS",
+    "project_uuid": "ab892b83-b7a5-428d-b54c-32b15b68890f",
+    "created_by": "管理員",
+    "updated_by": "管理員",
+    "created_at": "2023-11-28T03:07:45.155892Z",
+    "updated_at": "2023-11-28T03:11:10.867393Z"
+  },
+  {
+    "task_uuid": "65bca508-dffe-41a6-8e0e-7ff26dfb95b7",
+    "task_old_id": 37041,
+    "task_id": "2",
+    "task_name": "B",
+    "start_date": "2023-11-28T00:00:00Z",
+    "end_date": "2023-11-30T09:00:00Z",
+    "baseline_start_date": "2023-11-28T00:00:00Z",
+    "baseline_end_date": "2023-11-30T09:00:00Z",
+    "duration": 3,
+    "outline_number": "2",
+    "project_uuid": "ab892b83-b7a5-428d-b54c-32b15b68890f",
+    "created_by": "管理員",
+    "updated_by": "管理員",
+    "created_at": "2023-11-28T03:10:08.19045Z",
+    "updated_at": "2023-11-28T03:11:10.867393Z"
   }
 ]
 

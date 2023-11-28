@@ -736,7 +736,6 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 			for i, task := range projectTasks {
 				task.CreatedBy = *taskBase[i].CreatedByUsers.Name
 				task.UpdatedBy = *taskBase[i].UpdatedByUsers.Name
-				task.Predecessor = ""
 
 				// 將segment轉為陣列
 				var segments []taskModel.Segments
@@ -829,6 +828,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 					// 過濾掉已經列入各個SubTask的子任務
 					var filteredTasks []*taskModel.Single
 					for _, task := range projectTask.Subtask {
+						task.Predecessor = ""
 						if !task.IsSubTask {
 							filteredTasks = append(filteredTasks, task)
 						}
