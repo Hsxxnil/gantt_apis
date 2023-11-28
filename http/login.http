@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
   "user_name": "admin",
-  "password": "12345"
+  "password": "3939889"
 }
 
 > {% client.global.set("refreshToken", response.body.body.refresh_token); %}
