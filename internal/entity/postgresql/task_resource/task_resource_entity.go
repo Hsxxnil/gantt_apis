@@ -193,6 +193,11 @@ func (s *storage) Delete(input *model.Base) (err error) {
 		query.Where("task_uuid in (?)", input.TaskUUIDs)
 	}
 
+	if input.ResourceUUID != nil {
+		query.Where("resource_uuid = ?", input.ResourceUUID)
+
+	}
+
 	err = query.Delete(&model.Table{}).Error
 	if err != nil {
 		log.Error(err)

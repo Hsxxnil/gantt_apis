@@ -27,6 +27,8 @@ type Field struct {
 	ResourceUUID *string `json:"resource_uuid,omitempty" form:"resource_uuid"`
 	// 任務UUIDs (後端批量刪除用）
 	TaskUUIDs []*string `json:"task_uuids,omitempty" form:"task_uuids" swaggerignore:"true"`
+	// 資源UUIDs (後端批量刪除用）
+	ResourceUUIDs []*string `json:"resource_uuids,omitempty" form:"resource_uuids" swaggerignore:"true"`
 }
 
 // Fields is the searched structure file (including pagination)
