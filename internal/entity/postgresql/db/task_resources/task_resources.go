@@ -38,6 +38,8 @@ type Base struct {
 	Unit *float64 `json:"unit,omitempty"`
 	// 任務UUIDs (後端批量刪除用）
 	TaskUUIDs []*string `json:"task_uuids,omitempty"`
+	// 資源UUIDs (後端批量刪除用）
+	ResourceUUIDs []*string `json:"resource_uuids,omitempty"`
 	// project_resources data
 	Resources project_resources.Base `json:"resources,omitempty"`
 	// create_users data
