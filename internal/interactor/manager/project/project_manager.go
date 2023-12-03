@@ -317,32 +317,32 @@ func (m *manager) Update(trx *gorm.DB, input *projectModel.Update) (int, any) {
 			log.Error(err)
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 		}
+	}
 
-		// 取得task_uuids
-		taskBase, err := m.TaskService.GetByListNoPagination(&taskModel.Field{
-			ProjectUUID: util.PointerString(input.ProjectUUID),
-		})
-		if err != nil {
-			if !errors.Is(err, gorm.ErrRecordNotFound) {
-				log.Error(err)
-				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-			}
-		}
-		if len(taskBase) > 0 {
-			for _, task := range taskBase {
-				taskUUIDs = append(taskUUIDs, task.TaskUUID)
-			}
-		}
-
-		// 同步刪除task_resource關聯
-		err = m.TaskResourceService.WithTrx(trx).Delete(&taskResourceModel.Field{
-			TaskUUIDs:     taskUUIDs,
-			ResourceUUIDs: resourceUUIDs,
-		})
-		if err != nil {
+	// 取得task_uuids
+	taskBase, err := m.TaskService.GetByListNoPagination(&taskModel.Field{
+		ProjectUUID: util.PointerString(input.ProjectUUID),
+	})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			log.Error(err)
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 		}
+	}
+	if len(taskBase) > 0 {
+		for _, task := range taskBase {
+			taskUUIDs = append(taskUUIDs, task.TaskUUID)
+		}
+	}
+
+	// 同步刪除task_resource關聯
+	err = m.TaskResourceService.WithTrx(trx).Delete(&taskResourceModel.Field{
+		TaskUUIDs:     taskUUIDs,
+		ResourceUUIDs: resourceUUIDs,
+	})
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
 	trx.Commit()
