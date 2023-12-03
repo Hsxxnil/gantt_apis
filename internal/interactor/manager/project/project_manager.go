@@ -7,6 +7,7 @@ import (
 	projectResourceModel "hta/internal/interactor/models/project_resources"
 	projectTypeModel "hta/internal/interactor/models/project_types"
 	resourceModel "hta/internal/interactor/models/resources"
+	taskResourceModel "hta/internal/interactor/models/task_resources"
 	taskModel "hta/internal/interactor/models/tasks"
 	"hta/internal/interactor/pkg/util"
 	eventMarkService "hta/internal/interactor/service/event_mark"
@@ -15,6 +16,7 @@ import (
 	resourceService "hta/internal/interactor/service/resource"
 	roleService "hta/internal/interactor/service/role"
 	taskService "hta/internal/interactor/service/task"
+	taskResourceService "hta/internal/interactor/service/task_resource"
 
 	"gorm.io/gorm"
 
@@ -42,6 +44,7 @@ type manager struct {
 	ProjectResourceService projectResourceService.Service
 	EventMarkService       eventMarkService.Service
 	RoleService            roleService.Service
+	TaskResourceService    taskResourceService.Service
 }
 
 func Init(db *gorm.DB) Manager {
@@ -53,6 +56,7 @@ func Init(db *gorm.DB) Manager {
 		ProjectResourceService: projectResourceService.Init(db),
 		EventMarkService:       eventMarkService.Init(db),
 		RoleService:            roleService.Init(db),
+		TaskResourceService:    taskResourceService.Init(db),
 	}
 }
 
@@ -280,17 +284,22 @@ func (m *manager) Update(trx *gorm.DB, input *projectModel.Update) (int, any) {
 	}
 
 	// 更新resources
-	var resourceList []*projectResourceModel.Create
-	if len(input.Resource) > 0 {
-		// 同步刪除project_resource關聯
-		err = m.ProjectResourceService.WithTrx(trx).Delete(&projectResourceModel.Field{
-			ProjectUUID: util.PointerString(input.ProjectUUID),
-		})
-		if err != nil {
-			log.Error(err)
-			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-		}
+	var (
+		resourceList  []*projectResourceModel.Create
+		resourceUUIDs []*string
+		taskUUIDs     []*string
+	)
 
+	// 同步刪除project_resource關聯
+	err = m.ProjectResourceService.WithTrx(trx).Delete(&projectResourceModel.Field{
+		ProjectUUID: util.PointerString(input.ProjectUUID),
+	})
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	if len(input.Resource) > 0 {
 		// 同步新增project_resource關聯
 		for _, resource := range input.Resource {
 			projectResource := &projectResourceModel.Create{
@@ -300,9 +309,36 @@ func (m *manager) Update(trx *gorm.DB, input *projectModel.Update) (int, any) {
 				CreatedBy:    *input.UpdatedBy,
 			}
 			resourceList = append(resourceList, projectResource)
+			resourceUUIDs = append(resourceUUIDs, util.PointerString(resource.ResourceUUID))
 		}
 
 		_, err := m.ProjectResourceService.WithTrx(trx).CreateAll(resourceList)
+		if err != nil {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+
+		// 取得task_uuids
+		taskBase, err := m.TaskService.GetByListNoPagination(&taskModel.Field{
+			ProjectUUID: util.PointerString(input.ProjectUUID),
+		})
+		if err != nil {
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+		}
+		if len(taskBase) > 0 {
+			for _, task := range taskBase {
+				taskUUIDs = append(taskUUIDs, task.TaskUUID)
+			}
+		}
+
+		// 同步刪除task_resource關聯
+		err = m.TaskResourceService.WithTrx(trx).Delete(&taskResourceModel.Field{
+			TaskUUIDs:     taskUUIDs,
+			ResourceUUIDs: resourceUUIDs,
+		})
 		if err != nil {
 			log.Error(err)
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
