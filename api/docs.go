@@ -6263,6 +6263,10 @@ const docTemplate = `{
                                 "description": "負責人",
                                 "type": "string"
                             },
+                            "progress": {
+                                "description": "專案進度",
+                                "type": "integer"
+                            },
                             "project_id": {
                                 "description": "前端編號 (非表ID)",
                                 "type": "string"
@@ -6347,6 +6351,10 @@ const docTemplate = `{
                 "manager": {
                     "description": "負責人",
                     "type": "string"
+                },
+                "progress": {
+                    "description": "專案進度",
+                    "type": "integer"
                 },
                 "project_id": {
                     "description": "前端編號 (非表ID)",
