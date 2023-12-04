@@ -114,6 +114,8 @@ type List struct {
 		Client string `json:"client,omitempty"`
 		// 狀態
 		Status string `json:"status,omitempty"`
+		// 專案進度
+		Progress int64 `json:"progress"`
 		// 創建者
 		CreatedBy string `json:"created_by,omitempty"`
 		// 更新者
@@ -143,6 +145,8 @@ type Single struct {
 	StartDate *time.Time `json:"start_date,omitempty"`
 	// 結束日期
 	EndDate *time.Time `json:"end_date,omitempty"`
+	// 專案進度
+	Progress int64 `json:"progress"`
 	// 客戶
 	Client string `json:"client,omitempty"`
 	// 狀態

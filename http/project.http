@@ -16,12 +16,12 @@ Authorization: Bearer {{accessToken}}
 
 {
   "filter": {
-    "status": "re",
-    "type": "re",
-    "client": "re",
-    "project_name": "re",
-    "manager": "re",
-    "code": "re"
+    "status": "",
+    "type": "",
+    "client": "",
+    "project_name": "",
+    "manager": "",
+    "code": ""
   }
 }
 
