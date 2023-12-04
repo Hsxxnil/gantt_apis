@@ -55,6 +55,6 @@ config/*.go
 .air.toml
 *.sh
 build/*.*
-tmp/*.*
+tmp/*
 *.zip
 Makefile
