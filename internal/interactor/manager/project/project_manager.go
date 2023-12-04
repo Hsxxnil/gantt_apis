@@ -17,6 +17,7 @@ import (
 	roleService "hta/internal/interactor/service/role"
 	taskService "hta/internal/interactor/service/task"
 	taskResourceService "hta/internal/interactor/service/task_resource"
+	"time"
 
 	"gorm.io/gorm"
 
@@ -144,11 +145,20 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
+	today := time.Now().UTC()
 	for i, project := range output.Projects {
 		project.Type = *projectBase[i].ProjectTypes.Name
 		project.Manager = *projectBase[i].Resources.ResourceName
 		project.CreatedBy = *projectBase[i].CreatedByUsers.Name
 		project.UpdatedBy = *projectBase[i].UpdatedByUsers.Name
+		progress := int64((today.Sub(*projectBase[i].StartDate).Hours() / projectBase[i].EndDate.Sub(*projectBase[i].StartDate).Hours()) * 100)
+		if progress <= 0 {
+			project.Progress = 0
+		} else if progress >= 100 {
+			project.Progress = 100
+		} else {
+			project.Progress = progress
+		}
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
@@ -173,11 +183,20 @@ func (m *manager) GetByListNoPagination(input *projectModel.Field) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
+	today := time.Now().UTC()
 	for i, project := range output.Projects {
 		project.Type = *projectBase[i].ProjectTypes.Name
 		project.Manager = *projectBase[i].Resources.ResourceName
 		project.CreatedBy = *projectBase[i].CreatedByUsers.Name
 		project.UpdatedBy = *projectBase[i].UpdatedByUsers.Name
+		progress := int64((today.Sub(*projectBase[i].StartDate).Hours() / projectBase[i].EndDate.Sub(*projectBase[i].StartDate).Hours()) * 100)
+		if progress <= 0 {
+			project.Progress = 0
+		} else if progress >= 100 {
+			project.Progress = 100
+		} else {
+			project.Progress = progress
+		}
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
@@ -206,6 +225,15 @@ func (m *manager) GetBySingle(input *projectModel.Field) (int, any) {
 	output.Manager = *projectBase.Resources.ResourceName
 	output.CreatedBy = *projectBase.CreatedByUsers.Name
 	output.UpdatedBy = *projectBase.UpdatedByUsers.Name
+	today := time.Now().UTC()
+	progress := int64((today.Sub(*projectBase.StartDate).Hours() / projectBase.EndDate.Sub(*projectBase.StartDate).Hours()) * 100)
+	if progress <= 0 {
+		output.Progress = 0
+	} else if progress >= 100 {
+		output.Progress = 100
+	} else {
+		output.Progress = progress
+	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
