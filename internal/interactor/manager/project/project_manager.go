@@ -373,16 +373,16 @@ func (m *manager) Update(trx *gorm.DB, input *projectModel.Update) (int, any) {
 		for _, task := range taskBase {
 			taskUUIDs = append(taskUUIDs, task.TaskUUID)
 		}
-	}
 
-	// 同步刪除task_resource關聯
-	err = m.TaskResourceService.WithTrx(trx).Delete(&taskResourceModel.Field{
-		TaskUUIDs:     taskUUIDs,
-		ResourceUUIDs: resourceUUIDs,
-	})
-	if err != nil {
-		log.Error(err)
-		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		// 同步刪除task_resource關聯
+		err = m.TaskResourceService.WithTrx(trx).Delete(&taskResourceModel.Field{
+			TaskUUIDs:     taskUUIDs,
+			ResourceUUIDs: resourceUUIDs,
+		})
+		if err != nil {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
 	}
 
 	trx.Commit()
