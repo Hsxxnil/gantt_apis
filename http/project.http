@@ -48,18 +48,13 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### Update
-PATCH {{host}}/hta-gantt/v1.0/projects/5e13ee25-536a-40f7-8585-2aea56ba0191
+PATCH {{host}}/hta-gantt/v1.0/projects/f58324b7-99dd-45a0-9036-1954a77138ca
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
   "project_name": "123",
-  "resource": [
-    {
-      "resource_uuid": "8b5ca145-665f-4039-b7e1-50ae94dfb5eb",
-      "role": "PM"
-    }
-  ]
+  "resource": []
 }
 
 ### Delete
