@@ -151,13 +151,17 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 		project.Manager = *projectBase[i].Resources.ResourceName
 		project.CreatedBy = *projectBase[i].CreatedByUsers.Name
 		project.UpdatedBy = *projectBase[i].UpdatedByUsers.Name
-		progress := int64((today.Sub(*projectBase[i].StartDate).Hours() / projectBase[i].EndDate.Sub(*projectBase[i].StartDate).Hours()) * 100)
-		if progress <= 0 {
-			project.Progress = 0
-		} else if progress >= 100 {
-			project.Progress = 100
+		if projectBase[i].StartDate != nil && projectBase[i].EndDate != nil {
+			progress := int64((today.Sub(*projectBase[i].StartDate).Hours() / projectBase[i].EndDate.Sub(*projectBase[i].StartDate).Hours()) * 100)
+			if progress <= 0 {
+				project.Progress = 0
+			} else if progress >= 100 {
+				project.Progress = 100
+			} else {
+				project.Progress = progress
+			}
 		} else {
-			project.Progress = progress
+			project.Progress = 0
 		}
 	}
 
@@ -189,13 +193,17 @@ func (m *manager) GetByListNoPagination(input *projectModel.Field) (int, any) {
 		project.Manager = *projectBase[i].Resources.ResourceName
 		project.CreatedBy = *projectBase[i].CreatedByUsers.Name
 		project.UpdatedBy = *projectBase[i].UpdatedByUsers.Name
-		progress := int64((today.Sub(*projectBase[i].StartDate).Hours() / projectBase[i].EndDate.Sub(*projectBase[i].StartDate).Hours()) * 100)
-		if progress <= 0 {
-			project.Progress = 0
-		} else if progress >= 100 {
-			project.Progress = 100
+		if projectBase[i].StartDate != nil && projectBase[i].EndDate != nil {
+			progress := int64((today.Sub(*projectBase[i].StartDate).Hours() / projectBase[i].EndDate.Sub(*projectBase[i].StartDate).Hours()) * 100)
+			if progress <= 0 {
+				project.Progress = 0
+			} else if progress >= 100 {
+				project.Progress = 100
+			} else {
+				project.Progress = progress
+			}
 		} else {
-			project.Progress = progress
+			project.Progress = 0
 		}
 	}
 
@@ -226,13 +234,17 @@ func (m *manager) GetBySingle(input *projectModel.Field) (int, any) {
 	output.CreatedBy = *projectBase.CreatedByUsers.Name
 	output.UpdatedBy = *projectBase.UpdatedByUsers.Name
 	today := time.Now().UTC()
-	progress := int64((today.Sub(*projectBase.StartDate).Hours() / projectBase.EndDate.Sub(*projectBase.StartDate).Hours()) * 100)
-	if progress <= 0 {
-		output.Progress = 0
-	} else if progress >= 100 {
-		output.Progress = 100
+	if projectBase.StartDate != nil && projectBase.EndDate != nil {
+		progress := int64((today.Sub(*projectBase.StartDate).Hours() / projectBase.EndDate.Sub(*projectBase.StartDate).Hours()) * 100)
+		if progress <= 0 {
+			output.Progress = 0
+		} else if progress >= 100 {
+			output.Progress = 100
+		} else {
+			output.Progress = progress
+		}
 	} else {
-		output.Progress = progress
+		output.Progress = 0
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
