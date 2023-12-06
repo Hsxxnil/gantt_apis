@@ -22,6 +22,8 @@ type Token struct {
 	Role string `json:"role,omitempty"`
 	// 使用者ID
 	UserID string `json:"user_id,omitempty"`
+	// 是否驗證過	otp
+	OtpVerified bool `json:"otp_verified,omitempty"`
 }
 
 // Refresh struct is used to refresh token
