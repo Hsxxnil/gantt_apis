@@ -53,7 +53,7 @@ func (m *manager) Login(input *loginsModel.Login) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	if acknowledge == false {
+	if !acknowledge {
 		return code.PermissionDenied, code.GetCodeMessage(code.PermissionDenied, "Incorrect username or password.")
 	}
 
@@ -119,6 +119,13 @@ func (m *manager) Verify(input *loginsModel.Verify) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
+	// 驗證otp
+	otpValid, err := otp.ValidateOTP(input.Passcode, *userBase.OtpSecret)
+	if err != nil {
+		log.Error(err)
+		return code.PermissionDenied, code.GetCodeMessage(code.PermissionDenied, "Incorrect passcode.")
+	}
+
 	// 取得角色
 	roleBase, err := m.RoleService.GetBySingle(&roleModel.Field{
 		ID: *userBase.RoleID,
@@ -172,6 +179,7 @@ func (m *manager) Verify(input *loginsModel.Verify) (int, any) {
 
 	output.Role = *roleBase.Name
 	output.UserID = *userBase.ID
+	output.OtpVerified = otpValid
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
 

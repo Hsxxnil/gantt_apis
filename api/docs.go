@@ -5907,6 +5907,10 @@ const docTemplate = `{
                     "description": "授權令牌",
                     "type": "string"
                 },
+                "otp_verified": {
+                    "description": "是否驗證過\totp",
+                    "type": "boolean"
+                },
                 "refresh_token": {
                     "description": "刷新令牌",
                     "type": "string"
