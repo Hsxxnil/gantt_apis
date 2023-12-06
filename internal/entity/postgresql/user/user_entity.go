@@ -193,6 +193,14 @@ func (s *storage) Update(input *model.Base) (err error) {
 		data["role_id"] = input.RoleID
 	}
 
+	if input.OtpSecret != nil {
+		data["otp_secret"] = input.OtpSecret
+	}
+
+	if input.OtpAuthUrl != nil {
+		data["otp_auth_url"] = input.OtpAuthUrl
+	}
+
 	if input.UpdatedBy != nil {
 		data["updated_by"] = input.UpdatedBy
 	}

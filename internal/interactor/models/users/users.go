@@ -18,7 +18,7 @@ type Create struct {
 	// 使用者電話
 	PhoneNumber string `json:"phone_number,omitempty"`
 	// 使用者電子郵件
-	Email string `json:"email,omitempty"`
+	Email string `json:"email,omitempty" binding:"required,email" validate:"required,email"`
 	// 角色ID
 	RoleID string `json:"role_id,omitempty" binding:"required,uuid4" validate:"required,uuid4"`
 	// 創建者
@@ -139,6 +139,10 @@ type Update struct {
 	Email *string `json:"email,omitempty"`
 	// 角色ID
 	RoleID *string `json:"role_id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
+	// otp secret
+	OtpSecret *string `json:"otp_secret,omitempty"`
+	// otp auth url
+	OtpAuthUrl *string `json:"otp_auth_url,omitempty"`
 	// 更新者
 	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }

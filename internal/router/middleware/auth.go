@@ -1,4 +1,4 @@
-package auth
+package middleware
 
 import (
 	policyModel "hta/internal/interactor/models/policies"
