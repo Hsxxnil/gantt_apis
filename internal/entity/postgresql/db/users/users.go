@@ -25,6 +25,10 @@ type Table struct {
 	RoleID string `gorm:"column:role_id;type:uuid;not null;" json:"role_id"`
 	// roles data
 	Roles roles.Table `gorm:"foreignKey:RoleID;references:ID" json:"roles,omitempty"`
+	// otp secret
+	OtpSecret string `gorm:"column:otp_secret;type:text;" json:"otp_secret"`
+	// otp auth url
+	OtpAuthUrl string `gorm:"column:otp_auth_url;type:text;" json:"otp_auth_url"`
 	// 引入後端專用
 	special.Table
 }
@@ -49,6 +53,10 @@ type Base struct {
 	RoleID *string `json:"role_id,omitempty"`
 	// roles data
 	Roles roles.Base `json:"roles,omitempty"`
+	// otp secret
+	OtpSecret *string `json:"otp_secret,omitempty"`
+	// otp auth url
+	OtpAuthUrl *string `json:"otp_auth_url,omitempty"`
 	// 引入後端專用
 	special.Base
 }

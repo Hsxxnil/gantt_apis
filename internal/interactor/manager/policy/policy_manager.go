@@ -3,10 +3,9 @@ package policy
 import (
 	"encoding/json"
 	policyModel "hta/internal/interactor/models/policies"
-	"hta/internal/router/middleware/auth"
-
 	"hta/internal/interactor/pkg/util/code"
 	"hta/internal/interactor/pkg/util/log"
+	"hta/internal/router/middleware"
 )
 
 type Manager interface {
@@ -36,7 +35,7 @@ func (m *manager) Create(input *policyModel.PolicyRule) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	result, err := auth.CreatePolicy(field)
+	result, err := middleware.CreatePolicy(field)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -52,7 +51,7 @@ func (m *manager) Create(input *policyModel.PolicyRule) (int, any) {
 
 func (m *manager) GetByList() (int, any) {
 	var output []policyModel.Single
-	result := auth.GetAllPolicies()
+	result := middleware.GetAllPolicies()
 	if result == nil {
 		return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, "Policy does not exist.")
 	}
@@ -82,7 +81,7 @@ func (m *manager) Delete(input *policyModel.PolicyRule) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	result, err := auth.DeletePolicy(field)
+	result, err := middleware.DeletePolicy(field)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())

@@ -852,7 +852,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "body": {
-                                            "$ref": "#/definitions/jwx.Token"
+                                            "type": "string"
                                         }
                                     }
                                 }
@@ -5000,6 +5000,88 @@ const docTemplate = `{
                 }
             }
         },
+        "/verify": {
+            "post": {
+                "description": "使用者驗證",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "login"
+                ],
+                "summary": "使用者驗證",
+                "parameters": [
+                    {
+                        "description": "驗證帶入",
+                        "name": "*",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/logins.Verify"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功後返回的值",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.SuccessfulMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "body": {
+                                            "$ref": "#/definitions/jwx.Token"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "415": {
+                        "description": "必要欄位帶入錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "伺服器非預期錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/work-days": {
             "get": {
                 "description": "取得全部工作時間",
@@ -5848,6 +5930,23 @@ const docTemplate = `{
             "properties": {
                 "password": {
                     "description": "密碼",
+                    "type": "string"
+                },
+                "user_name": {
+                    "description": "使用者名稱",
+                    "type": "string"
+                }
+            }
+        },
+        "logins.Verify": {
+            "type": "object",
+            "required": [
+                "passcode",
+                "user_name"
+            ],
+            "properties": {
+                "passcode": {
+                    "description": "驗證碼",
                     "type": "string"
                 },
                 "user_name": {
@@ -7399,6 +7498,7 @@ const docTemplate = `{
         "users.Create": {
             "type": "object",
             "required": [
+                "email",
                 "name",
                 "password",
                 "role_id",
@@ -7609,6 +7709,14 @@ const docTemplate = `{
                 },
                 "name": {
                     "description": "使用者中文名稱",
+                    "type": "string"
+                },
+                "otp_auth_url": {
+                    "description": "otp auth url",
+                    "type": "string"
+                },
+                "otp_secret": {
+                    "description": "otp secret",
                     "type": "string"
                 },
                 "password": {
