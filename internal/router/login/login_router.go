@@ -12,6 +12,7 @@ func GetRouter(router *gin.Engine, db *gorm.DB) *gin.Engine {
 	v10 := router.Group("hta-gantt").Group("v1.0")
 	{
 		v10.POST("login", control.Login)
+		v10.POST("verify", control.Verify)
 		v10.POST("refresh", control.Refresh)
 	}
 

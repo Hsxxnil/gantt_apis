@@ -7,6 +7,15 @@ Content-Type: application/json
   "password": "3939889"
 }
 
+### verify
+POST {{host}}/hta-gantt/v1.0/verify
+Content-Type: application/json
+
+{
+  "user_name": "admin",
+  "passcode": "276672"
+}
+
 > {% client.global.set("refreshToken", response.body.body.refresh_token); %}
 
 ### refresh
