@@ -499,7 +499,9 @@ definitions:
         type: string
       status:
         description: 狀態
-        type: string
+        items:
+          type: string
+        type: array
       type:
         description: 類別
         type: string
