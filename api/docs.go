@@ -6312,7 +6312,10 @@ const docTemplate = `{
                 },
                 "type": {
                     "description": "類別",
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },

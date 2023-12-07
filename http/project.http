@@ -3,7 +3,7 @@ POST {{host}}/hta-gantt/v1.0/login
 Content-Type: application/json
 
 {
-  "user_name": "woni",
+  "user_name": "hsxxnil",
   "password": "12345"
 }
 
@@ -12,8 +12,8 @@ POST {{host}}/hta-gantt/v1.0/verify
 Content-Type: application/json
 
 {
-  "user_name": "admin",
-  "passcode": "623274"
+  "user_name": "hsxxnil",
+  "passcode": "799517"
 }
 
 > {% client.global.set("accessToken", response.body.body.access_token); %}
@@ -26,11 +26,11 @@ Authorization: Bearer {{accessToken}}
 {
   "filter": {
     "status": ["已終止"],
-    "type": "",
-    "client": "",
-    "project_name": "",
-    "manager": "",
-    "code": ""
+    "type": ["test"],
+    "client": "A",
+    "project_name": "A",
+    "manager": "A",
+    "code": "A"
   }
 }
 

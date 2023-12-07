@@ -25,6 +25,8 @@ type Base struct {
 	ID *string `json:"id,omitempty"`
 	// 名稱
 	Name *string `json:"name,omitempty"`
+	// 名稱s (後端查詢用）
+	Names []*string `json:"names,omitempty"`
 	// create_users data
 	CreatedByUsers users.Base `json:"created_by_users,omitempty"`
 	// update_users data
