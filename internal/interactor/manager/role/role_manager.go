@@ -36,7 +36,7 @@ func Init(db *gorm.DB) Manager {
 func (m *manager) Create(trx *gorm.DB, input *roleModel.Create) (int, any) {
 	defer trx.Rollback()
 
-	// 判斷角色是否重複
+	// determine if the role is duplicate
 	quantity, _ := m.RoleService.GetByQuantity(&roleModel.Field{
 		Name: util.PointerString(input.Name),
 	})

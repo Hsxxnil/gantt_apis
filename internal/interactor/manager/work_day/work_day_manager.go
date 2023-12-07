@@ -36,13 +36,13 @@ func Init(db *gorm.DB) Manager {
 func (m *manager) Create(trx *gorm.DB, input *workDayModel.Create) (int, any) {
 	defer trx.Rollback()
 
-	// 將workWeek轉換為JSON
+	// transform workWeek to JSON
 	if len(input.WorkWeeks) > 0 {
 		weekJson, _ := json.Marshal(input.WorkWeeks)
 		input.WorkWeek = string(weekJson)
 	}
 
-	// 將workingTime轉換為JSON
+	// transform workingTime to JSON
 	if len(input.WorkingTimes) > 0 {
 		timeJson, _ := json.Marshal(input.WorkingTimes)
 		input.WorkingTime = string(timeJson)
@@ -85,7 +85,7 @@ func (m *manager) GetByList(input *workDayModel.Fields) (int, any) {
 		work.CreatedBy = *workDayBase[i].CreatedByUsers.Name
 		work.UpdatedBy = *workDayBase[i].UpdatedByUsers.Name
 
-		// 將work_week轉為陣列
+		// transform workWeek to array
 		var workWeeks []string
 		if *workDayBase[i].WorkWeek != "" {
 			err = json.Unmarshal([]byte(*workDayBase[i].WorkWeek), &workWeeks)
@@ -96,7 +96,7 @@ func (m *manager) GetByList(input *workDayModel.Fields) (int, any) {
 		}
 		work.WorkWeeks = workWeeks
 
-		// 將working_time轉為陣列
+		// transform workingTime to array
 		var workingTimes []workDayModel.WorkingTimes
 		if *workDayBase[i].WorkingTime != "" {
 			err = json.Unmarshal([]byte(*workDayBase[i].WorkingTime), &workingTimes)
@@ -135,7 +135,7 @@ func (m *manager) GetByListNoPagination(input *workDayModel.Field) (int, any) {
 		work.CreatedBy = *workDayBase[i].CreatedByUsers.Name
 		work.UpdatedBy = *workDayBase[i].UpdatedByUsers.Name
 
-		// 將work_week轉為陣列
+		// transform workWeek to array
 		var workWeeks []string
 		if *workDayBase[i].WorkWeek != "" {
 			err = json.Unmarshal([]byte(*workDayBase[i].WorkWeek), &workWeeks)
@@ -146,7 +146,7 @@ func (m *manager) GetByListNoPagination(input *workDayModel.Field) (int, any) {
 		}
 		work.WorkWeeks = workWeeks
 
-		// 將working_time轉為陣列
+		// transform workingTime to array
 		var workingTimes []workDayModel.WorkingTimes
 		if *workDayBase[i].WorkingTime != "" {
 			err = json.Unmarshal([]byte(*workDayBase[i].WorkingTime), &workingTimes)
@@ -183,7 +183,7 @@ func (m *manager) GetBySingle(input *workDayModel.Field) (int, any) {
 	output.CreatedBy = *workDayBase.CreatedByUsers.Name
 	output.UpdatedBy = *workDayBase.UpdatedByUsers.Name
 
-	// 將work_week轉為陣列
+	// transform workWeek to array
 	var workWeeks []string
 	if *workDayBase.WorkWeek != "" {
 		err = json.Unmarshal([]byte(*workDayBase.WorkWeek), &workWeeks)
@@ -194,7 +194,7 @@ func (m *manager) GetBySingle(input *workDayModel.Field) (int, any) {
 	}
 	output.WorkWeeks = workWeeks
 
-	// 將working_time轉為陣列
+	// transform workingTime to array
 	var workingTimes []workDayModel.WorkingTimes
 	if *workDayBase.WorkingTime != "" {
 		err = json.Unmarshal([]byte(*workDayBase.WorkingTime), &workingTimes)
@@ -243,13 +243,13 @@ func (m *manager) Update(input *workDayModel.Update) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 將workWeek轉換為JSON
+	// transform workWeek to JSON
 	if len(input.WorkWeeks) > 0 {
 		weekJson, _ := json.Marshal(input.WorkWeeks)
 		input.WorkWeek = util.PointerString(string(weekJson))
 	}
 
-	// 將workingTime轉換為JSON
+	// transform workingTime to JSON
 	if len(input.WorkingTimes) > 0 {
 		timeJson, _ := json.Marshal(input.WorkingTimes)
 		input.WorkingTime = util.PointerString(string(timeJson))
