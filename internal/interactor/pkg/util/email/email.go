@@ -2,7 +2,7 @@ package email
 
 import (
 	"crypto/tls"
-	"fmt"
+	"hta/internal/interactor/pkg/util/log"
 
 	gomail "gopkg.in/mail.v2"
 )
@@ -33,7 +33,7 @@ func SendEmail(to, fromAddress, fromName, mailPwd, subject, message string) erro
 
 	// send E-Mail
 	if err := d.DialAndSend(m); err != nil {
-		fmt.Println(err)
+		log.Error(err)
 		return err
 	}
 
