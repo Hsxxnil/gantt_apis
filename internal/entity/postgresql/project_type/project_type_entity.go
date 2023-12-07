@@ -88,6 +88,10 @@ func (s *storage) GetByListNoPagination(input *model.Base) (quantity int64, outp
 		query.Where("name like ?", "%"+*input.Name+"%")
 	}
 
+	if input.Names != nil {
+		query.Where("name in (?)", input.Names)
+	}
+
 	err = query.Count(&quantity).Order("created_at desc").Find(&output).Error
 	if err != nil {
 		log.Error(err)

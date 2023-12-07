@@ -70,28 +70,20 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 		query.Where("created_by = ?", input.CreatedBy)
 	}
 
-	// filter
-	isFiltered := false
-	filter := s.db.Model(&model.Table{})
 	if input.FilterStatus != nil {
-		filter.Where("status in (?)", input.FilterStatus)
-		isFiltered = true
+		query.Where("status in (?)", input.FilterStatus)
 	}
 
 	if input.FilterTypes != nil {
-		if isFiltered {
-			filter.Or("type in (?)", input.FilterTypes)
-		} else {
-			filter.Where("typ in (?)", input.FilterTypes)
-		}
+		query.Where("type in (?)", input.FilterTypes)
 	}
 
+	// filter
+	isFiltered := false
+	filter := s.db.Model(&model.Table{})
 	if input.FilterClient != "" {
-		if isFiltered {
-			filter.Or("client like ?", "%"+input.FilterClient+"%")
-		} else {
-			filter.Where("client like ?", "%"+input.FilterClient+"%")
-		}
+		filter.Where("client like ?", "%"+input.FilterClient+"%")
+		isFiltered = true
 	}
 
 	if input.FilterName != "" {
