@@ -19,6 +19,8 @@ type Field struct {
 	ID string `json:"id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
 	// 名稱
 	Name *string `json:"name,omitempty" form:"name"`
+	// 名稱s (後端查詢用）
+	Names []*string `json:"names,omitempty" form:"names" swaggerignore:"true"`
 }
 
 // Fields is the searched structure file (including pagination)

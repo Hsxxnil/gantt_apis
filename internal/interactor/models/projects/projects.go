@@ -69,7 +69,7 @@ type Fields struct {
 // Filter struct is used to store the search field
 type Filter struct {
 	// 類別
-	FilterType string `json:"type,omitempty"`
+	FilterType []*string `json:"type,omitempty"`
 	// 類別 ids (後端查詢用）
 	FilterTypes []string `json:"types,omitempty" swaggerignore:"true"`
 	// 客戶
