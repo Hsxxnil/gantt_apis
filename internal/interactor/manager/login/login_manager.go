@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/ggwhite/go-masker"
+	"gorm.io/gorm"
 	"hta/config"
 	jwxModel "hta/internal/interactor/models/jwx"
 	loginsModel "hta/internal/interactor/models/logins"
@@ -18,8 +20,6 @@ import (
 	jwxService "hta/internal/interactor/service/jwx"
 	roleService "hta/internal/interactor/service/role"
 	userService "hta/internal/interactor/service/user"
-
-	"gorm.io/gorm"
 )
 
 type Manager interface {
@@ -102,7 +102,10 @@ func (m *manager) Login(input *loginsModel.Login) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	return code.Successful, code.GetCodeMessage(code.Successful, "send passcode successful.")
+	// 模糊電子郵件地址
+	obscuredEmail := masker.Email(*userBase.Email)
+
+	return code.Successful, code.GetCodeMessage(code.Successful, obscuredEmail)
 }
 
 func (m *manager) Verify(input *loginsModel.Verify) (int, any) {
