@@ -179,12 +179,12 @@ func (m *manager) Update(input *resourceModel.Update) (int, any) {
 func (m *manager) Import(trx *gorm.DB, input *resourceModel.Import) (int, any) {
 	defer trx.Rollback()
 
-	//設置CSV解析的選項
-	input.CSVFile.LazyQuotes = true       //寬鬆地處理引號
-	input.CSVFile.TrimLeadingSpace = true //自動去除每個字段前空格
-	input.CSVFile.FieldsPerRecord = -1    //不強制要求每條記錄擁有相同的字段數
+	// set CSV parse options
+	input.CSVFile.LazyQuotes = true       // loosely process quotes
+	input.CSVFile.TrimLeadingSpace = true // automatically remove spaces before each field
+	input.CSVFile.FieldsPerRecord = -1    // do not force each record to have the same number of fields
 
-	//讀取並解析CSV檔案
+	// read and parse CSV file
 	records, err := input.CSVFile.ReadAll()
 	if err != nil {
 		log.Error(err)
@@ -195,9 +195,9 @@ func (m *manager) Import(trx *gorm.DB, input *resourceModel.Import) (int, any) {
 	for i, record := range records {
 		if i == 0 {
 			for index, value := range record {
-				//識別CSV標題行，記錄各欄位的index
+				// identify the CSV header row and record the index of each field
 				switch value {
-				//根據欄位名稱設置對應的index
+				// set the index of each field according to the column name
 				//case "ID", "編號":
 				//	resourceIdx[0] = index
 				case "Name", "姓名":
@@ -239,7 +239,7 @@ func (m *manager) Import(trx *gorm.DB, input *resourceModel.Import) (int, any) {
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 		}
 
-		// 判斷資源是否重複
+		// determine if the resource is duplicate
 		quantity, _ := m.ResourceService.GetByQuantity(&resourceModel.Field{
 			ResourceName:  util.PointerString(record[resourceIdx[1]]),
 			ResourceGroup: util.PointerString(record[resourceIdx[8]]),

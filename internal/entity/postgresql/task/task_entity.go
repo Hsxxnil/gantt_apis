@@ -218,7 +218,7 @@ func (s *storage) GetByLastOutlineNumber(input *model.Base) (output *model.Table
 		query.Where("project_uuid = ?", input.ProjectUUID)
 	}
 
-	// 在無限層級的情況下進行降序排序
+	// sorting in descending order in the case of infinite levels
 	err = query.
 		Order(`(select array_agg(nullif(part, ''):: int) from unnest(string_to_array(outline_number, '.')) as part) desc`).
 		First(&output).Error
