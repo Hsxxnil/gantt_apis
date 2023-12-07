@@ -87,7 +87,7 @@ type Filter struct {
 	// 結束日期
 	FilterEndDate *time.Time `json:"end_date,omitempty"`
 	// 狀態
-	FilterStatus string `json:"status,omitempty"`
+	FilterStatus []string `json:"status,omitempty"`
 }
 
 // List is multiple return structure files

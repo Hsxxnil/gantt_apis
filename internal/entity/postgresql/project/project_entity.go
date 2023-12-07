@@ -73,8 +73,8 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 	// filter
 	isFiltered := false
 	filter := s.db.Model(&model.Table{})
-	if input.FilterStatus != "" {
-		filter.Where("status = ?", input.FilterStatus)
+	if input.FilterStatus != nil {
+		filter.Where("status in (?)", input.FilterStatus)
 		isFiltered = true
 	}
 
