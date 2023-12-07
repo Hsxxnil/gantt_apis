@@ -6305,7 +6305,10 @@ const docTemplate = `{
                 },
                 "status": {
                     "description": "狀態",
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "type": {
                     "description": "類別",
