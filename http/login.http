@@ -3,7 +3,7 @@ POST {{host}}/hta-gantt/v1.0/login
 Content-Type: application/json
 
 {
-  "user_name": "woni",
+  "user_name": "hsxxnil",
   "password": "12345"
 }
 

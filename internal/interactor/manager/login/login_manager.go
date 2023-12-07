@@ -88,13 +88,14 @@ func (m *manager) Login(input *loginsModel.Login) (int, any) {
 	fromAddress := "calla.nkust@gmail.com"
 	fromName := "PMIS平台"
 	mailPwd := "pfyj mkee hpgy sqlj"
-	subject := "系統驗證碼(請勿回覆此郵件)"
+	subject := "【PMIS平台】系統驗證碼(請勿回覆此郵件)"
 	message := fmt.Sprintf(
-		"您好：\n"+
-			"歡迎使用PMIS專案管理平台，\n"+
-			"您的驗證碼是：%s\n"+
-			"敬祝愉快\n"+
-			"此為系統發出的電子郵件，請勿直接回覆。", passcode)
+		"親愛的用戶：\n"+
+			"感謝您使用PMIS專案管理平台，請於30秒內輸入以下驗證碼。\n\n"+
+			"驗證碼：%s\n"+
+			"祝您使用愉快！\n\n"+
+			"<注意>\n"+
+			"*此郵件由系統自動發出，請勿直接回覆。", passcode)
 
 	err = email.SendEmail(to, fromAddress, fromName, mailPwd, subject, message)
 	if err != nil {
