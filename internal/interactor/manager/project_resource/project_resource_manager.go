@@ -95,7 +95,7 @@ func (m *manager) GetByProjectList(input *projectResourceModel.ProjectIDs) (int,
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 用來篩選已處理的resource
+	// filter processed resource
 	processedRes := make(map[string]bool)
 	for i, proRes := range projectResList {
 		resourceID := proRes.ResourceUUID

@@ -43,7 +43,7 @@ func Init(db *gorm.DB) Manager {
 }
 
 func (m *manager) Login(input *loginsModel.Login) (int, any) {
-	// 驗證帳密
+	// verify username & password
 	acknowledge, userBase, err := m.UserService.AcknowledgeUser(&usersModel.Field{
 		UserName: util.PointerString(input.UserName),
 		Password: util.PointerString(input.Password),
@@ -57,21 +57,21 @@ func (m *manager) Login(input *loginsModel.Login) (int, any) {
 		return code.PermissionDenied, code.GetCodeMessage(code.PermissionDenied, "Incorrect username or password.")
 	}
 
-	// 產生otp secret & otp auth url
+	// generate otp secret & otp auth url
 	otpSecret, optAuthURL, err := otp.GenerateOTP("sien", input.UserName)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 產生驗證碼
+	// generate passcode
 	passcode, err := otp.GeneratePasscode(otpSecret)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 更新otp secret & otp auth url
+	// update otp secret & otp auth url
 	err = m.UserService.Update(&usersModel.Update{
 		ID:         *userBase.ID,
 		OtpSecret:  util.PointerString(otpSecret),
@@ -83,7 +83,7 @@ func (m *manager) Login(input *loginsModel.Login) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 發送驗證碼
+	// send passcode to email
 	to := *userBase.Email
 	fromAddress := "calla.nkust@gmail.com"
 	fromName := "PMIS平台"
@@ -102,14 +102,14 @@ func (m *manager) Login(input *loginsModel.Login) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 模糊電子郵件地址
+	// mask email
 	obscuredEmail := masker.Email(*userBase.Email)
 
 	return code.Successful, code.GetCodeMessage(code.Successful, obscuredEmail)
 }
 
 func (m *manager) Verify(input *loginsModel.Verify) (int, any) {
-	// 取得使用者
+	// get user
 	userBase, err := m.UserService.GetBySingle(&usersModel.Field{
 		UserName: util.PointerString(input.UserName),
 	})
@@ -122,14 +122,14 @@ func (m *manager) Verify(input *loginsModel.Verify) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 驗證otp
+	// validate otp
 	otpValid, err := otp.ValidateOTP(input.Passcode, *userBase.OtpSecret)
 	if err != nil {
 		log.Error(err)
 		return code.PermissionDenied, code.GetCodeMessage(code.PermissionDenied, "Incorrect passcode.")
 	}
 
-	// 取得角色
+	// get role
 	roleBase, err := m.RoleService.GetBySingle(&roleModel.Field{
 		ID: *userBase.RoleID,
 	})
@@ -142,7 +142,7 @@ func (m *manager) Verify(input *loginsModel.Verify) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 產生accessToken
+	// generate access token
 	output := &jwxModel.Token{}
 	accessToken, err := m.JwxService.CreateAccessToken(&jwxModel.JWX{
 		UserID:     userBase.ID,
@@ -163,7 +163,7 @@ func (m *manager) Verify(input *loginsModel.Verify) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 產生refreshToken
+	// generate refresh token
 	refreshToken, err := m.JwxService.CreateRefreshToken(&jwxModel.JWX{
 		UserID: userBase.ID,
 	})
@@ -187,7 +187,7 @@ func (m *manager) Verify(input *loginsModel.Verify) (int, any) {
 }
 
 func (m *manager) Refresh(input *jwxModel.Refresh) (int, any) {
-	// 驗證refreshToken
+	// verify refresh token
 	j := &jwx.JWT{
 		PublicKey: config.RefreshPublicKey,
 		Token:     input.RefreshToken,

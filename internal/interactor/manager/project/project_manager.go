@@ -70,7 +70,7 @@ func (m *manager) Create(trx *gorm.DB, input *projectModel.Create) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 同步新增project_resource關聯
+	// sync create project_resource
 	var resourceList []*projectResourceModel.Create
 	if len(input.Resource) > 0 {
 		for _, resource := range input.Resource {
@@ -98,7 +98,7 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 	output := &projectModel.List{}
 	output.Limit = input.Limit
 	output.Page = input.Page
-	// 搜尋專案類別
+	// search project type
 	if input.FilterType != "" {
 		_, projectTypeBase, _ := m.ProjectTypeService.GetByListNoPagination(&projectTypeModel.Field{
 			Name: util.PointerString(input.FilterType),
@@ -112,7 +112,7 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 		}
 	}
 
-	// 搜尋專案負責人
+	// search manager
 	if input.FilterManager != "" {
 		_, resourceBase, _ := m.ResourceService.GetByListNoPagination(&resourceModel.Field{
 			ResourceName: util.PointerString(input.FilterManager),
@@ -271,7 +271,7 @@ func (m *manager) Delete(trx *gorm.DB, input *projectModel.Field) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 同步刪除task
+	// sync delete task
 	err = m.TaskService.WithTrx(trx).Delete(&taskModel.Field{
 		ProjectUUID: util.PointerString(input.ProjectUUID),
 	})
@@ -280,7 +280,7 @@ func (m *manager) Delete(trx *gorm.DB, input *projectModel.Field) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 同步刪除project_resource關聯
+	// sync delete project_resource
 	err = m.ProjectResourceService.WithTrx(trx).Delete(&projectResourceModel.Field{
 		ProjectUUID: util.PointerString(input.ProjectUUID),
 	})
@@ -289,7 +289,7 @@ func (m *manager) Delete(trx *gorm.DB, input *projectModel.Field) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 同步刪除event_marks
+	// sync delete event_mark
 	err = m.EventMarkService.Delete(&eventMarkModel.Field{
 		ProjectUUID: util.PointerString(input.ProjectUUID),
 	})
@@ -323,14 +323,14 @@ func (m *manager) Update(trx *gorm.DB, input *projectModel.Update) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 更新resources
+	// update resource
 	var (
 		resourceList  []*projectResourceModel.Create
 		resourceUUIDs []*string
 		taskUUIDs     []*string
 	)
 
-	// 同步刪除project_resource關聯
+	// sync delete project_resource
 	err = m.ProjectResourceService.WithTrx(trx).Delete(&projectResourceModel.Field{
 		ProjectUUID: util.PointerString(input.ProjectUUID),
 	})
@@ -340,7 +340,7 @@ func (m *manager) Update(trx *gorm.DB, input *projectModel.Update) (int, any) {
 	}
 
 	if len(input.Resource) > 0 {
-		// 同步新增project_resource關聯
+		// sync create project_resource
 		for _, resource := range input.Resource {
 			projectResource := &projectResourceModel.Create{
 				ProjectUUID:  *projectBase.ProjectUUID,
@@ -359,7 +359,7 @@ func (m *manager) Update(trx *gorm.DB, input *projectModel.Update) (int, any) {
 		}
 	}
 
-	// 取得task_uuids
+	// get task_uuids
 	taskBase, err := m.TaskService.GetByListNoPagination(&taskModel.Field{
 		ProjectUUID: util.PointerString(input.ProjectUUID),
 	})
@@ -374,7 +374,7 @@ func (m *manager) Update(trx *gorm.DB, input *projectModel.Update) (int, any) {
 			taskUUIDs = append(taskUUIDs, task.TaskUUID)
 		}
 
-		// 同步刪除task_resource關聯
+		// sync delete task_resource
 		err = m.TaskResourceService.WithTrx(trx).Delete(&taskResourceModel.Field{
 			TaskUUIDs:     taskUUIDs,
 			ResourceUUIDs: resourceUUIDs,

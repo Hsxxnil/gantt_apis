@@ -10,18 +10,9 @@ import (
 // SendEmail sends email.
 func SendEmail(to, fromAddress, fromName, mailPwd, subject, message string) error {
 	m := gomail.NewMessage()
-
-	// Set E-Mail sender
 	m.SetAddressHeader("From", fromAddress, fromName)
-
-	// Set E-Mail receivers
 	m.SetHeader("To", to)
-
-	// Set E-Mail subject
 	m.SetHeader("Subject", subject)
-
-	// Set E-Mail body. You can set plain text or html with text/html
-
 	m.SetBody("text/plain", message)
 
 	// Settings for SMTP server

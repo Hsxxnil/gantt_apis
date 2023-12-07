@@ -95,12 +95,12 @@ func (m *manager) createSubtasks(trx *gorm.DB, parentTask *taskModel.Create, sub
 	var createList []*taskModel.Create
 	for j, subBody := range subtasks {
 		if subBody.BaselineStartDate != nil && subBody.BaselineEndDate != nil {
-			// 取得最小的baseline_start_date
+			// get the minimum baseline_start_date
 			if minBaselineStart == nil || subBody.BaselineStartDate.Before(*minBaselineStart) {
 				minBaselineStart = subBody.BaselineStartDate
 			}
 
-			// 取得最大的baseline_end_date
+			// get the maximum baseline_end_date
 			if maxBaselineEnd == nil || subBody.BaselineEndDate.After(*maxBaselineEnd) {
 				maxBaselineEnd = subBody.BaselineEndDate
 			}
@@ -111,9 +111,9 @@ func (m *manager) createSubtasks(trx *gorm.DB, parentTask *taskModel.Create, sub
 		subBody.IsSubTask = true
 		subBody.CreatedBy = parentTask.CreatedBy
 		subBody.ProjectUUID = parentTask.ProjectUUID
-		// 將segments轉換為JSON
+		// transform segments to JSON
 		if len(subBody.Segments) > 0 {
-			// 確認是否為最子層任務
+			// check if it is the most sub-task
 			if len(subBody.Subtask) > 0 {
 				return nil, nil, nil, errors.New("the parent task cannot be segmented")
 			}
@@ -125,7 +125,7 @@ func (m *manager) createSubtasks(trx *gorm.DB, parentTask *taskModel.Create, sub
 			subBody.Segment = string(segJson)
 		}
 
-		// 將indicators轉換為JSON
+		// transform indicators to JSON
 		if len(subBody.Indicators) > 0 {
 			indJson, err := json.Marshal(subBody.Indicators)
 			if err != nil {
@@ -136,7 +136,7 @@ func (m *manager) createSubtasks(trx *gorm.DB, parentTask *taskModel.Create, sub
 		}
 		createList = append(createList, subBody)
 
-		// 處理可能的子任務
+		// handle possible subtasks
 		if len(subBody.Subtask) > 0 {
 			subSubtasks, subMinBaselineStart, subMaxBaselineEnd, err := m.createSubtasks(trx, subBody, subBody.Subtask, projectStart, projectEnd, minBaselineStart, maxBaselineEnd)
 			if err != nil {
@@ -144,7 +144,7 @@ func (m *manager) createSubtasks(trx *gorm.DB, parentTask *taskModel.Create, sub
 			}
 			createList = append(createList, subSubtasks...)
 
-			// 比對子任務的最小baseline_start_date及最大baseline_end_date
+			// compare the minimum baseline_start_date and maximum baseline_end_date of the subtasks
 			if minBaselineStart == nil || subBody.BaselineStartDate.Before(*subMinBaselineStart) {
 				minBaselineStart = subBody.BaselineStartDate
 			}
@@ -167,12 +167,12 @@ func (m *manager) updateSubtasks(trx *gorm.DB, parentTask *taskModel.Update, sub
 
 	for j, subBody := range subtasks {
 		if subBody.BaselineStartDate != nil && subBody.BaselineEndDate != nil {
-			// 取得最小的baseline_start_date
+			// get the minimum baseline_start_date
 			if minBaselineStart == nil || subBody.BaselineStartDate.Before(*minBaselineStart) {
 				minBaselineStart = subBody.BaselineStartDate
 			}
 
-			// 取得最大的baseline_end_date
+			// get the maximum baseline_end_date
 			if maxBaselineEnd == nil || subBody.BaselineEndDate.After(*maxBaselineEnd) {
 				maxBaselineEnd = subBody.BaselineEndDate
 			}
@@ -181,13 +181,13 @@ func (m *manager) updateSubtasks(trx *gorm.DB, parentTask *taskModel.Update, sub
 		subBody.UpdatedBy = parentTask.UpdatedBy
 		subBody.ProjectUUID = parentTask.ProjectUUID
 		subBody.IsSubTask = util.PointerBool(true)
-		// 更新任務階層
+		// update task's outline_number
 		newOutlineNumber := fmt.Sprintf("%s.%d", *parentTask.OutlineNumber, j+1)
 		subBody.OutlineNumber = util.PointerString(newOutlineNumber)
 
-		// 將segments轉換為JSON
+		// transform segments to JSON
 		if len(subBody.Segments) > 0 {
-			// 確認是否為最子層任務
+			// check if it is the most sub-task
 			if len(subBody.Subtask) > 0 {
 				return nil, nil, nil, nil, nil, errors.New("the parent task cannot be segmented")
 			}
@@ -201,7 +201,7 @@ func (m *manager) updateSubtasks(trx *gorm.DB, parentTask *taskModel.Update, sub
 			subBody.Segment = nil
 		}
 
-		// 將indicators轉換為JSON
+		// transform indicators to JSON
 		if len(subBody.Indicators) > 0 {
 			indJson, err := json.Marshal(subBody.Indicators)
 			if err != nil {
@@ -213,7 +213,7 @@ func (m *manager) updateSubtasks(trx *gorm.DB, parentTask *taskModel.Update, sub
 			subBody.Indicator = nil
 		}
 
-		// 更新task_resource
+		// sync update task_resource
 		if len(subBody.Resources) > 0 {
 			TaskUUIDs = append(TaskUUIDs, util.PointerString(subBody.TaskUUID))
 			taskResources := make(map[string][]*resourceModel.TaskSingle)
@@ -221,10 +221,10 @@ func (m *manager) updateSubtasks(trx *gorm.DB, parentTask *taskModel.Update, sub
 			taskResMapList = append(taskResMapList, taskResources)
 		}
 
-		// 子任務更新
+		// update subtask
 		updateList = append(updateList, subBody)
 
-		// 處理可能的子任務
+		// handle possible subtasks
 		if len(subBody.Subtask) > 0 {
 			subTaskUUIDs, subUpdateList, subTaskResMapList, subMinBaselineStart, subMaxBaselineEnd, err := m.updateSubtasks(trx, subBody, subBody.Subtask, minBaselineStart, maxBaselineEnd)
 			if err != nil {
@@ -235,7 +235,7 @@ func (m *manager) updateSubtasks(trx *gorm.DB, parentTask *taskModel.Update, sub
 			TaskUUIDs = append(TaskUUIDs, subTaskUUIDs...)
 
 			if subBody.BaselineStartDate != nil && subBody.BaselineEndDate != nil {
-				// 比對子任務的最小baseline_start_date及最大baseline_end_date
+				// compare the minimum baseline_start_date and maximum baseline_end_date of the subtasks
 				if minBaselineStart == nil || subBody.BaselineStartDate.Before(*subMinBaselineStart) {
 					minBaselineStart = subBody.BaselineStartDate
 				}
@@ -301,7 +301,7 @@ func (m *manager) syncUpdateProjectStartEndDate(trx *gorm.DB, projectID *string,
 		return errors.New("ProjectUUID is null")
 	}
 	var minBaselineStart, maxBaselineEnd *time.Time
-	// 取得任務最早開始日期及最晚結束日期
+	// get the minimum baseline_start_date and maximum baseline_end_date of the tasks
 	taskBase, err := m.TaskService.GetByMinStartMaxEnd(&taskModel.Field{
 		ProjectUUID:      projectID,
 		DeletedTaskUUIDs: TaskUUIDs,
@@ -311,7 +311,7 @@ func (m *manager) syncUpdateProjectStartEndDate(trx *gorm.DB, projectID *string,
 	}
 
 	if len(taskBase) > 0 {
-		// 找到taskBase中最小的baseline_start_date及最大的baseline_end_date
+		// find the minimum baseline_start_date and maximum baseline_end_date in taskBase
 		for _, task := range taskBase {
 			if minBaselineStart == nil || task.BaselineStartDate.Before(*minBaselineStart) {
 				minBaselineStart = task.BaselineStartDate
@@ -322,7 +322,7 @@ func (m *manager) syncUpdateProjectStartEndDate(trx *gorm.DB, projectID *string,
 		}
 	}
 
-	// 比對最新資料最小的baseline_start_date及最大的baseline_end_date
+	// compare the minimum baseline_start_date and maximum baseline_end_date of the tasks
 	if start != nil && end != nil {
 		if minBaselineStart == nil || start.Before(*minBaselineStart) {
 			minBaselineStart = start
@@ -332,7 +332,7 @@ func (m *manager) syncUpdateProjectStartEndDate(trx *gorm.DB, projectID *string,
 		}
 	}
 
-	// 更新專案開始日期及結束日期
+	// sync update project's start and end dates
 	err = m.ProjectService.WithTrx(trx).Update(&projectModel.Update{
 		ProjectUUID: *projectID,
 		StartDate:   minBaselineStart,
@@ -394,35 +394,35 @@ func assembleToCreateAll(tasks []*taskModel.Create, outlineNumber string, select
 	task.ProjectUUID = projectID
 	outlineNumberSplit := strings.Split(outlineNumber, ".")
 
-	//主任務處理
+	// handle the main task
 	if len(outlineNumberSplit) == 1 {
-		//紀錄當前主任務的outline_number
+		// record the outline_number of the current main task
 		if outlineNumber != "" {
 			selectOutlineNumber += "." + outlineNumber
 		}
-		// 將當前主任務的outline_number映射到allTask的index位置
+		// map the outline_number of the current main task to the index position of allTask
 		taskRecordIdx[selectOutlineNumber] = len(tasks)
 		tasks = append(tasks, task)
 		return tasks
 	} else {
-		//子任務處理
+		// handle the current subtask
 		var newOutlineNumber string
 		for i := 1; i < len(outlineNumberSplit); i++ {
 			newOutlineNumber += outlineNumberSplit[i]
-			//如果還不是最後的子任務，將outline_number加入分隔符
+			// if it is not the last subtask, add a separator to the outline_number
 			if i != len(outlineNumberSplit)-1 {
 				newOutlineNumber += "."
 			}
 		}
 
-		//將當前子任務的outline_number添加到其主任務的outline_number後
+		// append the outline_number of the current subtask to the outline_number of its parent task
 		if selectOutlineNumber == "" {
 			selectOutlineNumber = outlineNumberSplit[0]
 		} else {
 			selectOutlineNumber += "." + outlineNumberSplit[0]
 		}
 
-		//處理可能的子任務
+		// handle possible subtasks
 		subTasks := assembleToCreateAll(tasks[taskRecordIdx[selectOutlineNumber]].Subtask, newOutlineNumber, selectOutlineNumber, taskRecordIdx, task, projectID)
 		tasks[taskRecordIdx[selectOutlineNumber]].Subtask = subTasks
 	}
@@ -433,7 +433,7 @@ func assembleToCreateAll(tasks []*taskModel.Create, outlineNumber string, select
 func (m *manager) Create(trx *gorm.DB, input *taskModel.Create) (int, any) {
 	defer trx.Rollback()
 
-	// 判斷是否為子任務
+	// determine if the task is a subtask
 	if input.ParentUUID != nil {
 		parentBase, err := m.TaskService.GetBySingle(&taskModel.Field{
 			TaskUUID: *input.ParentUUID,
@@ -448,7 +448,7 @@ func (m *manager) Create(trx *gorm.DB, input *taskModel.Create) (int, any) {
 		}
 		input.ProjectUUID = *parentBase.ProjectUUID
 
-		// 取得同階層最後的outline_number
+		// get the last outline_number of the same level
 		input.OutlineNumber, err = m.getNextOutlineNumber(true, parentBase.OutlineNumber, input.ProjectUUID)
 		if err != nil {
 			log.Error(err)
@@ -456,7 +456,7 @@ func (m *manager) Create(trx *gorm.DB, input *taskModel.Create) (int, any) {
 		}
 		input.IsSubTask = true
 
-		// 確認是否為最子層任務
+		// check if it is the most sub-task
 		if parentBase.Segment != nil {
 			if *parentBase.Segment != "" {
 				log.Info("Please remove the task segmentation first.")
@@ -464,37 +464,38 @@ func (m *manager) Create(trx *gorm.DB, input *taskModel.Create) (int, any) {
 			}
 		}
 
-		// 將segments轉換為JSON
+		// transform segments to JSON
 		if len(input.Segments) > 0 {
 			segJson, _ := json.Marshal(input.Segments)
 			input.Segment = string(segJson)
 		}
 
-		// 將indicators轉換為JSON
+		// transform indicators to JSON
 		if len(input.Indicators) > 0 {
 			indJson, _ := json.Marshal(input.Indicators)
 			input.Indicator = string(indJson)
 		}
 
 	} else {
-		// 有子任務的主任務不能分段
+		// the main task with subtasks cannot be segmented
 		if len(input.Segments) > 0 {
 			if len(input.Subtask) > 0 {
 				log.Info("The parent task cannot be segmented.")
 				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The parent task cannot be segmented.")
 			}
-			// 將segments轉換為JSON
+
+			// transform segments to JSON
 			segJson, _ := json.Marshal(input.Segments)
 			input.Segment = string(segJson)
 		}
 
-		// 將indicators轉換為JSON
+		// transform indicators to JSON
 		if len(input.Indicators) > 0 {
 			indJson, _ := json.Marshal(input.Indicators)
 			input.Indicator = string(indJson)
 		}
 
-		// 取得新outline number
+		// get the new outline_number
 		newOutlineNumber, err := m.getNextOutlineNumber(false, nil, input.ProjectUUID)
 		if err != nil {
 			log.Error(err)
@@ -509,7 +510,7 @@ func (m *manager) Create(trx *gorm.DB, input *taskModel.Create) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 同步新增task_resource關聯
+	// sync create task_resource
 	if len(input.Resources) > 0 {
 		taskResMapList := []map[string][]*resourceModel.TaskSingle{
 			{*taskBase.TaskUUID: input.Resources},
@@ -521,7 +522,7 @@ func (m *manager) Create(trx *gorm.DB, input *taskModel.Create) (int, any) {
 		}
 	}
 
-	// 同步修改專案開始日期及結束日期
+	// sync update project's start and end dates
 	err = m.syncUpdateProjectStartEndDate(trx, util.PointerString(input.ProjectUUID), nil, input.BaselineStartDate, input.BaselineEndDate)
 	if err != nil {
 		log.Error(err)
@@ -540,7 +541,8 @@ func (m *manager) CreateAll(trx *gorm.DB, input []*taskModel.Create) (int, any) 
 		taskResMapList                   []map[string][]*resourceModel.TaskSingle
 		minBaselineStart, maxBaselineEnd *time.Time
 	)
-	// 取得最新outline_number
+
+	// get the new outline_number
 	topOutlineNumber, err := m.getNextOutlineNumber(false, nil, input[0].ProjectUUID)
 	if err != nil {
 		log.Error(err)
@@ -565,42 +567,43 @@ func (m *manager) CreateAll(trx *gorm.DB, input []*taskModel.Create) (int, any) 
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 主任務新增
+	// create the main task
 	for i, inputBody := range input {
 		if inputBody.BaselineStartDate != nil && inputBody.BaselineEndDate != nil {
-			// 取得最小的baseline_start_date
+			// get the minimum baseline_start_date
 			if minBaselineStart == nil || inputBody.BaselineStartDate.Before(*minBaselineStart) {
 				minBaselineStart = inputBody.BaselineStartDate
 			}
 
-			// 取得最大的baseline_end_date
+			// get the maximum baseline_end_date
 			if maxBaselineEnd == nil || inputBody.BaselineEndDate.After(*maxBaselineEnd) {
 				maxBaselineEnd = inputBody.BaselineEndDate
 			}
 		}
 
-		// 有子任務的主任務不能分段
+		// the main task with subtasks cannot be segmented
 		if len(inputBody.Segments) > 0 {
 			if len(inputBody.Subtask) > 0 {
 				log.Info("The parent task cannot be segmented.")
 				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The parent task cannot be segmented.")
 			}
-			// 將segments轉換為JSON
+
+			// transform segments to JSON
 			segJson, _ := json.Marshal(inputBody.Segments)
 			inputBody.Segment = string(segJson)
 		}
 
-		// 將indicators轉換為JSON
+		// transform indicators to JSON
 		if len(inputBody.Indicators) > 0 {
 			indJson, _ := json.Marshal(inputBody.Indicators)
 			inputBody.Indicator = string(indJson)
 		}
 
-		// 取得新outline number
+		// get the new outline_number
 		inputBody.OutlineNumber = strconv.Itoa(newOutlineNumber + i)
 		createList = append(createList, inputBody)
 
-		// 子任務新增
+		// create subtasks
 		if len(inputBody.Subtask) > 0 {
 			subSubtasks, subMinBaselineStart, subMaxBaselineEnd, err := m.createSubtasks(trx, inputBody, inputBody.Subtask, projectBase.StartDate, projectBase.EndDate, minBaselineStart, maxBaselineEnd)
 			if err != nil {
@@ -612,7 +615,7 @@ func (m *manager) CreateAll(trx *gorm.DB, input []*taskModel.Create) (int, any) 
 			}
 			createList = append(createList, subSubtasks...)
 
-			// 比對子任務的最小baseline_start_date及最大baseline_end_date
+			// compare the minimum baseline_start_date and maximum baseline_end_date of the subtasks
 			if minBaselineStart == nil || inputBody.BaselineStartDate.Before(*subMinBaselineStart) {
 				minBaselineStart = inputBody.BaselineStartDate
 			}
@@ -628,7 +631,7 @@ func (m *manager) CreateAll(trx *gorm.DB, input []*taskModel.Create) (int, any) 
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 同步新增task_resource關聯
+	// sync create task_resource
 	for i, taskBase := range tasksBase {
 		if len(createList[i].Resources) > 0 {
 			taskResources := make(map[string][]*resourceModel.TaskSingle)
@@ -644,7 +647,7 @@ func (m *manager) CreateAll(trx *gorm.DB, input []*taskModel.Create) (int, any) 
 		}
 	}
 
-	// 同步修改專案開始日期及結束日期
+	// sync update project's start and end dates
 	err = m.syncUpdateProjectStartEndDate(trx, util.PointerString(input[0].ProjectUUID), nil, minBaselineStart, maxBaselineEnd)
 	if err != nil {
 		log.Error(err)
@@ -658,7 +661,7 @@ func (m *manager) CreateAll(trx *gorm.DB, input []*taskModel.Create) (int, any) 
 func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int, any) {
 	output := &taskModel.List{}
 
-	// 取得project資訊
+	// get projects
 	projectBase, err := m.ProjectService.GetByListNoPagination(&projectModel.Field{
 		ProjectIDs: input.Projects,
 	})
@@ -680,21 +683,22 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 建立projectUUID的映射表
+	// create a map of projectUUID
 	projectMap := make(map[string]*projectModel.Single)
 	for _, project := range projects {
 		projectMap[project.ProjectUUID] = project
 	}
 
-	// 取得projectTasks資訊
+	// get project tasks
 	projectTaskMap := make(map[*string][]*taskModel.Single)
 	var (
 		wg sync.WaitGroup
 		mu sync.Mutex
 	)
-	// 建立error channel
+
+	// make an error channel
 	goroutineErr := make(chan error)
-	// 建立goroutine
+	// create goroutine
 	for _, projectsUUID := range input.Projects {
 		wg.Add(1)
 		go func(projectsUUID *string) {
@@ -702,7 +706,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 			mu.Lock()
 			defer mu.Unlock()
 
-			// 取得task資訊
+			// get tasks
 			taskBase, err := m.TaskService.GetByListNoPagination(&taskModel.Field{
 				ProjectUUID: projectsUUID,
 				Filter: taskModel.Filter{
@@ -727,7 +731,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 				goroutineErr <- err
 			}
 
-			// 建立任務UUID的映射表
+			// create a map of taskUUID
 			taskMap := make(map[string]*taskModel.Single)
 			for _, task := range projectTasks {
 				taskMap[task.TaskUUID] = task
@@ -737,7 +741,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 				task.CreatedBy = *taskBase[i].CreatedByUsers.Name
 				task.UpdatedBy = *taskBase[i].UpdatedByUsers.Name
 
-				// 將segment轉為陣列
+				// transform segments to array
 				var segments []taskModel.Segments
 				err = util.DecodeJSONToSlice(*taskBase[i].Segment, &segments)
 				if err != nil {
@@ -746,7 +750,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 				}
 				task.Segments = segments
 
-				// 將indicator轉為陣列
+				// transform indicator to array
 				var indicators []taskModel.Indicators
 				err = util.DecodeJSONToSlice(*taskBase[i].Indicator, &indicators)
 				if err != nil {
@@ -771,12 +775,12 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 				}
 
 				if !input.FilterMilestone {
-					// 判斷是否為子任務
+					// determine if the task is a subtask
 					if task.IsSubTask {
-						// 取得parent_outline_number
+						// get the parent outline number
 						parentOutlineNumber := getParentOutlineNumber(*taskBase[i].OutlineNumber)
 						if parentOutlineNumber != "" {
-							// 透過parent_outline_number尋找相同父階層的任務
+							// find tasks with the same parent outline number
 							parentTask := findParentTaskByOutlineNumber(projectTasks, parentOutlineNumber)
 							if parentTask != nil {
 								parentTask.Subtask = append(parentTask.Subtask, taskMap[task.TaskUUID])
@@ -790,11 +794,11 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 		}(projectsUUID)
 	}
 
-	// 等待所有goroutine完成
+	// wait until all goroutines are finished
 	wg.Wait()
 	close(goroutineErr)
 
-	// 檢查錯誤
+	// check if goroutine has error
 	err = <-goroutineErr
 	if err != nil {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -804,7 +808,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 		if len(projectTaskMap[projectsUUID]) > 0 {
 			if len(input.Projects) == 1 {
 				if !input.FilterMilestone {
-					// 過濾掉已經列入各個SubTask的子任務
+					// filter out the subtasks that have been included in each SubTask
 					var filteredTasks []*taskModel.Single
 					for _, task := range projectTaskMap[projectsUUID] {
 						if !task.IsSubTask {
@@ -825,7 +829,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 				projectTask.Subtask = projectTaskMap[projectsUUID]
 
 				if !input.FilterMilestone {
-					// 過濾掉已經列入各個SubTask的子任務
+					// filter out the subtasks that have been included in each SubTask
 					var filteredTasks []*taskModel.Single
 					for _, task := range projectTask.Subtask {
 						task.Predecessor = ""
@@ -836,11 +840,11 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 					projectTask.Subtask = filteredTasks
 				}
 
-				// 將project加入output.Tasks
+				// add project to output.Tasks
 				output.Tasks = append(output.Tasks, projectTask)
 			}
 
-			// 取得event_marks
+			// get event_marks
 			var eventMarks []*eventMarkModel.Single
 			eventMarkBase, err := m.EventMarkService.GetByListNoPagination(&eventMarkModel.Field{
 				ProjectUUID: projectsUUID,
@@ -861,7 +865,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 			}
 
-			// 將project加入output.Tasks
+			// add event_marks to output.Tasks
 			output.EventMarks = append(output.EventMarks, eventMarks...)
 		}
 	}
@@ -893,7 +897,7 @@ func (m *manager) GetByListNoPaginationNoSub(input *taskModel.Field) (int, any) 
 		task.CreatedBy = *taskBase[i].CreatedByUsers.Name
 		task.UpdatedBy = *taskBase[i].UpdatedByUsers.Name
 
-		// 將segment轉為陣列
+		// transform segments to array
 		var segments []taskModel.Segments
 		err = util.DecodeJSONToSlice(*taskBase[i].Segment, &segments)
 		if err != nil {
@@ -902,7 +906,7 @@ func (m *manager) GetByListNoPaginationNoSub(input *taskModel.Field) (int, any) 
 		}
 		task.Segments = segments
 
-		// 將indicator轉為陣列
+		// transform indicator to array
 		var indicators []taskModel.Indicators
 		err = util.DecodeJSONToSlice(*taskBase[i].Indicator, &indicators)
 		if err != nil {
@@ -952,7 +956,7 @@ func (m *manager) GetBySingle(input *taskModel.Field) (int, any) {
 	output.CreatedBy = *taskBase.CreatedByUsers.Name
 	output.UpdatedBy = *taskBase.UpdatedByUsers.Name
 
-	// 將segment轉為陣列
+	// transform segments to array
 	var segments []taskModel.Segments
 	err = util.DecodeJSONToSlice(*taskBase.Segment, &segments)
 	if err != nil {
@@ -961,7 +965,7 @@ func (m *manager) GetBySingle(input *taskModel.Field) (int, any) {
 	}
 	output.Segments = segments
 
-	// 將indicator轉為陣列
+	// transform indicator to array
 	var indicators []taskModel.Indicators
 	err = util.DecodeJSONToSlice(*taskBase.Indicator, &indicators)
 	if err != nil {
@@ -998,14 +1002,14 @@ func (m *manager) Delete(trx *gorm.DB, input *taskModel.DeletedTaskUUIDs) (int, 
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 同步刪除task_resource關聯
+	// sync delete task_resource
 	err = m.syncDeleteTaskResources(trx, nil, input.Tasks, true)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 同步修改專案開始日期及結束日期
+	// sync update project's start and end dates
 	err = m.syncUpdateProjectStartEndDate(trx, util.PointerString(input.ProjectUUID), input.Tasks, nil, nil)
 	if err != nil {
 		log.Error(err)
@@ -1031,7 +1035,7 @@ func (m *manager) Update(trx *gorm.DB, input *taskModel.Update) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 取得子任務數量
+	// get the quantity of subtasks
 	subQuantity, _ := m.TaskService.GetByQuantity(&taskModel.Field{
 		OutlineNumber: taskBase.OutlineNumber,
 	})
@@ -1041,13 +1045,14 @@ func (m *manager) Update(trx *gorm.DB, input *taskModel.Update) (int, any) {
 			log.Info("The parent task cannot be segmented.")
 			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The parent task cannot be segmented.")
 		}
-		// 將segments轉換為JSON
+
+		// transform segments to JSON
 		segJson, _ := json.Marshal(input.Segments)
 		input.Segment = util.PointerString(string(segJson))
 	}
 
 	if !input.BaselineEndDate.IsZero() || !input.BaselineEndDate.IsZero() {
-		// 取得project資訊
+		// get the project
 		projectBase, err := m.ProjectService.GetBySingle(&projectModel.Field{
 			ProjectUUID: *taskBase.ProjectUUID,
 		})
@@ -1066,20 +1071,20 @@ func (m *manager) Update(trx *gorm.DB, input *taskModel.Update) (int, any) {
 		}
 	}
 
-	// 將indicators轉換為JSON
+	// transform indicators to JSON
 	if len(input.Indicators) > 0 {
 		indJson, _ := json.Marshal(input.Indicators)
 		input.Indicator = util.PointerString(string(indJson))
 	}
 
-	// 同步刪除task_resource關聯
+	// sync delete task_resource
 	err = m.syncDeleteTaskResources(trx, util.PointerString(input.TaskUUID), nil, false)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 同步新增task_resource關聯
+	// sync create task_resource
 	if len(input.Resources) > 0 {
 		taskResMapList := []map[string][]*resourceModel.TaskSingle{
 			{*taskBase.TaskUUID: input.Resources},
@@ -1091,7 +1096,7 @@ func (m *manager) Update(trx *gorm.DB, input *taskModel.Update) (int, any) {
 		}
 	}
 
-	// 同步修改專案開始日期及結束日期
+	// sync update project's start and end dates
 	err = m.syncUpdateProjectStartEndDate(trx, input.ProjectUUID, nil, input.BaselineStartDate, input.BaselineEndDate)
 	if err != nil {
 		log.Error(err)
@@ -1118,42 +1123,43 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 		minBaselineStart, maxBaselineEnd *time.Time
 	)
 
-	// 主任務更新
+	// update the main task
 	for i, inputBody := range input {
 		if inputBody.BaselineStartDate != nil && inputBody.BaselineEndDate != nil {
-			// 取得最小的baseline_start_date
+			// get the minimum baseline_start_date
 			if minBaselineStart == nil || inputBody.BaselineStartDate.Before(*minBaselineStart) {
 				minBaselineStart = inputBody.BaselineStartDate
 			}
 
-			// 取得最大的baseline_end_date
+			// get the maximum baseline_end_date
 			if maxBaselineEnd == nil || inputBody.BaselineEndDate.After(*maxBaselineEnd) {
 				maxBaselineEnd = inputBody.BaselineEndDate
 			}
 		}
 
-		// 有子任務的主任務不能分段
+		// the main task with subtasks cannot be segmented
 		if len(inputBody.Segments) > 0 {
 			if len(inputBody.Subtask) > 0 {
 				log.Info("The parent task cannot be segmented.")
 				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The parent task cannot be segmented.")
 			}
-			// 將segments轉換為JSON
+
+			// transform segments to JSON
 			segJson, _ := json.Marshal(inputBody.Segments)
 			inputBody.Segment = util.PointerString(string(segJson))
 		}
 
-		// 將indicators轉換為JSON
+		// transform indicators to JSON
 		if len(inputBody.Indicators) > 0 {
 			indJson, _ := json.Marshal(inputBody.Indicators)
 			inputBody.Indicator = util.PointerString(string(indJson))
 		}
 
 		inputBody.IsSubTask = util.PointerBool(false)
-		// 計算薪階層
+		// calculate the new outline_number
 		inputBody.OutlineNumber = util.PointerString(strconv.Itoa(1 + i))
 
-		// 更新task_resource
+		// sync update task_resource
 		TaskUUIDs = append(TaskUUIDs, util.PointerString(inputBody.TaskUUID))
 		if len(inputBody.Resources) > 0 {
 			taskResources := make(map[string][]*resourceModel.TaskSingle)
@@ -1161,10 +1167,10 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 			taskResMapList = append(taskResMapList, taskResources)
 		}
 
-		// 主任務更新
+		// update the main task
 		updateList = append(updateList, inputBody)
 
-		// 子任務更新
+		// update subtasks
 		if len(inputBody.Subtask) > 0 {
 			subTaskUUIDs, subUpdateList, subTaskResMapList, subMinBaselineStart, subMaxBaselineEnd, err := m.updateSubtasks(trx, inputBody, inputBody.Subtask, minBaselineStart, maxBaselineEnd)
 			if err != nil {
@@ -1175,7 +1181,7 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 			TaskUUIDs = append(TaskUUIDs, subTaskUUIDs...)
 
 			if inputBody.BaselineStartDate != nil && inputBody.BaselineEndDate != nil {
-				// 比對子任務的最小baseline_start_date及最大baseline_end_date
+				// compare the minimum baseline_start_date and maximum baseline_end_date of the subtasks
 				if minBaselineStart == nil || inputBody.BaselineStartDate.Before(*subMinBaselineStart) {
 					minBaselineStart = inputBody.BaselineStartDate
 				}
@@ -1187,14 +1193,14 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 	}
 
 	var wg sync.WaitGroup
-	// 建立error channel
+	// make an error channel
 	goroutineErr := make(chan error)
-	// 建立goroutine
+	// create goroutine
 	for _, task := range updateList {
 		wg.Add(1)
 		go func(task *taskModel.Update) {
 			defer wg.Done()
-			// 更新任務
+			// update task
 			err := m.TaskService.WithTrx(trx).Update(task)
 			if err != nil {
 				goroutineErr <- err
@@ -1202,24 +1208,24 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 		}(task)
 	}
 
-	// 等待所有goroutine完成
+	// wait until all goroutines are finished
 	wg.Wait()
 	close(goroutineErr)
 
-	// 檢查錯誤
+	// check if goroutine has error
 	err := <-goroutineErr
 	if err != nil {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 同步刪除task_resource關聯
+	// sync delete task_resource
 	err = m.syncDeleteTaskResources(trx, nil, TaskUUIDs, true)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 同步新增task_resource關聯
+	// sync create task_resource
 	if len(taskResMapList) > 0 {
 		err = m.syncCreateTaskResources(trx, taskResMapList, *input[0].UpdatedBy)
 		if err != nil {
@@ -1228,7 +1234,7 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 		}
 	}
 
-	// 同步修改專案開始日期及結束日期
+	// sync update project's start and end dates
 	err = m.syncUpdateProjectStartEndDate(trx, input[0].ProjectUUID, nil, minBaselineStart, maxBaselineEnd)
 	if err != nil {
 		log.Error(err)
@@ -1242,7 +1248,7 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 func (m *manager) Import(trx *gorm.DB, input *taskModel.Import) (int, any) {
 	defer trx.Rollback()
 
-	// 取得專案資源資訊
+	// get project_resources
 	_, proRes, err := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
 		ProjectUUID: util.PointerString(input.ProjectUUID),
 	})
@@ -1252,18 +1258,18 @@ func (m *manager) Import(trx *gorm.DB, input *taskModel.Import) (int, any) {
 		}
 	}
 
-	// 建立project_resource_id跟resource_name的映射表
+	// create a map of resource_name and project_resource_id
 	nameToProResIDMap := make(map[string]string)
 	for _, res := range proRes {
 		nameToProResIDMap[*res.Resources.ResourceName] = *res.ResourceUUID
 	}
 
-	// 設置CSV解析的選項
-	input.CSVFile.LazyQuotes = true       // 寬鬆地處理引號
-	input.CSVFile.TrimLeadingSpace = true // 自動去除每個字段前空格
-	input.CSVFile.FieldsPerRecord = -1    // 不強制要求每條記錄擁有相同的字段數
+	// set CSV parse options
+	input.CSVFile.LazyQuotes = true       // loosely process quotes
+	input.CSVFile.TrimLeadingSpace = true // automatically remove spaces before each field
+	input.CSVFile.FieldsPerRecord = -1    // do not force each record to have the same number of fields
 
-	// 讀取並解析CSV檔案
+	// read and parse CSV file
 	records, err := input.CSVFile.ReadAll()
 	if err != nil {
 		log.Error(err)
@@ -1275,13 +1281,13 @@ func (m *manager) Import(trx *gorm.DB, input *taskModel.Import) (int, any) {
 	var createAllTask []*taskModel.Create
 	for i, record := range records {
 		if i == 0 {
-			// 識別CSV標題行，記錄各欄位的index
+			// identify the CSV header row and record the index of each field
 			for index, value := range record {
 				log.Debug("index: ", index, " value: ", value)
 				// 0: gantt project
 				if input.FileType == 1 {
 					switch value {
-					// 根據欄位名稱設置對應的index
+					// set the index of each field according to the column name
 					case "ID", "編號":
 						taskIdx[0] = index
 					case "Name", "名稱":
@@ -1320,7 +1326,7 @@ func (m *manager) Import(trx *gorm.DB, input *taskModel.Import) (int, any) {
 					// 1: saas pmi
 				} else if input.FileType == 2 {
 					switch value {
-					// 根據欄位名稱設置對應的index
+					// set the index of each field according to the column name
 					case "ID", "編號":
 						taskIdx[0] = index
 					case "Name", "名稱":
@@ -1353,12 +1359,12 @@ func (m *manager) Import(trx *gorm.DB, input *taskModel.Import) (int, any) {
 			continue
 		}
 
-		// 若無大綱編號則略過此記錄
+		// skip the record if there is no outline_number
 		if record[taskIdx[9]] == "" {
 			continue
 		}
 
-		// 構建上層大綱編號，用於驗證階層
+		// build the top outline_number for validation
 		outlineNumberSplit := strings.Split(record[taskIdx[9]], ".")
 		var topOutlineNumber string
 		for i := 0; i < len(outlineNumberSplit)-1; i++ {
@@ -1368,17 +1374,17 @@ func (m *manager) Import(trx *gorm.DB, input *taskModel.Import) (int, any) {
 			}
 		}
 
-		// 驗證檔案中的階層關係
+		// verify the hierarchy relationship in the file
 		if _, ok := taskRecordIdx[topOutlineNumber]; topOutlineNumber != "" && !ok {
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, "import errors")
 		}
 
-		// 將解析後的資料組合成Create的結構
+		// combine the parsed data into the 'Create' structure
 		createTask := &taskModel.Create{}
 		createTask.TaskID = record[taskIdx[0]]
 		createTask.TaskName = record[taskIdx[1]]
 		if record[taskIdx[2]] != "" {
-			// 將日期格式從"/"轉換為"-"
+			// transform the date format from "/" to "-"
 			var startDateString string
 			for _, v := range strings.Split(strings.ReplaceAll(record[taskIdx[2]], "/", "-"), "-") {
 				if len(v) == 1 {
@@ -1396,7 +1402,7 @@ func (m *manager) Import(trx *gorm.DB, input *taskModel.Import) (int, any) {
 		}
 
 		if record[taskIdx[3]] != "" {
-			// 將日期格式從"/"轉換為"-"
+			// transform the date format from "/" to "-"
 			var endDateString string
 			for _, v := range strings.Split(strings.ReplaceAll(record[taskIdx[3]], "/", "-"), "-") {
 				if len(v) == 1 {
@@ -1485,7 +1491,7 @@ func (m *manager) Import(trx *gorm.DB, input *taskModel.Import) (int, any) {
 		createTask.Notes = record[taskIdx[14]]
 
 		if record[taskIdx[15]] != "" {
-			// 將日期格式從"/"轉換為"-"
+			// transform the date format from "/" to "-"
 			var startDateString string
 			for _, v := range strings.Split(strings.ReplaceAll(record[taskIdx[15]], "/", "-"), "-") {
 				if len(v) == 1 {
@@ -1503,7 +1509,7 @@ func (m *manager) Import(trx *gorm.DB, input *taskModel.Import) (int, any) {
 		}
 
 		if record[taskIdx[16]] != "" {
-			// 將日期格式從"/"轉換為"-"
+			// transform the date format from "/" to "-"
 			var endDateString string
 			for _, v := range strings.Split(strings.ReplaceAll(record[taskIdx[16]], "/", "-"), "-") {
 				if len(v) == 1 {
@@ -1521,9 +1527,9 @@ func (m *manager) Import(trx *gorm.DB, input *taskModel.Import) (int, any) {
 			createTask.BaselineEndDate = util.PointerTime(endDate)
 		}
 
-		// 確認無相同outline_number的資料
+		// check if there is no data with the same outline_number
 		if _, ok := taskRecordIdx[record[taskIdx[9]]]; !ok {
-			// 紀錄當前task在createAllTask的index位置
+			// record the index of the current task in createAllTask
 			taskRecordIdx[record[taskIdx[9]]] = len(createAllTask)
 		}
 
