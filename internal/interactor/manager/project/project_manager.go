@@ -99,9 +99,9 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 	output.Limit = input.Limit
 	output.Page = input.Page
 	// search project type
-	if input.FilterType != "" {
+	if input.FilterType != nil {
 		_, projectTypeBase, _ := m.ProjectTypeService.GetByListNoPagination(&projectTypeModel.Field{
-			Name: util.PointerString(input.FilterType),
+			Names: input.FilterType,
 		})
 		if len(projectTypeBase) > 0 {
 			for _, projectType := range projectTypeBase {
