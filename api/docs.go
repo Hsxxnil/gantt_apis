@@ -6674,10 +6674,15 @@ const docTemplate = `{
         "logins.Verify": {
             "type": "object",
             "required": [
+                "domain",
                 "passcode",
                 "user_name"
             ],
             "properties": {
+                "domain": {
+                    "description": "網域",
+                    "type": "string"
+                },
                 "passcode": {
                     "description": "驗證碼",
                     "type": "string"
