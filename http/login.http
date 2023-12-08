@@ -4,7 +4,8 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "password": "12345"
+  "password": "12345",
+  "domain": "pm.hta365.net"
 }
 
 ### verify
@@ -12,7 +13,7 @@ POST {{host}}/hta-gantt/v1.0/verify
 Content-Type: application/json
 
 {
-  "user_name": "admin",
+  "user_name": "hsxxnil",
   "passcode": "093536"
 }
 

@@ -3,8 +3,8 @@ POST {{host}}/hta-gantt/v1.0/login
 Content-Type: application/json
 
 {
-  "user_name": "woni",
-  "password": "12345"
+  "user_name": "admin",
+  "password": "3939889"
 }
 
 ### verify
@@ -12,8 +12,8 @@ POST {{host}}/hta-gantt/v1.0/verify
 Content-Type: application/json
 
 {
-  "user_name": "woni",
-  "passcode": "367130"
+  "user_name": "admin",
+  "passcode": "482746"
 }
 
 > {% client.global.set("accessToken", response.body.body.access_token); %}
@@ -39,11 +39,12 @@ Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-  "user_name": "rethel",
-  "name": "方盛彰",
+  "user_name": "kevin_lin",
+  "name": "林中庸",
   "password": "12345",
-  "email": "plcder@gmail.com",
-  "role_id": "d56fc184-9441-4396-be6c-d48580650171"
+  "email": "Kevin_lin@hta.com.tw",
+  "role_id": "d56fc184-9441-4396-be6c-d48580650171",
+  "company_id": "d2de3502-bafb-4434-96fa-b191dcfce44d"
 }
 
 ### Update

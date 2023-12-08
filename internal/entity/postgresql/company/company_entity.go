@@ -1,9 +1,9 @@
-package user
+package company
 
 import (
 	"encoding/json"
 
-	model "hta/internal/entity/postgresql/db/users"
+	model "hta/internal/entity/postgresql/db/companies"
 	"hta/internal/interactor/pkg/util/log"
 
 	"gorm.io/gorm"
@@ -14,7 +14,7 @@ type Entity interface {
 	WithTrx(trx *gorm.DB) Entity
 	Create(input *model.Base) (err error)
 	GetByList(input *model.Base) (quantity int64, output []*model.Table, err error)
-	GetByListNoPagination(input *model.Base) (output []*model.Table, err error)
+	GetByListNoPagination(input *model.Base) (quantity int64, output []*model.Table, err error)
 	GetBySingle(input *model.Base) (output *model.Table, err error)
 	GetByQuantity(input *model.Base) (quantity int64, err error)
 	Delete(input *model.Base) (err error)
@@ -61,21 +61,10 @@ func (s *storage) Create(input *model.Base) (err error) {
 }
 
 func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.Table, err error) {
-	query := s.db.Model(&model.Table{}).Preload(clause.Associations)
+	query := s.db.Model(&model.Table{}).Count(&quantity).Preload(clause.Associations)
+
 	if input.ID != nil {
 		query.Where("id = ?", input.ID)
-	}
-
-	if input.UserName != nil {
-		query.Where("user_name = ?", input.UserName)
-	}
-
-	if input.Name != nil {
-		query.Where("name like %?%", *input.Name)
-	}
-
-	if input.ResourceUUID != nil {
-		query.Where("resource_uuid = ?", input.ResourceUUID)
 	}
 
 	err = query.Count(&quantity).Offset(int((input.Page - 1) * input.Limit)).
@@ -88,31 +77,20 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 	return quantity, output, nil
 }
 
-func (s *storage) GetByListNoPagination(input *model.Base) (output []*model.Table, err error) {
-	query := s.db.Model(&model.Table{}).Preload(clause.Associations)
+func (s *storage) GetByListNoPagination(input *model.Base) (quantity int64, output []*model.Table, err error) {
+	query := s.db.Model(&model.Table{}).Count(&quantity).Preload(clause.Associations)
+
 	if input.ID != nil {
 		query.Where("id = ?", input.ID)
 	}
 
-	if input.UserName != nil {
-		query.Where("user_name = ?", input.UserName)
-	}
-
-	if input.Name != nil {
-		query.Where("name like %?%", *input.Name)
-	}
-
-	if input.ResourceUUID != nil {
-		query.Where("resource_uuid = ?", input.ResourceUUID)
-	}
-
-	err = query.Order("created_at desc").Find(&output).Error
+	err = query.Count(&quantity).Order("created_at desc").Find(&output).Error
 	if err != nil {
 		log.Error(err)
-		return nil, err
+		return 0, nil, err
 	}
 
-	return output, nil
+	return quantity, output, nil
 }
 
 func (s *storage) GetBySingle(input *model.Base) (output *model.Table, err error) {
@@ -121,16 +99,8 @@ func (s *storage) GetBySingle(input *model.Base) (output *model.Table, err error
 		query.Where("id = ?", input.ID)
 	}
 
-	if input.UserName != nil {
-		query.Where("user_name = ?", input.UserName)
-	}
-
-	if input.Name != nil {
-		query.Where("name like %?%", *input.Name)
-	}
-
-	if input.ResourceUUID != nil {
-		query.Where("resource_uuid = ?", input.ResourceUUID)
+	if input.Domain != nil {
+		query.Where("domain = ?", input.Domain)
 	}
 
 	err = query.First(&output).Error
@@ -148,18 +118,6 @@ func (s *storage) GetByQuantity(input *model.Base) (quantity int64, err error) {
 		query.Where("id = ?", input.ID)
 	}
 
-	if input.UserName != nil {
-		query.Where("user_name = ?", input.UserName)
-	}
-
-	if input.ResourceUUID != nil {
-		query.Where("resource_uuid = ?", input.ResourceUUID)
-	}
-
-	if input.CompanyID != nil {
-		query.Where("company_id = ?", input.CompanyID)
-	}
-
 	err = query.Count(&quantity).Select("*").Error
 	if err != nil {
 		log.Error(err)
@@ -173,40 +131,28 @@ func (s *storage) Update(input *model.Base) (err error) {
 	query := s.db.Model(&model.Table{}).Omit(clause.Associations)
 	data := map[string]any{}
 
-	if input.UserName != nil {
-		data["user_name"] = input.UserName
+	if input.Domain != nil {
+		data["domain"] = input.Domain
 	}
 
 	if input.Name != nil {
 		data["name"] = input.Name
 	}
 
-	if input.Password != nil {
-		data["password"] = input.Password
+	if input.Address != nil {
+		data["address"] = input.Address
 	}
 
-	if input.PhoneNumber != nil {
-		data["phone_number"] = input.PhoneNumber
+	if input.TaxIDNumber != nil {
+		data["tax_id_number"] = input.TaxIDNumber
 	}
 
-	if input.Email != nil {
-		data["email"] = input.Email
+	if input.Phone != nil {
+		data["phone"] = input.Phone
 	}
 
-	if input.RoleID != nil {
-		data["role_id"] = input.RoleID
-	}
-
-	if input.OtpSecret != nil {
-		data["otp_secret"] = input.OtpSecret
-	}
-
-	if input.OtpAuthUrl != nil {
-		data["otp_auth_url"] = input.OtpAuthUrl
-	}
-
-	if input.CompanyID != nil {
-		data["company_id"] = input.CompanyID
+	if input.Remarks != nil {
+		data["remarks"] = input.Remarks
 	}
 
 	if input.UpdatedBy != nil {
