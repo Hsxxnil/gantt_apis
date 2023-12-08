@@ -7771,6 +7771,10 @@ const docTemplate = `{
                     "description": "未知",
                     "type": "string"
                 },
+                "baseline_duration": {
+                    "description": "基準線工作天",
+                    "type": "number"
+                },
                 "baseline_end_date": {
                     "description": "基準線結束日期",
                     "type": "string"
@@ -8005,6 +8009,10 @@ const docTemplate = `{
                     "description": "未知",
                     "type": "string"
                 },
+                "baseline_duration": {
+                    "description": "基準線工作天",
+                    "type": "number"
+                },
                 "baseline_end_date": {
                     "description": "基準線結束日期",
                     "type": "string"
@@ -8051,6 +8059,18 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/tasks.Indicators"
                     }
+                },
+                "indicatorsClass": {
+                    "description": "任務標示IconClass",
+                    "type": "string"
+                },
+                "indicatorsName": {
+                    "description": "任務標示名稱",
+                    "type": "string"
+                },
+                "indicatorsTooltip": {
+                    "description": "任務標示工具提示",
+                    "type": "string"
                 },
                 "is_subtask": {
                     "description": "是否為任務",
@@ -8141,6 +8161,10 @@ const docTemplate = `{
                 "assignments": {
                     "description": "未知",
                     "type": "string"
+                },
+                "baseline_duration": {
+                    "description": "基準線工作天",
+                    "type": "number"
                 },
                 "baseline_end_date": {
                     "description": "基準線結束日期",

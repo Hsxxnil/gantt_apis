@@ -28,6 +28,8 @@ type Table struct {
 	BaselineStartDate *time.Time `gorm:"column:baseline_start_date;type:timestamp;" json:"baseline_start_date"`
 	// 基準線結束日期
 	BaselineEndDate *time.Time `gorm:"column:baseline_end_date;type:timestamp;" json:"baseline_end_date"`
+	// 基準線工作天
+	BaselineDuration float64 `gorm:"column:baseline_duration;type:numeric;" json:"baseline_duration"`
 	// 期間
 	Duration float64 `gorm:"column:duration;type:numeric;" json:"duration"`
 	// 完成百分比
@@ -88,6 +90,8 @@ type Base struct {
 	BaselineStartDate *time.Time `json:"baseline_start_date,omitempty"`
 	// 基準線結束日期
 	BaselineEndDate *time.Time `json:"baseline_end_date,omitempty"`
+	// 基準線工作天
+	BaselineDuration *float64 `json:"baseline_duration,omitempty"`
 	// 期間
 	Duration *float64 `json:"duration,omitempty"`
 	// 完成百分比
