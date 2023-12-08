@@ -135,6 +135,8 @@ type List struct {
 	Tasks []*Single `json:"tasks"`
 	// event_marks
 	EventMarks []*event_marks.Single `json:"event_marks"`
+	// 專案狀態
+	ProjectStatus string `json:"project_status,omitempty"`
 	// 分頁返回結構檔
 	page.Total
 }
