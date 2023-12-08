@@ -156,6 +156,10 @@ func (s *storage) GetByQuantity(input *model.Base) (quantity int64, err error) {
 		query.Where("resource_uuid = ?", input.ResourceUUID)
 	}
 
+	if input.CompanyID != nil {
+		query.Where("company_id = ?", input.CompanyID)
+	}
+
 	err = query.Count(&quantity).Select("*").Error
 	if err != nil {
 		log.Error(err)
@@ -199,6 +203,10 @@ func (s *storage) Update(input *model.Base) (err error) {
 
 	if input.OtpAuthUrl != nil {
 		data["otp_auth_url"] = input.OtpAuthUrl
+	}
+
+	if input.CompanyID != nil {
+		data["company_id"] = input.CompanyID
 	}
 
 	if input.UpdatedBy != nil {
