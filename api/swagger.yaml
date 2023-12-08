@@ -388,6 +388,9 @@ definitions:
     type: object
   logins.Verify:
     properties:
+      domain:
+        description: 網域
+        type: string
       passcode:
         description: 驗證碼
         type: string
@@ -395,6 +398,7 @@ definitions:
         description: 使用者名稱
         type: string
     required:
+    - domain
     - passcode
     - user_name
     type: object

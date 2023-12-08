@@ -10,6 +10,8 @@ type JWX struct {
 	UserID *string `json:"user_id,omitempty"`
 	// 角色
 	Role *string `json:"role,omitempty"`
+	// 公司ID
+	CompanyID *string `json:"company_id,omitempty"`
 }
 
 // Token return structure file
