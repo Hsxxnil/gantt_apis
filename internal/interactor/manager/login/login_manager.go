@@ -7,6 +7,7 @@ import (
 	"github.com/ggwhite/go-masker"
 	"gorm.io/gorm"
 	"hta/config"
+	companyModel "hta/internal/interactor/models/companies"
 	jwxModel "hta/internal/interactor/models/jwx"
 	loginsModel "hta/internal/interactor/models/logins"
 	roleModel "hta/internal/interactor/models/roles"
@@ -17,6 +18,7 @@ import (
 	"hta/internal/interactor/pkg/util"
 	"hta/internal/interactor/pkg/util/code"
 	"hta/internal/interactor/pkg/util/log"
+	companyService "hta/internal/interactor/service/company"
 	jwxService "hta/internal/interactor/service/jwx"
 	roleService "hta/internal/interactor/service/role"
 	userService "hta/internal/interactor/service/user"
@@ -29,24 +31,40 @@ type Manager interface {
 }
 
 type manager struct {
-	UserService userService.Service
-	JwxService  jwxService.Service
-	RoleService roleService.Service
+	UserService    userService.Service
+	JwxService     jwxService.Service
+	RoleService    roleService.Service
+	CompanyService companyService.Service
 }
 
 func Init(db *gorm.DB) Manager {
 	return &manager{
-		UserService: userService.Init(db),
-		JwxService:  jwxService.Init(),
-		RoleService: roleService.Init(db),
+		UserService:    userService.Init(db),
+		JwxService:     jwxService.Init(),
+		RoleService:    roleService.Init(db),
+		CompanyService: companyService.Init(db),
 	}
 }
 
 func (m *manager) Login(input *loginsModel.Login) (int, any) {
+	// get company
+	companyBase, err := m.CompanyService.GetBySingle(&companyModel.Field{
+		Domain: util.PointerString(input.Domain),
+	})
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "Invalid domain.")
+		}
+
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
 	// verify username & password
 	acknowledge, userBase, err := m.UserService.AcknowledgeUser(&usersModel.Field{
-		UserName: util.PointerString(input.UserName),
-		Password: util.PointerString(input.Password),
+		UserName:  util.PointerString(input.UserName),
+		Password:  util.PointerString(input.Password),
+		CompanyID: util.PointerString(*companyBase.ID),
 	})
 	if err != nil {
 		log.Error(err)
@@ -58,6 +76,7 @@ func (m *manager) Login(input *loginsModel.Login) (int, any) {
 	}
 
 	// generate otp secret & otp auth url
+	// todo move to sign up
 	otpSecret, optAuthURL, err := otp.GenerateOTP("sien", input.UserName)
 	if err != nil {
 		log.Error(err)

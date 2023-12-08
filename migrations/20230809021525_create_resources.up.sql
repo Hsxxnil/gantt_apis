@@ -1,7 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS "pg_trgm";
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
---人力資源=accounts
 CREATE TABLE resources
 (
     resource_uuid UUID PRIMARY KEY,

@@ -1,4 +1,3 @@
---甘特圖任務列表，其中含有主任務及子任務
 CREATE TABLE tasks
 (
     task_uuid      UUID PRIMARY KEY,                          --pk
@@ -15,7 +14,7 @@ CREATE TABLE tasks
     assignments    VARCHAR,                                   -- 未知
     task_color     VARCHAR,                                   --紀錄標的顏色
     web_link       VARCHAR,                                   --預留：外部連結
-    is_subtask        BOOL      DEFAULT FALSE,                   --是否為任務
+    is_subtask     BOOL      DEFAULT FALSE,                   --是否為任務
     info           TEXT,
     created_at     TIMESTAMP default now(),
     created_by     UUID,

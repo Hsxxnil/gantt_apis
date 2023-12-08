@@ -1,115 +1,112 @@
-package user
+package company
 
 import (
 	"encoding/json"
 	"errors"
-
 	"hta/internal/interactor/pkg/util"
 
-	userModel "hta/internal/interactor/models/users"
-	userService "hta/internal/interactor/service/user"
-
 	"gorm.io/gorm"
+
+	companyModel "hta/internal/interactor/models/companies"
+	companyService "hta/internal/interactor/service/company"
 
 	"hta/internal/interactor/pkg/util/code"
 	"hta/internal/interactor/pkg/util/log"
 )
 
 type Manager interface {
-	Create(trx *gorm.DB, input *userModel.Create) (int, any)
-	GetByList(input *userModel.Fields) (int, any)
-	GetByListNoPagination(input *userModel.Field) (int, any)
-	GetBySingle(input *userModel.Field) (int, any)
-	Delete(input *userModel.Update) (int, any)
-	Update(input *userModel.Update) (int, any)
+	Create(trx *gorm.DB, input *companyModel.Create) (int, any)
+	GetByList(input *companyModel.Fields) (int, any)
+	GetByListNoPagination(input *companyModel.Field) (int, any)
+	GetBySingle(input *companyModel.Field) (int, any)
+	Delete(input *companyModel.Field) (int, any)
+	Update(input *companyModel.Update) (int, any)
 }
 
 type manager struct {
-	UserService userService.Service
+	CompanyService companyService.Service
 }
 
 func Init(db *gorm.DB) Manager {
 	return &manager{
-		UserService: userService.Init(db),
+		CompanyService: companyService.Init(db),
 	}
 }
 
-func (m *manager) Create(trx *gorm.DB, input *userModel.Create) (int, any) {
+func (m *manager) Create(trx *gorm.DB, input *companyModel.Create) (int, any) {
 	defer trx.Rollback()
 
-	// determine if the username is duplicate
-	quantity, _ := m.UserService.GetByQuantity(&userModel.Field{
-		UserName:  util.PointerString(input.UserName),
-		CompanyID: util.PointerString(input.CompanyID),
-	})
-
-	if quantity > 0 {
-		log.Info("UserName already exists. UserName: ", input.UserName)
-		return code.BadRequest, code.GetCodeMessage(code.BadRequest, "User already exists.")
-	}
-
-	userBase, err := m.UserService.WithTrx(trx).Create(input)
+	companyBase, err := m.CompanyService.WithTrx(trx).Create(input)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
 	trx.Commit()
-	return code.Successful, code.GetCodeMessage(code.Successful, userBase.ID)
+	return code.Successful, code.GetCodeMessage(code.Successful, companyBase.ID)
 }
 
-func (m *manager) GetByList(input *userModel.Fields) (int, any) {
-	output := &userModel.List{}
+func (m *manager) GetByList(input *companyModel.Fields) (int, any) {
+	output := &companyModel.List{}
 	output.Limit = input.Limit
 	output.Page = input.Page
-	quantity, userBase, err := m.UserService.GetByList(input)
+	quantity, companyBase, err := m.CompanyService.GetByList(input)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 	output.Total.Total = quantity
-	userByte, err := json.Marshal(userBase)
-	if err != nil {
-		log.Error(err)
-		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-	}
 	output.Pages = util.Pagination(quantity, output.Limit)
-	err = json.Unmarshal(userByte, &output.Users)
+	companyByte, err := json.Marshal(companyBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	for i, user := range output.Users {
-		user.Role = *userBase[i].Roles.DisplayName
+	err = json.Unmarshal(companyByte, &output.Companies)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	for i, company := range output.Companies {
+		company.CreatedBy = *companyBase[i].CreatedByUsers.Name
+		company.UpdatedBy = *companyBase[i].UpdatedByUsers.Name
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
 
-func (m *manager) GetByListNoPagination(input *userModel.Field) (int, any) {
-	output := &userModel.ListNoPagination{}
-	userBase, err := m.UserService.GetByListNoPagination(input)
+func (m *manager) GetByListNoPagination(input *companyModel.Field) (int, any) {
+	output := &companyModel.List{}
+	quantity, companyBase, err := m.CompanyService.GetByListNoPagination(input)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
-	userByte, err := json.Marshal(userBase)
+	output.Total.Total = quantity
+	companyByte, err := json.Marshal(companyBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
-	err = json.Unmarshal(userByte, &output.Users)
+
+	err = json.Unmarshal(companyByte, &output.Companies)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	for i, company := range output.Companies {
+		company.CreatedBy = *companyBase[i].CreatedByUsers.Name
+		company.UpdatedBy = *companyBase[i].UpdatedByUsers.Name
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
 
-func (m *manager) GetBySingle(input *userModel.Field) (int, any) {
-	userBase, err := m.UserService.GetBySingle(input)
+func (m *manager) GetBySingle(input *companyModel.Field) (int, any) {
+	companyBase, err := m.CompanyService.GetBySingle(input)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, err.Error())
@@ -119,21 +116,22 @@ func (m *manager) GetBySingle(input *userModel.Field) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	output := &userModel.Single{}
-	userByte, _ := json.Marshal(userBase)
-	err = json.Unmarshal(userByte, &output)
+	output := &companyModel.Single{}
+	companyByte, _ := json.Marshal(companyBase)
+	err = json.Unmarshal(companyByte, &output)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	output.Role = *userBase.Roles.DisplayName
+	output.CreatedBy = *companyBase.CreatedByUsers.Name
+	output.UpdatedBy = *companyBase.UpdatedByUsers.Name
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
 
-func (m *manager) Delete(input *userModel.Update) (int, any) {
-	_, err := m.UserService.GetBySingle(&userModel.Field{
+func (m *manager) Delete(input *companyModel.Field) (int, any) {
+	_, err := m.CompanyService.GetBySingle(&companyModel.Field{
 		ID: input.ID,
 	})
 	if err != nil {
@@ -145,7 +143,7 @@ func (m *manager) Delete(input *userModel.Update) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = m.UserService.Delete(input)
+	err = m.CompanyService.Delete(input)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -154,8 +152,8 @@ func (m *manager) Delete(input *userModel.Update) (int, any) {
 	return code.Successful, code.GetCodeMessage(code.Successful, "Delete ok!")
 }
 
-func (m *manager) Update(input *userModel.Update) (int, any) {
-	userBase, err := m.UserService.GetBySingle(&userModel.Field{
+func (m *manager) Update(input *companyModel.Update) (int, any) {
+	companyBase, err := m.CompanyService.GetBySingle(&companyModel.Field{
 		ID: input.ID,
 	})
 	if err != nil {
@@ -167,11 +165,11 @@ func (m *manager) Update(input *userModel.Update) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = m.UserService.Update(input)
+	err = m.CompanyService.Update(input)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	return code.Successful, code.GetCodeMessage(code.Successful, userBase.ID)
+	return code.Successful, code.GetCodeMessage(code.Successful, companyBase.ID)
 }
