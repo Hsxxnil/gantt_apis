@@ -77,7 +77,7 @@ func (m *manager) Login(input *loginsModel.Login) (int, any) {
 
 	// generate otp secret & otp auth url
 	// todo move to sign up
-	otpSecret, optAuthURL, err := otp.GenerateOTP("sien", input.UserName)
+	otpSecret, optAuthURL, err := otp.GenerateOTP(*companyBase.Name, input.UserName)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -129,9 +129,23 @@ func (m *manager) Login(input *loginsModel.Login) (int, any) {
 }
 
 func (m *manager) Verify(input *loginsModel.Verify) (int, any) {
+	// get company
+	companyBase, err := m.CompanyService.GetBySingle(&companyModel.Field{
+		Domain: util.PointerString(input.Domain),
+	})
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "Invalid domain.")
+		}
+
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
 	// get user
 	userBase, err := m.UserService.GetBySingle(&usersModel.Field{
-		UserName: util.PointerString(input.UserName),
+		UserName:  util.PointerString(input.UserName),
+		CompanyID: companyBase.ID,
 	})
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -169,6 +183,7 @@ func (m *manager) Verify(input *loginsModel.Verify) (int, any) {
 		Name:       userBase.Name,
 		ResourceID: userBase.ResourceUUID,
 		Role:       roleBase.Name,
+		CompanyID:  userBase.CompanyID,
 	})
 
 	if err != nil {
@@ -223,6 +238,7 @@ func (m *manager) Refresh(input *jwxModel.Refresh) (int, any) {
 		return code.JWTRejected, code.GetCodeMessage(code.JWTRejected, "RefreshToken is error.")
 	}
 
+	// get user
 	field, err := m.UserService.GetBySingle(&usersModel.Field{
 		ID: j.Other["user_id"].(string),
 	})
@@ -235,7 +251,7 @@ func (m *manager) Refresh(input *jwxModel.Refresh) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 取得角色
+	// get role
 	roleBase, err := m.RoleService.GetBySingle(&roleModel.Field{
 		ID: *field.RoleID,
 	})
@@ -248,12 +264,13 @@ func (m *manager) Refresh(input *jwxModel.Refresh) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// 產生accessToken
+	// generate access token
 	token, err := m.JwxService.CreateAccessToken(&jwxModel.JWX{
 		UserID:     field.ID,
 		Name:       field.Name,
 		ResourceID: field.ResourceUUID,
 		Role:       roleBase.Name,
+		CompanyID:  field.CompanyID,
 	})
 	if err != nil {
 		log.Error(err)

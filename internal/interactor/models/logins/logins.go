@@ -16,4 +16,6 @@ type Verify struct {
 	UserName string `json:"user_name,omitempty" binding:"required" validate:"required"`
 	// 驗證碼
 	Passcode string `json:"passcode,omitempty" binding:"required" validate:"required"`
+	// 網域
+	Domain string `json:"domain,omitempty" binding:"required" validate:"required"`
 }
