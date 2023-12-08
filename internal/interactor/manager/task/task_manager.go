@@ -758,6 +758,11 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 					goroutineErr <- err
 				}
 				task.Indicators = indicators
+				if len(indicators) > 0 {
+					task.IndicatorsName = indicators[0].Name
+					task.IndicatorsIconClass = indicators[0].IconClass
+					task.IndicatorsToolTip = indicators[0].ToolTip
+				}
 
 				task.CoordinatorName = *taskBase[i].Coordinators.ResourceName
 				for j, res := range taskBase[i].TaskResources {
@@ -914,6 +919,11 @@ func (m *manager) GetByListNoPaginationNoSub(input *taskModel.Field) (int, any) 
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 		}
 		task.Indicators = indicators
+		if len(indicators) > 0 {
+			task.IndicatorsName = indicators[0].Name
+			task.IndicatorsIconClass = indicators[0].IconClass
+			task.IndicatorsToolTip = indicators[0].ToolTip
+		}
 
 		task.CoordinatorName = *taskBase[i].Coordinators.ResourceName
 		for j, res := range taskBase[i].TaskResources {
@@ -973,6 +983,11 @@ func (m *manager) GetBySingle(input *taskModel.Field) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 	output.Indicators = indicators
+	if len(indicators) > 0 {
+		output.IndicatorsName = indicators[0].Name
+		output.IndicatorsIconClass = indicators[0].IconClass
+		output.IndicatorsToolTip = indicators[0].ToolTip
+	}
 
 	output.CoordinatorName = *taskBase.Coordinators.ResourceName
 	for i, res := range taskBase.TaskResources {

@@ -283,6 +283,10 @@ func (s *storage) Update(input *model.Base) (err error) {
 		data["baseline_end_date"] = input.BaselineEndDate
 	}
 
+	if input.BaselineDuration != nil {
+		data["baseline_duration"] = input.BaselineDuration
+	}
+
 	if input.Duration != nil {
 		data["duration"] = input.Duration
 	}
