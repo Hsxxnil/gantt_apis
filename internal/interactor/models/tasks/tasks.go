@@ -25,6 +25,8 @@ type Create struct {
 	BaselineStartDate *time.Time `json:"baseline_start_date,omitempty"`
 	// 基準線結束日期
 	BaselineEndDate *time.Time `json:"baseline_end_date,omitempty"`
+	// 基準線工作天
+	BaselineDuration float64 `json:"baseline_duration,omitempty"`
 	// 期間
 	Duration float64 `json:"duration,omitempty" binding:"omitempty,gte=0" validate:"omitempty,gte=0"`
 	// 完成百分比
@@ -83,6 +85,8 @@ type Field struct {
 	BaselineStartDate *time.Time `json:"baseline_start_date,omitempty" form:"baseline_start_date"`
 	// 基準線結束日期
 	BaselineEndDate *time.Time `json:"baseline_end_date,omitempty" form:"baseline_end_date"`
+	// 基準線工作天
+	BaselineDuration *float64 `json:"baseline_duration,omitempty" form:"baseline_duration"`
 	// 期間
 	Duration *float64 `json:"duration,omitempty" form:"duration"`
 	// 完成百分比
@@ -153,6 +157,8 @@ type Single struct {
 	BaselineStartDate *time.Time `json:"baseline_start_date,omitempty"`
 	// 基準線結束日期
 	BaselineEndDate *time.Time `json:"baseline_end_date,omitempty"`
+	// 基準線工作天
+	BaselineDuration float64 `json:"baseline_duration,omitempty"`
 	// 期間
 	Duration float64 `json:"duration,omitempty"`
 	// 完成百分比
@@ -179,6 +185,12 @@ type Single struct {
 	ProjectUUID string `json:"project_uuid,omitempty"`
 	// 備註
 	Notes string `json:"notes,omitempty"`
+	// 任務標示名稱
+	IndicatorsName string `json:"indicatorsName,omitempty"`
+	// 任務標示工具提示
+	IndicatorsToolTip string `json:"indicatorsTooltip,omitempty"`
+	// 任務標示IconClass
+	IndicatorsIconClass string `json:"indicatorsClass,omitempty"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty"`
 	// 更新者
@@ -209,6 +221,8 @@ type Update struct {
 	BaselineStartDate *time.Time `json:"baseline_start_date,omitempty"`
 	// 基準線結束日期
 	BaselineEndDate *time.Time `json:"baseline_end_date,omitempty"`
+	// 基準線工作天
+	BaselineDuration *float64 `json:"baseline_duration,omitempty"`
 	// 期間
 	Duration *float64 `json:"duration,omitempty" binding:"omitempty,gte=0" validate:"omitempty,gte=0"`
 	// 完成百分比
