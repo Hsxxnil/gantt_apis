@@ -3,12 +3,20 @@ POST {{host}}/hta-gantt/v1.0/login
 Content-Type: application/json
 
 {
-  "user_name": "admin",
+  "user_name": "woni",
   "password": "12345"
 }
 
-> {% client.global.set("accessToken", response.body.body.access_token); %}
+### verify
+POST {{host}}/hta-gantt/v1.0/verify
+Content-Type: application/json
 
+{
+  "user_name": "woni",
+  "passcode": "367130"
+}
+
+> {% client.global.set("accessToken", response.body.body.access_token); %}
 ### GetByList
 GET {{host}}/hta-gantt/v1.0/event-marks?page=1&limit=20
 Accept: application/json
