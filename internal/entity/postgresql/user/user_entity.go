@@ -78,6 +78,10 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 		query.Where("resource_uuid = ?", input.ResourceUUID)
 	}
 
+	if input.CompanyID != nil {
+		query.Where("company_id = ?", input.CompanyID)
+	}
+
 	err = query.Count(&quantity).Offset(int((input.Page - 1) * input.Limit)).
 		Limit(int(input.Limit)).Order("created_at desc").Find(&output).Error
 	if err != nil {
@@ -106,6 +110,10 @@ func (s *storage) GetByListNoPagination(input *model.Base) (output []*model.Tabl
 		query.Where("resource_uuid = ?", input.ResourceUUID)
 	}
 
+	if input.CompanyID != nil {
+		query.Where("company_id = ?", input.CompanyID)
+	}
+
 	err = query.Order("created_at desc").Find(&output).Error
 	if err != nil {
 		log.Error(err)
@@ -131,6 +139,10 @@ func (s *storage) GetBySingle(input *model.Base) (output *model.Table, err error
 
 	if input.ResourceUUID != nil {
 		query.Where("resource_uuid = ?", input.ResourceUUID)
+	}
+
+	if input.CompanyID != nil {
+		query.Where("company_id = ?", input.CompanyID)
 	}
 
 	err = query.First(&output).Error
