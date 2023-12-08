@@ -27,6 +27,18 @@ type Create struct {
 type Field struct {
 	// 表ID
 	ID string `json:"id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
+	// 網域
+	Domain *string `json:"domain,omitempty" form:"domain"`
+	// 名稱
+	Name *string `json:"name,omitempty" form:"name"`
+	// 營業地址
+	Address *string `json:"address,omitempty" form:"address"`
+	// 統一編號
+	TaxIDNumber *string `json:"tax_id_number,omitempty" form:"tax_id_number"`
+	// 電話
+	Phone *string `json:"phone,omitempty" form:"phone"`
+	// 備註
+	Remarks *string `json:"remarks,omitempty" form:"remarks"`
 }
 
 // Fields is the searched structure file (including pagination)
