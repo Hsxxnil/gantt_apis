@@ -14,7 +14,7 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "passcode": "033738",
+  "passcode": "450726",
   "domain": "localhost"
 }
 
@@ -27,11 +27,10 @@ Authorization: Bearer {{accessToken}}
 
 {
   "filter": {
-    "is_milestone": false
+    "is_milestone": true
   },
   "projects": [
-    "ab892b83-b7a5-428d-b54c-32b15b68890f",
-    "9eaeddf3-e512-4df4-9de2-bd34b8d1041a"
+    "b46a49ce-b317-4279-8ae9-12f6baab3942"
   ]
 }
 
