@@ -822,6 +822,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 					}
 					output.Tasks = filteredTasks
 				}
+				output.ProjectStatus = *projectBase[0].Status
 
 			} else {
 				projectTask := &taskModel.Single{
