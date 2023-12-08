@@ -6652,10 +6652,15 @@ const docTemplate = `{
         "logins.Login": {
             "type": "object",
             "required": [
+                "domain",
                 "password",
                 "user_name"
             ],
             "properties": {
+                "domain": {
+                    "description": "網域",
+                    "type": "string"
+                },
                 "password": {
                     "description": "密碼",
                     "type": "string"
@@ -8232,6 +8237,7 @@ const docTemplate = `{
         "users.Create": {
             "type": "object",
             "required": [
+                "company_id",
                 "email",
                 "name",
                 "password",
@@ -8239,6 +8245,10 @@ const docTemplate = `{
                 "user_name"
             ],
             "properties": {
+                "company_id": {
+                    "description": "公司ID",
+                    "type": "string"
+                },
                 "email": {
                     "description": "使用者電子郵件",
                     "type": "string"
@@ -8437,6 +8447,10 @@ const docTemplate = `{
         "users.Update": {
             "type": "object",
             "properties": {
+                "company_id": {
+                    "description": "公司ID",
+                    "type": "string"
+                },
                 "email": {
                     "description": "使用者電子郵件",
                     "type": "string"

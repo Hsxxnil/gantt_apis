@@ -29,6 +29,8 @@ type Table struct {
 	OtpSecret string `gorm:"column:otp_secret;type:text;" json:"otp_secret"`
 	// otp auth url
 	OtpAuthUrl string `gorm:"column:otp_auth_url;type:text;" json:"otp_auth_url"`
+	// 公司ID
+	CompanyID string `gorm:"column:company_id;type:uuid;" json:"company_id"`
 	// 引入後端專用
 	special.Table
 }
@@ -57,6 +59,8 @@ type Base struct {
 	OtpSecret *string `json:"otp_secret,omitempty"`
 	// otp auth url
 	OtpAuthUrl *string `json:"otp_auth_url,omitempty"`
+	// 公司ID
+	CompanyID *string `json:"company_id,omitempty"`
 	// 引入後端專用
 	special.Base
 }

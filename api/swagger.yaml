@@ -372,6 +372,9 @@ definitions:
     type: object
   logins.Login:
     properties:
+      domain:
+        description: 網域
+        type: string
       password:
         description: 密碼
         type: string
@@ -379,6 +382,7 @@ definitions:
         description: 使用者名稱
         type: string
     required:
+    - domain
     - password
     - user_name
     type: object
@@ -1515,6 +1519,9 @@ definitions:
     type: object
   users.Create:
     properties:
+      company_id:
+        description: 公司ID
+        type: string
       email:
         description: 使用者電子郵件
         type: string
@@ -1537,6 +1544,7 @@ definitions:
         description: 使用者名稱
         type: string
     required:
+    - company_id
     - email
     - name
     - password
@@ -1665,6 +1673,9 @@ definitions:
     type: object
   users.Update:
     properties:
+      company_id:
+        description: 公司ID
+        type: string
       email:
         description: 使用者電子郵件
         type: string
