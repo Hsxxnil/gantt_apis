@@ -23,7 +23,7 @@ type Create struct {
 	// 客戶
 	Client string `json:"client,omitempty"`
 	// 狀態
-	Status string `json:"status,omitempty"`
+	Status string `json:"status,omitempty" binding:"required" validate:"required"`
 	//資源
 	Resource []*ProjectResource `json:"resource,omitempty"`
 	// 創建者

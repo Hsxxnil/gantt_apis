@@ -6968,6 +6968,9 @@ const docTemplate = `{
         },
         "projects.Create": {
             "type": "object",
+            "required": [
+                "status"
+            ],
             "properties": {
                 "client": {
                     "description": "客戶",
@@ -7955,6 +7958,10 @@ const docTemplate = `{
                 "pages": {
                     "description": "總頁數",
                     "type": "integer"
+                },
+                "project_status": {
+                    "description": "專案狀態",
+                    "type": "string"
                 },
                 "tasks": {
                     "description": "多筆",
