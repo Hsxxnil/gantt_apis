@@ -6,6 +6,8 @@ type Login struct {
 	UserName string `json:"user_name,omitempty" binding:"required" validate:"required"`
 	// 密碼
 	Password string `json:"password,omitempty" binding:"required" validate:"required"`
+	// 網域
+	Domain string `json:"domain,omitempty" binding:"required" validate:"required"`
 }
 
 // Verify struct is used to verify the OTP code
