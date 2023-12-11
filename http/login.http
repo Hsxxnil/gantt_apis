@@ -5,7 +5,7 @@ Content-Type: application/json
 {
   "user_name": "hsxxnil",
   "password": "12345",
-  "domain": "pm.hta365.net"
+  "domain": "d.pmip.likbox.com"
 }
 
 ### verify
@@ -33,6 +33,6 @@ Content-Type: application/json
 
 {
   "email": "lhsuan1225@gmail.com",
-  "domain": "pm.hta365.net"
+  "domain": "d.pmip.likbox.com"
 }
 

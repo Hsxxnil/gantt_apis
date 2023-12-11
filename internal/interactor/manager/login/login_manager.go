@@ -285,9 +285,23 @@ func (m *manager) Refresh(input *jwxModel.Refresh) (int, any) {
 }
 
 func (m *manager) ForgetPassword(input *loginModel.ForgetPassword) (int, any) {
+	// get company
+	companyBase, err := m.CompanyService.GetBySingle(&companyModel.Field{
+		Domain: util.PointerString(input.Domain),
+	})
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "Invalid domain.")
+		}
+
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
 	// get user by email
 	userBase, err := m.UserService.GetBySingle(&userModel.Field{
-		Email: util.PointerString(input.Email),
+		Email:     util.PointerString(input.Email),
+		CompanyID: companyBase.ID,
 	})
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

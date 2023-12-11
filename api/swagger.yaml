@@ -1668,6 +1668,14 @@ definitions:
           type: object
         type: array
     type: object
+  users.ResetPassword:
+    properties:
+      password:
+        description: 密碼
+        type: string
+    required:
+    - password
+    type: object
   users.Single:
     properties:
       created_at:
@@ -4926,6 +4934,56 @@ paths:
                   type: string
               type: object
       summary: 取得全部使用者
+      tags:
+      - user
+  /users/reset-password/current-user:
+    patch:
+      consumes:
+      - application/json
+      description: 重設密碼
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 重設密碼
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/users.ResetPassword'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 重設密碼
       tags:
       - user
   /v1.0/policies:

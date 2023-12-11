@@ -154,3 +154,12 @@ type Update struct {
 	// 更新者
 	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }
+
+type ResetPassword struct {
+	// 表ID
+	ID string `json:"id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
+	// 密碼
+	Password string `json:"password,omitempty" binding:"required" validate:"required"`
+	// 更新者
+	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
+}
