@@ -21,6 +21,7 @@ type Control interface {
 	GetByList(ctx *gin.Context)
 	GetByListNoPagination(ctx *gin.Context)
 	GetBySingle(ctx *gin.Context)
+	GetByCurrent(ctx *gin.Context)
 	Delete(ctx *gin.Context)
 	Update(ctx *gin.Context)
 }
@@ -138,6 +139,32 @@ func (c *control) GetBySingle(ctx *gin.Context) {
 	id := ctx.Param("id")
 	input := &userModel.Field{}
 	input.ID = id
+	if err := ctx.ShouldBindQuery(input); err != nil {
+		log.Error(err)
+		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
+
+		return
+	}
+
+	httpCode, codeMessage := c.Manager.GetBySingle(input)
+	ctx.JSON(httpCode, codeMessage)
+}
+
+// GetByCurrent
+// @Summary 取得當前使用者
+// @description 取得當前使用者
+// @Tags user
+// @version 1.0
+// @Accept json
+// @produce json
+// @param Authorization header string  true "JWE Token"
+// @success 200 object code.SuccessfulMessage{body=users.Single} "成功後返回的值"
+// @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
+// @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
+// @Router /users/current-user [get]
+func (c *control) GetByCurrent(ctx *gin.Context) {
+	input := &userModel.Field{}
+	input.ID = ctx.MustGet("user_id").(string)
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
