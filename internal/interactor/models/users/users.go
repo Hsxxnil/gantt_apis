@@ -136,7 +136,9 @@ type Update struct {
 	// 資源UUID
 	ResourceUUID *string `json:"resource_uuid,omitempty"`
 	// 使用者密碼
-	Password string `json:"password,omitempty"`
+	Password *string `json:"password,omitempty"`
+	// 使用者舊密碼
+	OldPassword *string `json:"old_password,omitempty"`
 	// 使用者電話
 	PhoneNumber *string `json:"phone_number,omitempty"`
 	// 使用者電子郵件

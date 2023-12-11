@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "password": "12345",
+  "password": "54321",
   "domain": "pm.hta365.net"
 }
 
@@ -14,7 +14,7 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "passcode": "610383",
+  "passcode": "728400",
   "domain": "pm.hta365.net"
 }
 
@@ -55,12 +55,13 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### Update
-PATCH {{host}}/hta-gantt/v1.0/users/fef3c69f-7375-45ed-986f-2b07eabca892
+PATCH {{host}}/hta-gantt/v1.0/users/current-user
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-  "role_id": "428cc181-d78e-4bcd-bce3-2f2823e864ce"
+  "password": "12345",
+  "old_password": "54321"
 }
 
 ### Delete

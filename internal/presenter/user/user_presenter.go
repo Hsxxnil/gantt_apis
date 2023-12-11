@@ -214,16 +214,14 @@ func (c *control) Delete(ctx *gin.Context) {
 // @Accept json
 // @produce json
 // @param Authorization header string  true "JWE Token"
-// @param id path string true "使用者ID"
 // @param * body users.Update true "更新使用者"
 // @success 200 object code.SuccessfulMessage{body=string} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
-// @Router /users/{id} [patch]
+// @Router /users/current-user [patch]
 func (c *control) Update(ctx *gin.Context) {
-	id := ctx.Param("id")
 	input := &userModel.Update{}
-	input.ID = id
+	input.ID = ctx.MustGet("user_id").(string)
 	input.UpdatedBy = util.PointerString(ctx.MustGet("user_id").(string))
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
