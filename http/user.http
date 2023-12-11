@@ -14,7 +14,7 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "passcode": "205435",
+  "passcode": "610383",
   "domain": "pm.hta365.net"
 }
 
@@ -32,6 +32,11 @@ Authorization: Bearer {{accessToken}}
 
 ### GetBySingle
 GET {{host}}/hta-gantt/v1.0/users/85cee689-bcb2-461f-8b0a-ea6922f1cb07
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+### GetByCurrent
+GET {{host}}/hta-gantt/v1.0/users/current-user
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
