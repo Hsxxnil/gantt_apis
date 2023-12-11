@@ -332,6 +332,7 @@ func (m *manager) ForgetPassword(input *loginModel.ForgetPassword) (int, any) {
 		ResourceID: userBase.ResourceUUID,
 		Role:       roleBase.Name,
 		CompanyID:  userBase.CompanyID,
+		Expiration: util.PointerInt64(30),
 	})
 
 	if err != nil {
