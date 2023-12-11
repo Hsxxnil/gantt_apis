@@ -816,6 +816,88 @@ const docTemplate = `{
                 }
             }
         },
+        "/forget-password": {
+            "post": {
+                "description": "忘記密碼",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "login"
+                ],
+                "summary": "忘記密碼",
+                "parameters": [
+                    {
+                        "description": "登入帶入",
+                        "name": "*",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/logins.ForgetPassword"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功後返回的值",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.SuccessfulMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "body": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "415": {
+                        "description": "必要欄位帶入錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "伺服器非預期錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/holidays": {
             "get": {
                 "description": "取得全部假期",
@@ -6645,6 +6727,23 @@ const docTemplate = `{
                 },
                 "user_id": {
                     "description": "使用者ID",
+                    "type": "string"
+                }
+            }
+        },
+        "logins.ForgetPassword": {
+            "type": "object",
+            "required": [
+                "domain",
+                "email"
+            ],
+            "properties": {
+                "domain": {
+                    "description": "網域",
+                    "type": "string"
+                },
+                "email": {
+                    "description": "使用者電子郵件",
                     "type": "string"
                 }
             }

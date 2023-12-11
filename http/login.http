@@ -27,3 +27,12 @@ Content-Type: application/json
   "refresh_token": "{{refreshToken}}"
 }
 
+### forgotPassword
+POST {{host}}/hta-gantt/v1.0/forget-password
+Content-Type: application/json
+
+{
+  "email": "lhsuan1225@gmail.com",
+  "domain": "pm.hta365.net"
+}
+
