@@ -4,8 +4,8 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "password": "54321",
-  "domain": "pm.hta365.net"
+  "password": "12345",
+  "domain": "localhost"
 }
 
 ### verify
@@ -63,6 +63,16 @@ Authorization: Bearer {{accessToken}}
   "password": "12345",
   "old_password": "54321"
 }
+
+### ResetPassword
+PATCH {{host}}/hta-gantt/v1.0/users/reset-password/current-user
+Content-Type: application/json
+Authorization: Bearer REMOVEDREMOVED
+
+{
+  "password": "12345"
+}
+
 
 ### Delete
 DELETE {{host}}/hta-gantt/v1.0/users/fef3c69f-7375-45ed-986f-2b07eabca892

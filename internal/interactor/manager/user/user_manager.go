@@ -22,6 +22,7 @@ type Manager interface {
 	GetBySingle(input *userModel.Field) (int, any)
 	Delete(input *userModel.Update) (int, any)
 	Update(input *userModel.Update) (int, any)
+	ResetPassword(input *userModel.ResetPassword) (int, any)
 }
 
 type manager struct {
@@ -199,6 +200,42 @@ func (m *manager) Update(input *userModel.Update) (int, any) {
 	}
 
 	err = m.UserService.Update(input)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	return code.Successful, code.GetCodeMessage(code.Successful, userBase.ID)
+}
+
+func (m *manager) ResetPassword(input *userModel.ResetPassword) (int, any) {
+	userBase, err := m.UserService.GetBySingle(&userModel.Field{
+		ID: input.ID,
+	})
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, err.Error())
+		}
+
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// transform input to Update struct
+	update := &userModel.Update{}
+	inputByte, err := json.Marshal(input)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	err = json.Unmarshal(inputByte, update)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	err = m.UserService.Update(update)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
