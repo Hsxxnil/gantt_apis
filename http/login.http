@@ -5,7 +5,7 @@ Content-Type: application/json
 {
   "user_name": "hsxxnil",
   "password": "12345",
-  "domain": "d.pmip.likbox.com"
+  "domain": "localhost"
 }
 
 ### verify
@@ -33,6 +33,7 @@ Content-Type: application/json
 
 {
   "email": "REMOVED",
-  "domain": "d.pmip.likbox.com"
+  "domain": "localhost",
+  "port": "4200"
 }
 

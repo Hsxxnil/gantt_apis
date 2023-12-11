@@ -6907,6 +6907,10 @@ const docTemplate = `{
                 "email": {
                     "description": "使用者電子郵件",
                     "type": "string"
+                },
+                "port": {
+                    "description": "連接埠",
+                    "type": "string"
                 }
             }
         },

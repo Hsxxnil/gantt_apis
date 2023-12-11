@@ -26,4 +26,6 @@ type ForgetPassword struct {
 	Email string `json:"email,omitempty" binding:"required,email" validate:"required,email"`
 	// 網域
 	Domain string `json:"domain,omitempty" binding:"required" validate:"required"`
+	// 連接埠
+	Port string `json:"port,omitempty"`
 }
