@@ -346,7 +346,18 @@ func (m *manager) ForgetPassword(input *loginModel.ForgetPassword) (int, any) {
 	fromName := "PMIS平台"
 	mailPwd := "pfyj mkee hpgy sqlj"
 	subject := "【PMIS平台】請重設密碼(請勿回覆此郵件)"
-	resetPasswordLink := fmt.Sprintf("https://%s/password_reset/%s", input.Domain, accessToken.AccessToken)
+	domain := input.Domain
+	httpMod := "https"
+	// modify localhost port and httpMod for testing
+	if input.Domain == "localhost" {
+		if input.Port != "" {
+			domain = fmt.Sprintf("%s:%s", input.Domain, input.Port)
+			httpMod = "http"
+		} else {
+			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "Invalid port.")
+		}
+	}
+	resetPasswordLink := fmt.Sprintf("%s://%s/password_reset/%s", httpMod, domain, accessToken.AccessToken)
 	message := fmt.Sprintf(`
     <html>
         <head>
