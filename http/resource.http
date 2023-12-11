@@ -3,8 +3,9 @@ POST {{host}}/hta-gantt/v1.0/login
 Content-Type: application/json
 
 {
-  "user_name": "woni",
-  "password": "12345"
+  "user_name": "hsxxnil",
+  "password": "12345",
+  "domain": "d.pmip.likbox.com"
 }
 
 ### verify
@@ -12,8 +13,9 @@ POST {{host}}/hta-gantt/v1.0/verify
 Content-Type: application/json
 
 {
-  "user_name": "woni",
-  "passcode": "367130"
+  "user_name": "hsxxnil",
+  "passcode": "905499",
+  "domain": "d.pmip.likbox.com"
 }
 
 > {% client.global.set("accessToken", response.body.body.access_token); %}
@@ -29,11 +31,12 @@ Authorization: Bearer {{accessToken}}
     "direction": "asc"
   },
   "filter": {
-    "resource_name": "",
+    "resource_name": "丙",
     "resource_group": [
+      "業務"
     ],
-    "email": "",
-    "phone": ""
+    "email": "丙",
+    "phone": "丙"
   }
 }
 
