@@ -136,7 +136,9 @@ type Update struct {
 	// 資源UUID
 	ResourceUUID *string `json:"resource_uuid,omitempty"`
 	// 使用者密碼
-	Password string `json:"password,omitempty"`
+	Password *string `json:"password,omitempty"`
+	// 使用者舊密碼
+	OldPassword *string `json:"old_password,omitempty"`
 	// 使用者電話
 	PhoneNumber *string `json:"phone_number,omitempty"`
 	// 使用者電子郵件
@@ -149,6 +151,15 @@ type Update struct {
 	OtpAuthUrl *string `json:"otp_auth_url,omitempty"`
 	// 公司ID
 	CompanyID *string `json:"company_id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
+	// 更新者
+	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
+}
+
+type ResetPassword struct {
+	// 表ID
+	ID string `json:"id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
+	// 密碼
+	Password string `json:"password,omitempty" binding:"required" validate:"required"`
 	// 更新者
 	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }

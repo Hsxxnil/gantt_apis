@@ -5,7 +5,7 @@ Content-Type: application/json
 {
   "user_name": "hsxxnil",
   "password": "12345",
-  "domain": "pm.hta365.net"
+  "domain": "d.pmip.likbox.com"
 }
 
 ### verify
@@ -25,5 +25,14 @@ Content-Type: application/json
 
 {
   "refresh_token": "{{refreshToken}}"
+}
+
+### forgotPassword
+POST {{host}}/hta-gantt/v1.0/forget-password
+Content-Type: application/json
+
+{
+  "email": "lhsuan1225@gmail.com",
+  "domain": "d.pmip.likbox.com"
 }
 

@@ -236,9 +236,9 @@ func (s *service) Update(input *model.Update) (err error) {
 	}
 
 	key := "423CD5C09F7DD58950F1E494099EB075"
-	if input.Password != "" {
-		input.Password = hash.HmacSha512(input.Password, key)
-		password, err := encryption.AesEncryptOFB([]byte(input.Password), []byte(key))
+	if input.Password != nil {
+		input.Password = util.PointerString(hash.HmacSha512(*input.Password, key))
+		password, err := encryption.AesEncryptOFB([]byte(*input.Password), []byte(key))
 		if err != nil {
 			log.Error(err)
 			return err
