@@ -25,7 +25,9 @@ func GenerateOTP(organization, username string) (otpSecret, optAuthUrl string, e
 
 // GeneratePasscode is used to generate the OTP code.
 func GeneratePasscode(secret string) (passcode string, err error) {
-	passcode, err = totp.GenerateCode(secret, time.Now())
+	passcode, err = totp.GenerateCodeCustom(secret, time.Now(), totp.ValidateOpts{
+		Period: 60,
+	})
 	if err != nil {
 		log.Error(err)
 		return "", err
