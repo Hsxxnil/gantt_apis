@@ -67,6 +67,10 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 		query.Where("resource_uuid = ?", input.ResourceUUID)
 	}
 
+	if input.FilterResourceGroup != nil {
+		query.Where("resource_group in (?)", input.FilterResourceGroup)
+	}
+
 	if input.Sort.Field != "" && input.Sort.Direction != "" {
 		query.Order(input.Sort.Field + " " + input.Sort.Direction)
 	}
@@ -77,14 +81,6 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 	if input.FilterResourceName != "" {
 		filter.Where("resource_name like ?", "%"+input.FilterResourceName+"%")
 		isFiltered = true
-	}
-
-	if len(input.FilterResourceGroup) > 0 {
-		if isFiltered {
-			filter.Or("resource_group in (?)", input.FilterResourceGroup)
-		} else {
-			filter.Where("resource_group in (?)", input.FilterResourceGroup)
-		}
 	}
 
 	if input.FilterEmail != "" {
