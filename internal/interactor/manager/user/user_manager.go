@@ -41,10 +41,11 @@ func (m *manager) Create(trx *gorm.DB, input *userModel.Create) (int, any) {
 	quantity, _ := m.UserService.GetByQuantity(&userModel.Field{
 		UserName:  util.PointerString(input.UserName),
 		CompanyID: util.PointerString(input.CompanyID),
+		Email:     util.PointerString(input.Email),
 	})
 
 	if quantity > 0 {
-		log.Info("UserName already exists. UserName: ", input.UserName)
+		log.Info("User already exists. UserName: ", input.UserName, "email: ", input.Email)
 		return code.BadRequest, code.GetCodeMessage(code.BadRequest, "User already exists.")
 	}
 

@@ -14,6 +14,7 @@ func GetRouter(router *gin.Engine, db *gorm.DB) *gin.Engine {
 		v10.POST("login", control.Login)
 		v10.POST("verify", control.Verify)
 		v10.POST("refresh", control.Refresh)
+		v10.POST("forget-password", control.ForgetPassword)
 	}
 
 	return router
