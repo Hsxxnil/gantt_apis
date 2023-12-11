@@ -156,6 +156,36 @@ func (m *manager) Delete(input *userModel.Update) (int, any) {
 }
 
 func (m *manager) Update(input *userModel.Update) (int, any) {
+	// validate old password
+	if input.Password != nil {
+		acknowledge, _, err := m.UserService.AcknowledgeUser(&userModel.Field{
+			ID:       input.ID,
+			Password: input.OldPassword,
+		})
+		if err != nil {
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+		}
+
+		if acknowledge == false {
+			return code.PermissionDenied, code.GetCodeMessage(code.PermissionDenied, "Incorrect password.")
+		}
+	}
+
+	// determine if the username is duplicate
+	if input.UserName != nil {
+		quantity, _ := m.UserService.GetByQuantity(&userModel.Field{
+			UserName: input.UserName,
+		})
+
+		if quantity > 0 {
+			log.Info("UserName already exists. UserName: ", input.UserName)
+			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "User already exists.")
+		}
+	}
+
 	userBase, err := m.UserService.GetBySingle(&userModel.Field{
 		ID: input.ID,
 	})
