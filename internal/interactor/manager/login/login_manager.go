@@ -9,9 +9,9 @@ import (
 	"hta/config"
 	companyModel "hta/internal/interactor/models/companies"
 	jwxModel "hta/internal/interactor/models/jwx"
-	loginsModel "hta/internal/interactor/models/logins"
+	loginModel "hta/internal/interactor/models/logins"
 	roleModel "hta/internal/interactor/models/roles"
-	usersModel "hta/internal/interactor/models/users"
+	userModel "hta/internal/interactor/models/users"
 	"hta/internal/interactor/pkg/email"
 	"hta/internal/interactor/pkg/jwx"
 	"hta/internal/interactor/pkg/otp"
@@ -25,9 +25,10 @@ import (
 )
 
 type Manager interface {
-	Login(input *loginsModel.Login) (int, any)
+	Login(input *loginModel.Login) (int, any)
 	Refresh(input *jwxModel.Refresh) (int, any)
-	Verify(input *loginsModel.Verify) (int, any)
+	Verify(input *loginModel.Verify) (int, any)
+	ForgetPassword(input *loginModel.ForgetPassword) (int, any)
 }
 
 type manager struct {
@@ -46,7 +47,7 @@ func Init(db *gorm.DB) Manager {
 	}
 }
 
-func (m *manager) Login(input *loginsModel.Login) (int, any) {
+func (m *manager) Login(input *loginModel.Login) (int, any) {
 	// get company
 	companyBase, err := m.CompanyService.GetBySingle(&companyModel.Field{
 		Domain: util.PointerString(input.Domain),
@@ -61,7 +62,7 @@ func (m *manager) Login(input *loginsModel.Login) (int, any) {
 	}
 
 	// verify username & password
-	acknowledge, userBase, err := m.UserService.AcknowledgeUser(&usersModel.Field{
+	acknowledge, userBase, err := m.UserService.AcknowledgeUser(&userModel.Field{
 		UserName:  util.PointerString(input.UserName),
 		Password:  util.PointerString(input.Password),
 		CompanyID: util.PointerString(*companyBase.ID),
@@ -91,7 +92,7 @@ func (m *manager) Login(input *loginsModel.Login) (int, any) {
 	}
 
 	// update otp secret & otp auth url
-	err = m.UserService.Update(&usersModel.Update{
+	err = m.UserService.Update(&userModel.Update{
 		ID:         *userBase.ID,
 		OtpSecret:  util.PointerString(otpSecret),
 		OtpAuthUrl: util.PointerString(optAuthURL),
@@ -116,7 +117,7 @@ func (m *manager) Login(input *loginsModel.Login) (int, any) {
 			"<注意>\n"+
 			"*此郵件由系統自動發出，請勿直接回覆。", passcode)
 
-	err = email.SendEmail(to, fromAddress, fromName, mailPwd, subject, message)
+	err = email.SendEmailWithText(to, fromAddress, fromName, mailPwd, subject, message)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -128,7 +129,7 @@ func (m *manager) Login(input *loginsModel.Login) (int, any) {
 	return code.Successful, code.GetCodeMessage(code.Successful, obscuredEmail)
 }
 
-func (m *manager) Verify(input *loginsModel.Verify) (int, any) {
+func (m *manager) Verify(input *loginModel.Verify) (int, any) {
 	// get company
 	companyBase, err := m.CompanyService.GetBySingle(&companyModel.Field{
 		Domain: util.PointerString(input.Domain),
@@ -143,7 +144,7 @@ func (m *manager) Verify(input *loginsModel.Verify) (int, any) {
 	}
 
 	// get user
-	userBase, err := m.UserService.GetBySingle(&usersModel.Field{
+	userBase, err := m.UserService.GetBySingle(&userModel.Field{
 		UserName:  util.PointerString(input.UserName),
 		CompanyID: companyBase.ID,
 	})
@@ -239,7 +240,7 @@ func (m *manager) Refresh(input *jwxModel.Refresh) (int, any) {
 	}
 
 	// get user
-	field, err := m.UserService.GetBySingle(&usersModel.Field{
+	field, err := m.UserService.GetBySingle(&userModel.Field{
 		ID: j.Other["user_id"].(string),
 	})
 	if err != nil {
@@ -281,4 +282,129 @@ func (m *manager) Refresh(input *jwxModel.Refresh) (int, any) {
 	token.Role = *roleBase.Name
 	token.UserID = *field.ID
 	return code.Successful, code.GetCodeMessage(code.Successful, token)
+}
+
+func (m *manager) ForgetPassword(input *loginModel.ForgetPassword) (int, any) {
+	// get company
+	companyBase, err := m.CompanyService.GetBySingle(&companyModel.Field{
+		Domain: util.PointerString(input.Domain),
+	})
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "Invalid domain.")
+		}
+
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// get user by email
+	userBase, err := m.UserService.GetBySingle(&userModel.Field{
+		Email:     util.PointerString(input.Email),
+		CompanyID: companyBase.ID,
+	})
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "User does not exist.")
+		}
+
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// get role
+	roleBase, err := m.RoleService.GetBySingle(&roleModel.Field{
+		ID: *userBase.RoleID,
+	})
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, "Role does not exist.")
+		}
+
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// generate access token
+	accessToken, err := m.JwxService.CreateAccessToken(&jwxModel.JWX{
+		UserID:     userBase.ID,
+		Name:       userBase.Name,
+		ResourceID: userBase.ResourceUUID,
+		Role:       roleBase.Name,
+		CompanyID:  userBase.CompanyID,
+		Expiration: util.PointerInt64(30),
+	})
+
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// send passcode to email
+	to := input.Email
+	fromAddress := "REMOVED"
+	fromName := "PMIS平台"
+	mailPwd := "REMOVED"
+	subject := "【PMIS平台】請重設密碼(請勿回覆此郵件)"
+	resetPasswordLink := fmt.Sprintf("https://%s/password_reset/%s", input.Domain, accessToken.AccessToken)
+	message := fmt.Sprintf(`
+    <html>
+        <head>
+            <style>
+                body {
+                    font-family: 'Arial', sans-serif;
+                    text-align: center;
+                    margin: 20px;
+                }
+
+                p {
+                    margin-bottom: 10px;
+                }
+
+                a {
+                    text-decoration: none;
+                }
+
+                button {
+                    padding: 10px;
+                    background-color: #4CAF50;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    text-decoration: none;
+                }
+
+                button:hover {
+                    background-color: #45a049;
+                }
+            </style>
+        </head>
+        <body>
+            <p>親愛的用戶：</p>
+            <p>請點擊以下連結重設密碼：</p>
+            <a href="%s">
+                <button>
+                    重設密碼
+                </button>
+            </a>
+            <br>
+            <p>祝您使用愉快！</p>
+            <p><注意></p>
+            <p>*此郵件由系統自動發出，請勿直接回覆。</p>
+            <p>*此連結有效期限為30分鐘。</p>
+        </body>
+    </html>
+`, resetPasswordLink)
+
+	err = email.SendEmailWithHtml(to, fromAddress, fromName, mailPwd, subject, message)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// mask email
+	obscuredEmail := masker.Email(*userBase.Email)
+
+	return code.Successful, code.GetCodeMessage(code.Successful, obscuredEmail)
 }

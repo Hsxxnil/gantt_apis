@@ -32,6 +32,10 @@ func (s service) CreateAccessToken(input *model.JWX) (output *model.Token, err e
 	}
 
 	accessExpiration := util.NowToUTC().Add(time.Minute * 5).Unix()
+	if input.Expiration != nil {
+		accessExpiration = util.NowToUTC().Add(time.Minute * time.Duration(*input.Expiration)).Unix()
+	}
+
 	j := &jwx.JWE{
 		PublicKey:     config.AccessPublicKey,
 		Other:         other,

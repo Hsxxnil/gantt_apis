@@ -12,6 +12,8 @@ type JWX struct {
 	Role *string `json:"role,omitempty"`
 	// 公司ID
 	CompanyID *string `json:"company_id,omitempty"`
+	// 時效
+	Expiration *int64 `json:"expiration,omitempty" swaggerignore:"true"`
 }
 
 // Token return structure file
