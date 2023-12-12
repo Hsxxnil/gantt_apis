@@ -14,7 +14,8 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "passcode": "093536"
+  "passcode": "874285",
+  "domain": "localhost"
 }
 
 > {% client.global.set("refreshToken", response.body.body.refresh_token); %}
