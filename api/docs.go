@@ -836,7 +836,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/logins.ForgetPassword"
+                            "$ref": "#/definitions/logins.Forget"
                         }
                     }
                 ],
@@ -6893,7 +6893,7 @@ const docTemplate = `{
                 }
             }
         },
-        "logins.ForgetPassword": {
+        "logins.Forget": {
             "type": "object",
             "required": [
                 "domain",
