@@ -370,7 +370,7 @@ definitions:
         description: 使用者ID
         type: string
     type: object
-  logins.ForgetPassword:
+  logins.Forget:
     properties:
       domain:
         description: 網域
@@ -2347,7 +2347,7 @@ paths:
         name: '*'
         required: true
         schema:
-          $ref: '#/definitions/logins.ForgetPassword'
+          $ref: '#/definitions/logins.Forget'
       produces:
       - application/json
       responses:

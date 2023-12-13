@@ -28,7 +28,7 @@ type Manager interface {
 	Login(input *loginModel.Login) (int, any)
 	Refresh(input *jwxModel.Refresh) (int, any)
 	Verify(input *loginModel.Verify) (int, any)
-	ForgetPassword(input *loginModel.ForgetPassword) (int, any)
+	Forget(input *loginModel.Forget) (int, any)
 }
 
 type manager struct {
@@ -284,7 +284,7 @@ func (m *manager) Refresh(input *jwxModel.Refresh) (int, any) {
 	return code.Successful, code.GetCodeMessage(code.Successful, token)
 }
 
-func (m *manager) ForgetPassword(input *loginModel.ForgetPassword) (int, any) {
+func (m *manager) Forget(input *loginModel.Forget) (int, any) {
 	// get company
 	companyBase, err := m.CompanyService.GetBySingle(&companyModel.Field{
 		Domain: util.PointerString(input.Domain),
@@ -340,7 +340,7 @@ func (m *manager) ForgetPassword(input *loginModel.ForgetPassword) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// send passcode to email
+	// send link to email
 	to := input.Email
 	fromAddress := "calla.nkust@gmail.com"
 	fromName := "PMIS平台"
