@@ -14,7 +14,7 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "passcode": "450726",
+  "passcode": "093248",
   "domain": "localhost"
 }
 
@@ -92,13 +92,12 @@ Authorization: Bearer {{accessToken}}
 ]
 
 ### Update
-PATCH {{host}}/hta-gantt/v1.0/tasks/e712cceb-2f6e-44d5-9ab4-67f695a5d2d3
+PATCH {{host}}/hta-gantt/v1.0/tasks/40de0b9f-db01-4c70-8878-d1ff8932bbbe
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-  "baseline_start_date": "2023-03-28T16:00:00Z",
-  "baseline_end_date": "2023-04-24T16:00:00Z"
+  "task_name": "D"
 }
 
 ### UpdateAll

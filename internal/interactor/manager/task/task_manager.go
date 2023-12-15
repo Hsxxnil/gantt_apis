@@ -1051,6 +1051,48 @@ func (m *manager) Update(trx *gorm.DB, input *taskModel.Update) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
+	// get the project for the task
+	projectBase, err := m.ProjectService.GetBySingle(&projectModel.Field{
+		ProjectUUID: *taskBase.ProjectUUID,
+	})
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, err.Error())
+		}
+
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// determine the project status
+	if *projectBase.Status != "建檔中" {
+		if *projectBase.Status == "執行中" || *projectBase.Status == "已暫停" {
+			if (!input.BaselineStartDate.IsZero() && input.BaselineStartDate != taskBase.BaselineStartDate) || (!input.BaselineEndDate.IsZero() && input.BaselineEndDate != taskBase.BaselineEndDate) {
+				log.Info("The baseline cannot be modified while project is in progress.")
+				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The baseline cannot be modified while project is in progress.")
+			}
+		} else {
+			// transform taskBase to update struct
+			original := &taskModel.Update{}
+			taskByte, err := json.Marshal(taskBase)
+			if err != nil {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+
+			err = json.Unmarshal(taskByte, &original)
+			if err != nil {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+
+			if input != original {
+				log.Info("The project is completed and cannot be modified.")
+				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The project is completed and cannot be modified.")
+			}
+		}
+	}
+
 	// get the quantity of subtasks
 	subQuantity, _ := m.TaskService.GetByQuantity(&taskModel.Field{
 		OutlineNumber: taskBase.OutlineNumber,
@@ -1065,26 +1107,6 @@ func (m *manager) Update(trx *gorm.DB, input *taskModel.Update) (int, any) {
 		// transform segments to JSON
 		segJson, _ := json.Marshal(input.Segments)
 		input.Segment = util.PointerString(string(segJson))
-	}
-
-	if !input.BaselineEndDate.IsZero() || !input.BaselineEndDate.IsZero() {
-		// get the project
-		projectBase, err := m.ProjectService.GetBySingle(&projectModel.Field{
-			ProjectUUID: *taskBase.ProjectUUID,
-		})
-		if err != nil {
-			if errors.Is(err, gorm.ErrRecordNotFound) {
-				return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, err.Error())
-			}
-
-			log.Error(err)
-			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-		}
-
-		if *projectBase.Status == "啟動中" {
-			log.Info("The baseline cannot be modified while project is in progress.")
-			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The baseline cannot be modified while project is in progress.")
-		}
 	}
 
 	// transform indicators to JSON
@@ -1113,7 +1135,7 @@ func (m *manager) Update(trx *gorm.DB, input *taskModel.Update) (int, any) {
 	}
 
 	// sync update project's start and end dates
-	err = m.syncUpdateProjectStartEndDate(trx, input.ProjectUUID, nil, input.BaselineStartDate, input.BaselineEndDate)
+	err = m.syncUpdateProjectStartEndDate(trx, taskBase.ProjectUUID, nil, input.BaselineStartDate, input.BaselineEndDate)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
