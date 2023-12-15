@@ -17,7 +17,7 @@ type Control interface {
 	Login(ctx *gin.Context)
 	Verify(ctx *gin.Context)
 	Refresh(ctx *gin.Context)
-	ForgetPassword(ctx *gin.Context)
+	Forget(ctx *gin.Context)
 }
 
 type control struct {
@@ -104,20 +104,20 @@ func (c *control) Refresh(ctx *gin.Context) {
 	ctx.JSON(httpCode, codeMessage)
 }
 
-// ForgetPassword
+// Forget
 // @Summary 忘記密碼
 // @description 忘記密碼
 // @Tags login
 // @version 1.0
 // @Accept json
 // @produce json
-// @param * body logins.ForgetPassword true "登入帶入"
+// @param * body logins.Forget true "登入帶入"
 // @success 200 object code.SuccessfulMessage{body=string} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
 // @Router /forget-password [post]
-func (c *control) ForgetPassword(ctx *gin.Context) {
-	input := &loginModel.ForgetPassword{}
+func (c *control) Forget(ctx *gin.Context) {
+	input := &loginModel.Forget{}
 
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
@@ -125,6 +125,6 @@ func (c *control) ForgetPassword(ctx *gin.Context) {
 		return
 	}
 
-	httpCode, codeMessage := c.Manager.ForgetPassword(input)
+	httpCode, codeMessage := c.Manager.Forget(input)
 	ctx.JSON(httpCode, codeMessage)
 }

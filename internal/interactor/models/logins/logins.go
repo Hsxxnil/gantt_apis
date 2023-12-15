@@ -20,8 +20,8 @@ type Verify struct {
 	Domain string `json:"domain,omitempty" binding:"required" validate:"required"`
 }
 
-// ForgetPassword struct is used to forget password.
-type ForgetPassword struct {
+// Forget struct is used to forget password.
+type Forget struct {
 	// 使用者電子郵件
 	Email string `json:"email,omitempty" binding:"required,email" validate:"required,email"`
 	// 網域

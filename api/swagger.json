@@ -833,7 +833,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/logins.ForgetPassword"
+                            "$ref": "#/definitions/logins.Forget"
                         }
                     }
                 ],
@@ -6890,7 +6890,7 @@
                 }
             }
         },
-        "logins.ForgetPassword": {
+        "logins.Forget": {
             "type": "object",
             "required": [
                 "domain",
