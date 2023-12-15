@@ -1066,7 +1066,7 @@ func (m *manager) Update(trx *gorm.DB, input *taskModel.Update) (int, any) {
 
 	// determine the project status
 	if *projectBase.Status != "建檔中" {
-		if *projectBase.Status == "執行中" || *projectBase.Status == "已暫停" {
+		if *projectBase.Status == "執行中" || *projectBase.Status == "暫停中" {
 			if (!input.BaselineStartDate.IsZero() && input.BaselineStartDate != taskBase.BaselineStartDate) || (!input.BaselineEndDate.IsZero() && input.BaselineEndDate != taskBase.BaselineEndDate) {
 				log.Info("The baseline cannot be modified while project is in progress.")
 				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The baseline cannot be modified while project is in progress.")
