@@ -8727,6 +8727,10 @@ const docTemplate = `{
                     "description": "使用者中文名稱",
                     "type": "string"
                 },
+                "otp_auth_url": {
+                    "description": "otp auth url",
+                    "type": "string"
+                },
                 "phone_number": {
                     "description": "使用者電話",
                     "type": "string"
