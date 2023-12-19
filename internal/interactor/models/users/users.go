@@ -117,6 +117,8 @@ type Single struct {
 	RoleID string `json:"role_id,omitempty"`
 	// 角色
 	Role string `json:"role,omitempty"`
+	// otp auth url
+	OtpAuthUrl string `json:"otp_auth_url,omitempty"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty"`
 	// 更新者
@@ -155,6 +157,7 @@ type Update struct {
 	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }
 
+// ResetPassword struct is used to reset password
 type ResetPassword struct {
 	// 表ID
 	ID string `json:"id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
