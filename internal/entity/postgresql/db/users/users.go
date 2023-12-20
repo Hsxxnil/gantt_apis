@@ -28,7 +28,7 @@ type Table struct {
 	// otp auth url
 	OtpAuthUrl string `gorm:"column:otp_auth_url;type:text;" json:"otp_auth_url"`
 	// 組織ID
-	OrgID string `gorm:"column:organization_id;type:uuid;" json:"organization_id"`
+	OrgID string `gorm:"column:org_id;type:uuid;" json:"org_id"`
 	// 是否啟用
 	IsEnable bool `gorm:"column:is_enable;type:boolean;not null;default:false;" json:"is_enable"`
 	// 是否使用驗證器
@@ -60,7 +60,7 @@ type Base struct {
 	// otp auth url
 	OtpAuthUrl *string `json:"otp_auth_url,omitempty"`
 	// 組織ID
-	OrgID *string `json:"organization_id,omitempty"`
+	OrgID *string `json:"org_id,omitempty"`
 	// 是否啟用
 	IsEnable *bool `json:"is_enable,omitempty"`
 	// 是否使用驗證器
