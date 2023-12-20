@@ -1,4 +1,4 @@
-package company
+package organization
 
 import (
 	"encoding/json"
@@ -7,106 +7,106 @@ import (
 
 	"gorm.io/gorm"
 
-	companyModel "hta/internal/interactor/models/companies"
-	companyService "hta/internal/interactor/service/company"
+	organizationModel "hta/internal/interactor/models/organizations"
+	organizationService "hta/internal/interactor/service/organization"
 
 	"hta/internal/interactor/pkg/util/code"
 	"hta/internal/interactor/pkg/util/log"
 )
 
 type Manager interface {
-	Create(trx *gorm.DB, input *companyModel.Create) (int, any)
-	GetByList(input *companyModel.Fields) (int, any)
-	GetByListNoPagination(input *companyModel.Field) (int, any)
-	GetBySingle(input *companyModel.Field) (int, any)
-	Delete(input *companyModel.Field) (int, any)
-	Update(input *companyModel.Update) (int, any)
+	Create(trx *gorm.DB, input *organizationModel.Create) (int, any)
+	GetByList(input *organizationModel.Fields) (int, any)
+	GetByListNoPagination(input *organizationModel.Field) (int, any)
+	GetBySingle(input *organizationModel.Field) (int, any)
+	Delete(input *organizationModel.Field) (int, any)
+	Update(input *organizationModel.Update) (int, any)
 }
 
 type manager struct {
-	CompanyService companyService.Service
+	OrganizationService organizationService.Service
 }
 
 func Init(db *gorm.DB) Manager {
 	return &manager{
-		CompanyService: companyService.Init(db),
+		OrganizationService: organizationService.Init(db),
 	}
 }
 
-func (m *manager) Create(trx *gorm.DB, input *companyModel.Create) (int, any) {
+func (m *manager) Create(trx *gorm.DB, input *organizationModel.Create) (int, any) {
 	defer trx.Rollback()
 
-	companyBase, err := m.CompanyService.WithTrx(trx).Create(input)
+	organizationBase, err := m.OrganizationService.WithTrx(trx).Create(input)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
 	trx.Commit()
-	return code.Successful, code.GetCodeMessage(code.Successful, companyBase.ID)
+	return code.Successful, code.GetCodeMessage(code.Successful, organizationBase.ID)
 }
 
-func (m *manager) GetByList(input *companyModel.Fields) (int, any) {
-	output := &companyModel.List{}
+func (m *manager) GetByList(input *organizationModel.Fields) (int, any) {
+	output := &organizationModel.List{}
 	output.Limit = input.Limit
 	output.Page = input.Page
-	quantity, companyBase, err := m.CompanyService.GetByList(input)
+	quantity, organizationBase, err := m.OrganizationService.GetByList(input)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 	output.Total.Total = quantity
 	output.Pages = util.Pagination(quantity, output.Limit)
-	companyByte, err := json.Marshal(companyBase)
+	organizationByte, err := json.Marshal(organizationBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = json.Unmarshal(companyByte, &output.Companies)
+	err = json.Unmarshal(organizationByte, &output.Organizations)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	for i, company := range output.Companies {
-		company.CreatedBy = *companyBase[i].CreatedByUsers.Name
-		company.UpdatedBy = *companyBase[i].UpdatedByUsers.Name
+	for i, organization := range output.Organizations {
+		organization.CreatedBy = *organizationBase[i].CreatedByUsers.Name
+		organization.UpdatedBy = *organizationBase[i].UpdatedByUsers.Name
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
 
-func (m *manager) GetByListNoPagination(input *companyModel.Field) (int, any) {
-	output := &companyModel.List{}
-	quantity, companyBase, err := m.CompanyService.GetByListNoPagination(input)
+func (m *manager) GetByListNoPagination(input *organizationModel.Field) (int, any) {
+	output := &organizationModel.List{}
+	quantity, organizationBase, err := m.OrganizationService.GetByListNoPagination(input)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 	output.Total.Total = quantity
-	companyByte, err := json.Marshal(companyBase)
+	organizationByte, err := json.Marshal(organizationBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = json.Unmarshal(companyByte, &output.Companies)
+	err = json.Unmarshal(organizationByte, &output.Organizations)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	for i, company := range output.Companies {
-		company.CreatedBy = *companyBase[i].CreatedByUsers.Name
-		company.UpdatedBy = *companyBase[i].UpdatedByUsers.Name
+	for i, organization := range output.Organizations {
+		organization.CreatedBy = *organizationBase[i].CreatedByUsers.Name
+		organization.UpdatedBy = *organizationBase[i].UpdatedByUsers.Name
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
 
-func (m *manager) GetBySingle(input *companyModel.Field) (int, any) {
-	companyBase, err := m.CompanyService.GetBySingle(input)
+func (m *manager) GetBySingle(input *organizationModel.Field) (int, any) {
+	organizationBase, err := m.OrganizationService.GetBySingle(input)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, err.Error())
@@ -116,22 +116,22 @@ func (m *manager) GetBySingle(input *companyModel.Field) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	output := &companyModel.Single{}
-	companyByte, _ := json.Marshal(companyBase)
-	err = json.Unmarshal(companyByte, &output)
+	output := &organizationModel.Single{}
+	organizationByte, _ := json.Marshal(organizationBase)
+	err = json.Unmarshal(organizationByte, &output)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	output.CreatedBy = *companyBase.CreatedByUsers.Name
-	output.UpdatedBy = *companyBase.UpdatedByUsers.Name
+	output.CreatedBy = *organizationBase.CreatedByUsers.Name
+	output.UpdatedBy = *organizationBase.UpdatedByUsers.Name
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
 
-func (m *manager) Delete(input *companyModel.Field) (int, any) {
-	_, err := m.CompanyService.GetBySingle(&companyModel.Field{
+func (m *manager) Delete(input *organizationModel.Field) (int, any) {
+	_, err := m.OrganizationService.GetBySingle(&organizationModel.Field{
 		ID: input.ID,
 	})
 	if err != nil {
@@ -143,7 +143,7 @@ func (m *manager) Delete(input *companyModel.Field) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = m.CompanyService.Delete(input)
+	err = m.OrganizationService.Delete(input)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -152,8 +152,8 @@ func (m *manager) Delete(input *companyModel.Field) (int, any) {
 	return code.Successful, code.GetCodeMessage(code.Successful, "Delete ok!")
 }
 
-func (m *manager) Update(input *companyModel.Update) (int, any) {
-	companyBase, err := m.CompanyService.GetBySingle(&companyModel.Field{
+func (m *manager) Update(input *organizationModel.Update) (int, any) {
+	organizationBase, err := m.OrganizationService.GetBySingle(&organizationModel.Field{
 		ID: input.ID,
 	})
 	if err != nil {
@@ -165,11 +165,11 @@ func (m *manager) Update(input *companyModel.Update) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = m.CompanyService.Update(input)
+	err = m.OrganizationService.Update(input)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	return code.Successful, code.GetCodeMessage(code.Successful, companyBase.ID)
+	return code.Successful, code.GetCodeMessage(code.Successful, organizationBase.ID)
 }

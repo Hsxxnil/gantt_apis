@@ -1,4 +1,4 @@
-package company
+package organization
 
 import (
 	"hta/internal/interactor/pkg/util"
@@ -6,8 +6,8 @@ import (
 
 	constant "hta/internal/interactor/constants"
 
-	"hta/internal/interactor/manager/company"
-	companyModel "hta/internal/interactor/models/companies"
+	"hta/internal/interactor/manager/organization"
+	organizationModel "hta/internal/interactor/models/organizations"
 	"hta/internal/interactor/pkg/util/code"
 	"hta/internal/interactor/pkg/util/log"
 
@@ -25,31 +25,31 @@ type Control interface {
 }
 
 type control struct {
-	Manager company.Manager
+	Manager organization.Manager
 }
 
 func Init(db *gorm.DB) Control {
 	return &control{
-		Manager: company.Init(db),
+		Manager: organization.Init(db),
 	}
 }
 
 // Create
-// @Summary 新增公司
-// @description 新增公司
-// @Tags company
+// @Summary 新增組織
+// @description 新增組織
+// @Tags organization
 // @version 1.0
 // @Accept json
 // @produce json
 // @param Authorization header string true "JWE Token"
-// @param * body companies.Create true "新增公司"
+// @param * body organizations.Create true "新增組織"
 // @success 200 object code.SuccessfulMessage{body=string} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
-// @Router /companies [post]
+// @Router /organizations [post]
 func (c *control) Create(ctx *gin.Context) {
 	trx := ctx.MustGet("db_trx").(*gorm.DB)
-	input := &companyModel.Create{}
+	input := &organizationModel.Create{}
 	input.CreatedBy = ctx.MustGet("user_id").(string)
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
@@ -63,21 +63,21 @@ func (c *control) Create(ctx *gin.Context) {
 }
 
 // GetByList
-// @Summary 取得全部公司
-// @description 取得全部公司
-// @Tags company
+// @Summary 取得全部組織
+// @description 取得全部組織
+// @Tags organization
 // @version 1.0
 // @Accept json
 // @produce json
 // @param Authorization header string true "JWE Token"
 // @param page query int true "目前頁數,請從1開始帶入"
 // @param limit query int true "一次回傳比數,請從1開始帶入,最高上限20"
-// @success 200 object code.SuccessfulMessage{body=companies.List} "成功後返回的值"
+// @success 200 object code.SuccessfulMessage{body=organizations.List} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
-// @Router /companies [get]
+// @Router /organizations [get]
 func (c *control) GetByList(ctx *gin.Context) {
-	input := &companyModel.Fields{}
+	input := &organizationModel.Fields{}
 
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
@@ -95,9 +95,9 @@ func (c *control) GetByList(ctx *gin.Context) {
 }
 
 // GetByListNoPagination
-// @Summary 取得全部公司(不用page&limit)
-// @description 取得全部公司
-// @Tags company
+// @Summary 取得全部組織(不用page&limit)
+// @description 取得全部組織
+// @Tags organization
 // @version 1.0
 // @Accept json
 // @produce json
@@ -105,9 +105,9 @@ func (c *control) GetByList(ctx *gin.Context) {
 // @success 200 object code.SuccessfulMessage{body=tasks.List} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
-// @Router /companies/no-pagination [get]
+// @Router /organizations/no-pagination [get]
 func (c *control) GetByListNoPagination(ctx *gin.Context) {
-	input := &companyModel.Field{}
+	input := &organizationModel.Field{}
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
@@ -120,21 +120,21 @@ func (c *control) GetByListNoPagination(ctx *gin.Context) {
 }
 
 // GetBySingle
-// @Summary 取得單一公司
-// @description 取得單一公司
-// @Tags company
+// @Summary 取得單一組織
+// @description 取得單一組織
+// @Tags organization
 // @version 1.0
 // @Accept json
 // @produce json
 // @param Authorization header string true "JWE Token"
-// @param id path string true "公司UUID"
-// @success 200 object code.SuccessfulMessage{body=companies.Single} "成功後返回的值"
+// @param id path string true "組織UUID"
+// @success 200 object code.SuccessfulMessage{body=organizations.Single} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
-// @Router /companies/{id} [get]
+// @Router /organizations/{id} [get]
 func (c *control) GetBySingle(ctx *gin.Context) {
 	id := ctx.Param("id")
-	input := &companyModel.Field{}
+	input := &organizationModel.Field{}
 	input.ID = id
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
@@ -148,21 +148,21 @@ func (c *control) GetBySingle(ctx *gin.Context) {
 }
 
 // Delete
-// @Summary 刪除單一公司
-// @description 刪除單一公司
-// @Tags company
+// @Summary 刪除單一組織
+// @description 刪除單一組織
+// @Tags organization
 // @version 1.0
 // @Accept json
 // @produce json
 // @param Authorization header string true "JWE Token"
-// @param id path string true "公司UUID"
+// @param id path string true "組織UUID"
 // @success 200 object code.SuccessfulMessage{body=string} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
-// @Router /companies/{id} [delete]
+// @Router /organizations/{id} [delete]
 func (c *control) Delete(ctx *gin.Context) {
 	id := ctx.Param("id")
-	input := &companyModel.Field{}
+	input := &organizationModel.Field{}
 	input.ID = id
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
@@ -176,22 +176,22 @@ func (c *control) Delete(ctx *gin.Context) {
 }
 
 // Update
-// @Summary 更新單一公司
-// @description 更新單一公司
-// @Tags company
+// @Summary 更新單一組織
+// @description 更新單一組織
+// @Tags organization
 // @version 1.0
 // @Accept json
 // @produce json
 // @param Authorization header string true "JWE Token"
-// @param id path string true "公司UUID"
-// @param * body companies.Update true "更新公司"
+// @param id path string true "組織UUID"
+// @param * body organizations.Update true "更新組織"
 // @success 200 object code.SuccessfulMessage{body=string} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
-// @Router /companies/{id} [patch]
+// @Router /organizations/{id} [patch]
 func (c *control) Update(ctx *gin.Context) {
 	id := ctx.Param("id")
-	input := &companyModel.Update{}
+	input := &organizationModel.Update{}
 	input.ID = id
 	input.UpdatedBy = util.PointerString(ctx.MustGet("user_id").(string))
 	if err := ctx.ShouldBindJSON(input); err != nil {

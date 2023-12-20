@@ -33,7 +33,7 @@ func Verify() gin.HandlerFunc {
 		ctx.Set("resource_id", j.Other["resource_id"])
 		ctx.Set("user_id", j.Other["user_id"])
 		ctx.Set("role", j.Other["role"])
-		ctx.Set("company_id", j.Other["company_id"])
+		ctx.Set("organization_id", j.Other["organization_id"])
 		ctx.Next()
 	}
 }

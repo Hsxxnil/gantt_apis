@@ -1,4 +1,4 @@
-package companies
+package organizations
 
 import (
 	"hta/internal/interactor/models/page"
@@ -52,7 +52,7 @@ type Fields struct {
 // List is multiple return structure files
 type List struct {
 	// 多筆
-	Companies []*struct {
+	Organizations []*struct {
 		// 表ID
 		ID string `json:"id,omitempty"`
 		// 網域
@@ -73,7 +73,7 @@ type List struct {
 		UpdatedBy string `json:"updated_by,omitempty"`
 		// 時間戳記
 		section.TimeAt
-	} `json:"companies"`
+	} `json:"organizations"`
 	// 分頁返回結構檔
 	page.Total
 }
