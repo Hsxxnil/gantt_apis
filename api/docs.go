@@ -8540,7 +8540,7 @@ const docTemplate = `{
             "required": [
                 "email",
                 "name",
-                "organization_id",
+                "org_id",
                 "password",
                 "role_id",
                 "user_name"
@@ -8554,7 +8554,7 @@ const docTemplate = `{
                     "description": "使用者中文名稱",
                     "type": "string"
                 },
-                "organization_id": {
+                "org_id": {
                     "description": "組織ID",
                     "type": "string"
                 },
@@ -8764,7 +8764,7 @@ const docTemplate = `{
                     "description": "使用者舊密碼",
                     "type": "string"
                 },
-                "organization_id": {
+                "org_id": {
                     "description": "組織ID",
                     "type": "string"
                 },
