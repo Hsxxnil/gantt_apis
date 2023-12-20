@@ -4,8 +4,8 @@ import (
 	"hta/internal/interactor/pkg/connect"
 	"hta/internal/interactor/pkg/util/log"
 	"hta/internal/router"
-	"hta/internal/router/company"
 	"hta/internal/router/holiday"
+	"hta/internal/router/organization"
 	"hta/internal/router/work_day"
 
 	"github.com/apex/gateway"
@@ -21,7 +21,7 @@ func main() {
 	engine := router.Default()
 	engine = holiday.GetRouter(engine, db)
 	engine = work_day.GetRouter(engine, db)
-	engine = company.GetRouter(engine, db)
+	engine = organization.GetRouter(engine, db)
 
 	log.Fatal(gateway.ListenAndServe(":8080", engine))
 }

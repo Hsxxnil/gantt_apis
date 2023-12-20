@@ -4,7 +4,7 @@ alter table users
     drop column phone_number;
 
 alter table users
-    add is_enabled boolean not null default false;ㄒ
+    add is_enabled boolean not null default false;
 
 create index idx_users_is_enabled on users (is_enabled);
 

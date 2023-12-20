@@ -24,7 +24,7 @@ type Table struct {
 	special.Table
 }
 
-// Base struct is corresponding end_date event_marks table structure file
+// Base struct is corresponding to event_marks table structure file
 type Base struct {
 	// 表ID
 	ID *string `json:"id,omitempty"`

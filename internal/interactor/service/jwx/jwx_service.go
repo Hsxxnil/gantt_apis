@@ -24,11 +24,11 @@ func Init() Service {
 
 func (s service) CreateAccessToken(input *model.JWX) (output *model.Token, err error) {
 	other := map[string]any{
-		"user_id":     input.UserID,
-		"name":        input.Name,
-		"resource_id": input.ResourceID,
-		"role":        input.Role,
-		"company_id":  input.CompanyID,
+		"user_id":         input.UserID,
+		"name":            input.Name,
+		"resource_id":     input.ResourceID,
+		"role":            input.Role,
+		"organization_id": input.OrgID,
 	}
 
 	accessExpiration := util.NowToUTC().Add(time.Minute * 5).Unix()

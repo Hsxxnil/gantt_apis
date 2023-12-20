@@ -19,8 +19,8 @@ type Create struct {
 	Email string `json:"email,omitempty" binding:"required,email" validate:"required,email"`
 	// 角色ID
 	RoleID string `json:"role_id,omitempty" binding:"required,uuid4" validate:"required,uuid4"`
-	// 公司ID
-	CompanyID string `json:"company_id,omitempty" binding:"required,uuid4" validate:"required,uuid4"`
+	// 組織ID
+	OrgID string `json:"organization_id,omitempty" binding:"required,uuid4" validate:"required,uuid4"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }
@@ -41,8 +41,8 @@ type Field struct {
 	Email *string `json:"email,omitempty" form:"email"`
 	// 角色ID
 	RoleID string `json:"role_id,omitempty" form:"role_id"`
-	// 公司ID
-	CompanyID *string `json:"company_id,omitempty" form:"company_id"`
+	// 組織ID
+	OrgID *string `json:"organization_id,omitempty" form:"organization_id"`
 	// 是否啟用
 	IsEnable *bool `json:"is_enable,omitempty" form:"is_enable"`
 	// 是否使用驗證器
@@ -145,8 +145,8 @@ type Update struct {
 	OtpSecret *string `json:"otp_secret,omitempty"`
 	// otp auth url
 	OtpAuthUrl *string `json:"otp_auth_url,omitempty"`
-	// 公司ID
-	CompanyID *string `json:"company_id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
+	// 組織ID
+	OrgID *string `json:"organization_id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
 	// 更新者
 	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }

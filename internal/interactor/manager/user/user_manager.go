@@ -40,9 +40,9 @@ func (m *manager) Create(trx *gorm.DB, input *userModel.Create) (int, any) {
 
 	// determine if the username is duplicate
 	quantity, _ := m.UserService.GetByQuantity(&userModel.Field{
-		UserName:  util.PointerString(input.UserName),
-		CompanyID: util.PointerString(input.CompanyID),
-		Email:     util.PointerString(input.Email),
+		UserName: util.PointerString(input.UserName),
+		OrgID:    util.PointerString(input.OrgID),
+		Email:    util.PointerString(input.Email),
 	})
 
 	if quantity > 0 {

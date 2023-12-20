@@ -81,7 +81,7 @@ func (c *control) Create(ctx *gin.Context) {
 // @Router /users/list [post]
 func (c *control) GetByList(ctx *gin.Context) {
 	input := &userModel.Fields{}
-	input.CompanyID = util.PointerString(ctx.MustGet("company_id").(string))
+	input.OrgID = util.PointerString(ctx.MustGet("organization_id").(string))
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
@@ -111,7 +111,7 @@ func (c *control) GetByList(ctx *gin.Context) {
 // @Router /users [get]
 func (c *control) GetByListNoPagination(ctx *gin.Context) {
 	input := &userModel.Field{}
-	input.CompanyID = util.PointerString(ctx.MustGet("company_id").(string))
+	input.OrgID = util.PointerString(ctx.MustGet("organization_id").(string))
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
