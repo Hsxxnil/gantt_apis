@@ -1,8 +1,8 @@
 package project_type
 
 import (
-	"encoding/json"
 	"errors"
+	"github.com/bytedance/sonic"
 	"hta/internal/interactor/pkg/util"
 
 	"gorm.io/gorm"
@@ -57,13 +57,13 @@ func (m *manager) GetByList(input *projectTypeModel.Fields) (int, any) {
 	}
 	output.Total.Total = quantity
 	output.Pages = util.Pagination(quantity, output.Limit)
-	projectTypeByte, err := json.Marshal(projectTypeBase)
+	projectTypeByte, err := sonic.Marshal(projectTypeBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = json.Unmarshal(projectTypeByte, &output.ProjectTypes)
+	err = sonic.Unmarshal(projectTypeByte, &output.ProjectTypes)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -85,13 +85,13 @@ func (m *manager) GetByListNoPagination(input *projectTypeModel.Field) (int, any
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 	output.Total.Total = quantity
-	projectTypeByte, err := json.Marshal(projectTypeBase)
+	projectTypeByte, err := sonic.Marshal(projectTypeBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = json.Unmarshal(projectTypeByte, &output.ProjectTypes)
+	err = sonic.Unmarshal(projectTypeByte, &output.ProjectTypes)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -117,8 +117,8 @@ func (m *manager) GetBySingle(input *projectTypeModel.Field) (int, any) {
 	}
 
 	output := &projectTypeModel.Single{}
-	projectTypeByte, _ := json.Marshal(projectTypeBase)
-	err = json.Unmarshal(projectTypeByte, &output)
+	projectTypeByte, _ := sonic.Marshal(projectTypeBase)
+	err = sonic.Unmarshal(projectTypeByte, &output)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())

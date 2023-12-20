@@ -1,7 +1,7 @@
 package task
 
 import (
-	"encoding/json"
+	"github.com/bytedance/sonic"
 	model "hta/internal/entity/postgresql/db/tasks"
 	"hta/internal/interactor/pkg/util/log"
 
@@ -42,14 +42,14 @@ func (s *storage) WithTrx(trx *gorm.DB) Entity {
 }
 
 func (s *storage) Create(input *model.Base) (err error) {
-	marshal, err := json.Marshal(input)
+	marshal, err := sonic.Marshal(input)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
 
 	data := &model.Table{}
-	err = json.Unmarshal(marshal, data)
+	err = sonic.Unmarshal(marshal, data)
 	if err != nil {
 		log.Error(err)
 		return err
@@ -65,14 +65,14 @@ func (s *storage) Create(input *model.Base) (err error) {
 }
 
 func (s *storage) CreateAll(input []*model.Base) (err error) {
-	marshal, err := json.Marshal(input)
+	marshal, err := sonic.Marshal(input)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
 
 	data := &[]model.Table{}
-	err = json.Unmarshal(marshal, data)
+	err = sonic.Unmarshal(marshal, data)
 	if err != nil {
 		log.Error(err)
 		return err

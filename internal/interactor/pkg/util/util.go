@@ -1,7 +1,7 @@
 package util
 
 import (
-	"encoding/json"
+	"github.com/bytedance/sonic"
 	"hta/internal/interactor/pkg/util/log"
 	"math"
 	"math/rand"
@@ -36,7 +36,7 @@ func RemoveString(s []string, item string) []string {
 // DecodeJSONToSlice is a generic function to decode a JSON string into a slice.
 func DecodeJSONToSlice(jsonStr string, targetSlice any) error {
 	if jsonStr != "" {
-		err := json.Unmarshal([]byte(jsonStr), targetSlice)
+		err := sonic.Unmarshal([]byte(jsonStr), targetSlice)
 		if err != nil {
 			log.Error(err)
 			return err

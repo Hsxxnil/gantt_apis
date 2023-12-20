@@ -1,9 +1,9 @@
 package task
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/bytedance/sonic"
 	resourceManager "hta/internal/interactor/manager/resource"
 	eventMarkModel "hta/internal/interactor/models/event_marks"
 	projectResourceModel "hta/internal/interactor/models/project_resources"
@@ -117,7 +117,7 @@ func (m *manager) createSubtasks(trx *gorm.DB, parentTask *taskModel.Create, sub
 			if len(subBody.Subtask) > 0 {
 				return nil, nil, nil, errors.New("the parent task cannot be segmented")
 			}
-			segJson, err := json.Marshal(subBody.Segments)
+			segJson, err := sonic.Marshal(subBody.Segments)
 			if err != nil {
 				log.Error(err)
 				return nil, nil, nil, err
@@ -127,7 +127,7 @@ func (m *manager) createSubtasks(trx *gorm.DB, parentTask *taskModel.Create, sub
 
 		// transform indicators to JSON
 		if len(subBody.Indicators) > 0 {
-			indJson, err := json.Marshal(subBody.Indicators)
+			indJson, err := sonic.Marshal(subBody.Indicators)
 			if err != nil {
 				log.Error(err)
 				return nil, nil, nil, err
@@ -191,7 +191,7 @@ func (m *manager) updateSubtasks(trx *gorm.DB, parentTask *taskModel.Update, sub
 			if len(subBody.Subtask) > 0 {
 				return nil, nil, nil, nil, nil, errors.New("the parent task cannot be segmented")
 			}
-			segJson, err := json.Marshal(subBody.Segments)
+			segJson, err := sonic.Marshal(subBody.Segments)
 			if err != nil {
 				log.Error(err)
 				return nil, nil, nil, nil, nil, err
@@ -203,7 +203,7 @@ func (m *manager) updateSubtasks(trx *gorm.DB, parentTask *taskModel.Update, sub
 
 		// transform indicators to JSON
 		if len(subBody.Indicators) > 0 {
-			indJson, err := json.Marshal(subBody.Indicators)
+			indJson, err := sonic.Marshal(subBody.Indicators)
 			if err != nil {
 				log.Error(err)
 				return nil, nil, nil, nil, nil, err
@@ -466,13 +466,13 @@ func (m *manager) Create(trx *gorm.DB, input *taskModel.Create) (int, any) {
 
 		// transform segments to JSON
 		if len(input.Segments) > 0 {
-			segJson, _ := json.Marshal(input.Segments)
+			segJson, _ := sonic.Marshal(input.Segments)
 			input.Segment = string(segJson)
 		}
 
 		// transform indicators to JSON
 		if len(input.Indicators) > 0 {
-			indJson, _ := json.Marshal(input.Indicators)
+			indJson, _ := sonic.Marshal(input.Indicators)
 			input.Indicator = string(indJson)
 		}
 
@@ -485,13 +485,13 @@ func (m *manager) Create(trx *gorm.DB, input *taskModel.Create) (int, any) {
 			}
 
 			// transform segments to JSON
-			segJson, _ := json.Marshal(input.Segments)
+			segJson, _ := sonic.Marshal(input.Segments)
 			input.Segment = string(segJson)
 		}
 
 		// transform indicators to JSON
 		if len(input.Indicators) > 0 {
-			indJson, _ := json.Marshal(input.Indicators)
+			indJson, _ := sonic.Marshal(input.Indicators)
 			input.Indicator = string(indJson)
 		}
 
@@ -589,13 +589,13 @@ func (m *manager) CreateAll(trx *gorm.DB, input []*taskModel.Create) (int, any) 
 			}
 
 			// transform segments to JSON
-			segJson, _ := json.Marshal(inputBody.Segments)
+			segJson, _ := sonic.Marshal(inputBody.Segments)
 			inputBody.Segment = string(segJson)
 		}
 
 		// transform indicators to JSON
 		if len(inputBody.Indicators) > 0 {
-			indJson, _ := json.Marshal(inputBody.Indicators)
+			indJson, _ := sonic.Marshal(inputBody.Indicators)
 			inputBody.Indicator = string(indJson)
 		}
 
@@ -671,13 +671,13 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 	}
 
 	var projects []*projectModel.Single
-	projectByte, err := json.Marshal(projectBase)
+	projectByte, err := sonic.Marshal(projectBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = json.Unmarshal(projectByte, &projects)
+	err = sonic.Unmarshal(projectByte, &projects)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -719,13 +719,13 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 			}
 
 			var projectTasks []*taskModel.Single
-			taskByte, err := json.Marshal(taskBase)
+			taskByte, err := sonic.Marshal(taskBase)
 			if err != nil {
 				log.Error(err)
 				goroutineErr <- err
 			}
 
-			err = json.Unmarshal(taskByte, &projectTasks)
+			err = sonic.Unmarshal(taskByte, &projectTasks)
 			if err != nil {
 				log.Error(err)
 				goroutineErr <- err
@@ -863,13 +863,13 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 				log.Error(err)
 				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 			}
-			eventMarkByte, err := json.Marshal(eventMarkBase)
+			eventMarkByte, err := sonic.Marshal(eventMarkBase)
 			if err != nil {
 				log.Error(err)
 				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 			}
 
-			err = json.Unmarshal(eventMarkByte, &eventMarks)
+			err = sonic.Unmarshal(eventMarkByte, &eventMarks)
 			if err != nil {
 				log.Error(err)
 				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -891,13 +891,13 @@ func (m *manager) GetByListNoPaginationNoSub(input *taskModel.Field) (int, any) 
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	taskByte, err := json.Marshal(taskBase)
+	taskByte, err := sonic.Marshal(taskBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = json.Unmarshal(taskByte, &output.Tasks)
+	err = sonic.Unmarshal(taskByte, &output.Tasks)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -961,8 +961,8 @@ func (m *manager) GetBySingle(input *taskModel.Field) (int, any) {
 	}
 
 	output := &taskModel.Single{}
-	taskByte, _ := json.Marshal(taskBase)
-	err = json.Unmarshal(taskByte, &output)
+	taskByte, _ := sonic.Marshal(taskBase)
+	err = sonic.Unmarshal(taskByte, &output)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -1078,13 +1078,13 @@ func (m *manager) Update(trx *gorm.DB, input *taskModel.Update) (int, any) {
 		} else {
 			// transform taskBase to update struct
 			original := &taskModel.Update{}
-			taskByte, err := json.Marshal(taskBase)
+			taskByte, err := sonic.Marshal(taskBase)
 			if err != nil {
 				log.Error(err)
 				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 			}
 
-			err = json.Unmarshal(taskByte, &original)
+			err = sonic.Unmarshal(taskByte, &original)
 			if err != nil {
 				log.Error(err)
 				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -1109,13 +1109,13 @@ func (m *manager) Update(trx *gorm.DB, input *taskModel.Update) (int, any) {
 		}
 
 		// transform segments to JSON
-		segJson, _ := json.Marshal(input.Segments)
+		segJson, _ := sonic.Marshal(input.Segments)
 		input.Segment = util.PointerString(string(segJson))
 	}
 
 	// transform indicators to JSON
 	if len(input.Indicators) > 0 {
-		indJson, _ := json.Marshal(input.Indicators)
+		indJson, _ := sonic.Marshal(input.Indicators)
 		input.Indicator = util.PointerString(string(indJson))
 	}
 
@@ -1187,13 +1187,13 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 			}
 
 			// transform segments to JSON
-			segJson, _ := json.Marshal(inputBody.Segments)
+			segJson, _ := sonic.Marshal(inputBody.Segments)
 			inputBody.Segment = util.PointerString(string(segJson))
 		}
 
 		// transform indicators to JSON
 		if len(inputBody.Indicators) > 0 {
-			indJson, _ := json.Marshal(inputBody.Indicators)
+			indJson, _ := sonic.Marshal(inputBody.Indicators)
 			inputBody.Indicator = util.PointerString(string(indJson))
 		}
 

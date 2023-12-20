@@ -1,8 +1,8 @@
 package holiday
 
 import (
-	"encoding/json"
 	"errors"
+	"github.com/bytedance/sonic"
 	"hta/internal/interactor/pkg/util"
 
 	"gorm.io/gorm"
@@ -57,13 +57,13 @@ func (m *manager) GetByList(input *holidayModel.Fields) (int, any) {
 	}
 	output.Total.Total = quantity
 	output.Pages = util.Pagination(quantity, output.Limit)
-	holidayByte, err := json.Marshal(holidayBase)
+	holidayByte, err := sonic.Marshal(holidayBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = json.Unmarshal(holidayByte, &output.Holidays)
+	err = sonic.Unmarshal(holidayByte, &output.Holidays)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -85,13 +85,13 @@ func (m *manager) GetByListNoPagination(input *holidayModel.Field) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 	output.Total.Total = quantity
-	holidayByte, err := json.Marshal(holidayBase)
+	holidayByte, err := sonic.Marshal(holidayBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = json.Unmarshal(holidayByte, &output.Holidays)
+	err = sonic.Unmarshal(holidayByte, &output.Holidays)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -117,8 +117,8 @@ func (m *manager) GetBySingle(input *holidayModel.Field) (int, any) {
 	}
 
 	output := &holidayModel.Single{}
-	holidayByte, _ := json.Marshal(holidayBase)
-	err = json.Unmarshal(holidayByte, &output)
+	holidayByte, _ := sonic.Marshal(holidayBase)
+	err = sonic.Unmarshal(holidayByte, &output)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
