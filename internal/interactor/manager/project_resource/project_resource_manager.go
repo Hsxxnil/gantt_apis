@@ -1,8 +1,8 @@
 package project_resource
 
 import (
-	"encoding/json"
 	"errors"
+	"github.com/bytedance/sonic"
 	"hta/internal/interactor/pkg/util"
 
 	"gorm.io/gorm"
@@ -41,13 +41,13 @@ func (m *manager) GetByList(input *projectResourceModel.Fields) (int, any) {
 	}
 	output.Total.Total = quantity
 	output.Pages = util.Pagination(quantity, output.Limit)
-	projectResourceByte, err := json.Marshal(projectResourceBase)
+	projectResourceByte, err := sonic.Marshal(projectResourceBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = json.Unmarshal(projectResourceByte, &output.ProjectResources)
+	err = sonic.Unmarshal(projectResourceByte, &output.ProjectResources)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -83,13 +83,13 @@ func (m *manager) GetByProjectList(input *projectResourceModel.ProjectIDs) (int,
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	projectResourceByte, err := json.Marshal(projectResourceBase)
+	projectResourceByte, err := sonic.Marshal(projectResourceBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = json.Unmarshal(projectResourceByte, &projectResList)
+	err = sonic.Unmarshal(projectResourceByte, &projectResList)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -132,8 +132,8 @@ func (m *manager) GetBySingle(input *projectResourceModel.Field) (int, any) {
 	}
 
 	output := &projectResourceModel.Single{}
-	projectResourceByte, _ := json.Marshal(projectResourceBase)
-	err = json.Unmarshal(projectResourceByte, &output)
+	projectResourceByte, _ := sonic.Marshal(projectResourceBase)
+	err = sonic.Unmarshal(projectResourceByte, &output)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())

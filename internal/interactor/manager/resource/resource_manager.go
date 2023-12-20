@@ -1,8 +1,8 @@
 package resource
 
 import (
-	"encoding/json"
 	"errors"
+	"github.com/bytedance/sonic"
 	"hta/internal/interactor/pkg/util"
 	"strconv"
 
@@ -59,13 +59,13 @@ func (m *manager) GetByList(input *resourceModel.Fields) (int, any) {
 	}
 	output.Total.Total = quantity
 	output.Pages = util.Pagination(quantity, output.Limit)
-	resourceByte, err := json.Marshal(resourceBase)
+	resourceByte, err := sonic.Marshal(resourceBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = json.Unmarshal(resourceByte, &output.Resources)
+	err = sonic.Unmarshal(resourceByte, &output.Resources)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -87,13 +87,13 @@ func (m *manager) GetByListNoPagination(input *resourceModel.Field) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 	output.Total.Total = quantity
-	resourceByte, err := json.Marshal(resourceBase)
+	resourceByte, err := sonic.Marshal(resourceBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = json.Unmarshal(resourceByte, &output.Resources)
+	err = sonic.Unmarshal(resourceByte, &output.Resources)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -119,8 +119,8 @@ func (m *manager) GetBySingle(input *resourceModel.Field) (int, any) {
 	}
 
 	output := &resourceModel.Single{}
-	resourceByte, _ := json.Marshal(resourceBase)
-	err = json.Unmarshal(resourceByte, &output)
+	resourceByte, _ := sonic.Marshal(resourceBase)
+	err = sonic.Unmarshal(resourceByte, &output)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
