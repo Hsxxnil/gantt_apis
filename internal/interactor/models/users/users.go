@@ -44,7 +44,7 @@ type Field struct {
 	// 組織ID
 	OrgID *string `json:"org_id,omitempty" form:"org_id"`
 	// 是否啟用
-	IsEnable *bool `json:"is_enable,omitempty" form:"is_enable"`
+	IsEnabled *bool `json:"is_enabled,omitempty" form:"is_enabled"`
 	// 是否使用驗證器
 	IsAuthenticator *bool `json:"is_authenticator,omitempty" form:"is_authenticator"`
 }
