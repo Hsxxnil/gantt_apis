@@ -17,8 +17,6 @@ type Table struct {
 	ResourceUUID *string `gorm:"column:resource_uuid;type:text;" json:"resource_uuid"`
 	// 使用者密碼
 	Password string `gorm:"column:password;type:text;not null;" json:"password"`
-	// 使用者電話
-	PhoneNumber string `gorm:"column:phone_number;type:text;" json:"phone_number"`
 	// 使用者電子郵件
 	Email string `gorm:"column:email;type:text;" json:"email"`
 	// 角色ID
@@ -31,6 +29,10 @@ type Table struct {
 	OtpAuthUrl string `gorm:"column:otp_auth_url;type:text;" json:"otp_auth_url"`
 	// 公司ID
 	CompanyID string `gorm:"column:company_id;type:uuid;" json:"company_id"`
+	// 是否啟用
+	IsEnable bool `gorm:"column:is_enable;type:boolean;not null;default:false;" json:"is_enable"`
+	// 是否使用驗證器
+	IsAuthenticator bool `gorm:"column:is_authenticator;type:boolean;not null;default:false;" json:"is_authenticator"`
 	// 引入後端專用
 	special.Table
 }
@@ -47,8 +49,6 @@ type Base struct {
 	ResourceUUID *string `json:"resource_uuid,omitempty"`
 	// 使用者密碼
 	Password *string `json:"password,omitempty"`
-	// 使用者電話
-	PhoneNumber *string `json:"phone_number,omitempty"`
 	// 使用者電子郵件
 	Email *string `json:"email,omitempty"`
 	// 角色ID
@@ -61,6 +61,10 @@ type Base struct {
 	OtpAuthUrl *string `json:"otp_auth_url,omitempty"`
 	// 公司ID
 	CompanyID *string `json:"company_id,omitempty"`
+	// 是否啟用
+	IsEnable *bool `json:"is_enable,omitempty"`
+	// 是否使用驗證器
+	IsAuthenticator *bool `json:"is_authenticator,omitempty"`
 	// 引入後端專用
 	special.Base
 }
