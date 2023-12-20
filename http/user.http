@@ -14,8 +14,8 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "passcode": "701460",
-  "domain": "pm.hta365.net"
+  "passcode": "781174",
+  "domain": "localhost"
 }
 
 > {% client.global.set("accessToken", response.body.body.access_token); %}

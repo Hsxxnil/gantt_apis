@@ -821,6 +821,8 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 						}
 					}
 					output.Tasks = filteredTasks
+				} else {
+					output.Tasks = projectTaskMap[projectsUUID]
 				}
 				output.ProjectStatus = *projectBase[0].Status
 
@@ -844,6 +846,8 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 						}
 					}
 					projectTask.Subtask = filteredTasks
+				} else {
+					projectTask.Subtask = projectTaskMap[projectsUUID]
 				}
 
 				// add project to output.Tasks

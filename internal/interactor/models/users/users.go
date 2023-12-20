@@ -15,8 +15,6 @@ type Create struct {
 	ResourceUUID *string `json:"resource_uuid,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
 	// 使用者密碼
 	Password string `json:"password,omitempty" binding:"required" validate:"required"`
-	// 使用者電話
-	PhoneNumber string `json:"phone_number,omitempty"`
 	// 使用者電子郵件
 	Email string `json:"email,omitempty" binding:"required,email" validate:"required,email"`
 	// 角色ID
@@ -39,14 +37,16 @@ type Field struct {
 	ResourceUUID *string `json:"resource_uuid,omitempty" form:"resource_uuid"`
 	// 使用者密碼
 	Password *string `json:"password,omitempty" form:"password"`
-	// 使用者電話
-	PhoneNumber *string `json:"phone_number,omitempty" form:"phone_number"`
 	// 使用者電子郵件
 	Email *string `json:"email,omitempty" form:"email"`
 	// 角色ID
 	RoleID string `json:"role_id,omitempty" form:"role_id"`
 	// 公司ID
 	CompanyID *string `json:"company_id,omitempty" form:"company_id"`
+	// 是否啟用
+	IsEnable *bool `json:"is_enable,omitempty" form:"is_enable"`
+	// 是否使用驗證器
+	IsAuthenticator *bool `json:"is_authenticator,omitempty" form:"is_authenticator"`
 }
 
 // Fields is the searched structure file (including pagination)
@@ -69,8 +69,6 @@ type List struct {
 		Name string `json:"name,omitempty"`
 		// 資源UUID
 		ResourceUUID string `json:"resource_uuid,omitempty"`
-		// 使用者電話
-		PhoneNumber string `json:"phone_number,omitempty"`
 		// 使用者電子郵件
 		Email string `json:"email,omitempty"`
 		// 角色ID
@@ -109,14 +107,14 @@ type Single struct {
 	Name string `json:"name,omitempty"`
 	// 資源UUID
 	ResourceUUID string `json:"resource_uuid,omitempty"`
-	// 使用者電話
-	PhoneNumber string `json:"phone_number,omitempty"`
 	// 使用者電子郵件
 	Email string `json:"email,omitempty"`
 	// 角色ID
 	RoleID string `json:"role_id,omitempty"`
 	// 角色
 	Role string `json:"role,omitempty"`
+	// otp auth url
+	OtpAuthUrl string `json:"otp_auth_url,omitempty"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty"`
 	// 更新者
@@ -139,8 +137,6 @@ type Update struct {
 	Password *string `json:"password,omitempty"`
 	// 使用者舊密碼
 	OldPassword *string `json:"old_password,omitempty"`
-	// 使用者電話
-	PhoneNumber *string `json:"phone_number,omitempty"`
 	// 使用者電子郵件
 	Email *string `json:"email,omitempty"`
 	// 角色ID
@@ -155,6 +151,7 @@ type Update struct {
 	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }
 
+// ResetPassword struct is used to reset password
 type ResetPassword struct {
 	// 表ID
 	ID string `json:"id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
