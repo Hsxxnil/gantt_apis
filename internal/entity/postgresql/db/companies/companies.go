@@ -5,7 +5,7 @@ import (
 	"hta/internal/interactor/models/special"
 )
 
-// Table struct is event_marks database table struct
+// Table struct is companies database table struct
 type Table struct {
 	// 表ID
 	ID string `gorm:"<-:create;column:id;type:uuid;not null;primaryKey;" json:"id"`
@@ -29,7 +29,7 @@ type Table struct {
 	special.Table
 }
 
-// Base struct is corresponding end_date event_marks table structure file
+// Base struct is corresponding to companies table structure file
 type Base struct {
 	// 表ID
 	ID *string `json:"id,omitempty"`
