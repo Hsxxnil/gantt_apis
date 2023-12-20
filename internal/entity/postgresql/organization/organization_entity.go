@@ -1,9 +1,9 @@
-package company
+package organization
 
 import (
 	"encoding/json"
 
-	model "hta/internal/entity/postgresql/db/companies"
+	model "hta/internal/entity/postgresql/db/organizations"
 	"hta/internal/interactor/pkg/util/log"
 
 	"gorm.io/gorm"

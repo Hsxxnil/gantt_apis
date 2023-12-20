@@ -27,8 +27,8 @@ type Table struct {
 	OtpSecret string `gorm:"column:otp_secret;type:text;" json:"otp_secret"`
 	// otp auth url
 	OtpAuthUrl string `gorm:"column:otp_auth_url;type:text;" json:"otp_auth_url"`
-	// 公司ID
-	CompanyID string `gorm:"column:company_id;type:uuid;" json:"company_id"`
+	// 組織ID
+	OrgID string `gorm:"column:organization_id;type:uuid;" json:"organization_id"`
 	// 是否啟用
 	IsEnable bool `gorm:"column:is_enable;type:boolean;not null;default:false;" json:"is_enable"`
 	// 是否使用驗證器
@@ -59,8 +59,8 @@ type Base struct {
 	OtpSecret *string `json:"otp_secret,omitempty"`
 	// otp auth url
 	OtpAuthUrl *string `json:"otp_auth_url,omitempty"`
-	// 公司ID
-	CompanyID *string `json:"company_id,omitempty"`
+	// 組織ID
+	OrgID *string `json:"organization_id,omitempty"`
 	// 是否啟用
 	IsEnable *bool `json:"is_enable,omitempty"`
 	// 是否使用驗證器

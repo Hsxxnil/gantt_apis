@@ -1,4 +1,4 @@
-drop index idx_users_company_id;
+drop index idx_users_org_id;
 
 alter table users
-    drop column company_id;
+    drop column org_id;

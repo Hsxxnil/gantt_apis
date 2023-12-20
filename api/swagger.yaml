@@ -27,150 +27,6 @@ definitions:
         example: "2021-07-29T07:23:47Z"
         type: string
     type: object
-  companies.Create:
-    properties:
-      address:
-        description: 營業地址
-        type: string
-      domain:
-        description: 網域
-        type: string
-      name:
-        description: 名稱
-        type: string
-      phone:
-        description: 電話
-        type: string
-      remarks:
-        description: 備註
-        type: string
-      tax_id_number:
-        description: 統一編號
-        type: string
-    required:
-    - domain
-    - name
-    type: object
-  companies.List:
-    properties:
-      companies:
-        description: 多筆
-        items:
-          properties:
-            address:
-              description: 營業地址
-              type: string
-            created_at:
-              description: 創建時間
-              type: string
-            created_by:
-              description: 創建者
-              type: string
-            deleted_at:
-              description: 刪除時間
-              type: string
-            domain:
-              description: 網域
-              type: string
-            id:
-              description: 表ID
-              type: string
-            name:
-              description: 名稱
-              type: string
-            phone:
-              description: 電話
-              type: string
-            remarks:
-              description: 備註
-              type: string
-            tax_id_number:
-              description: 統一編號
-              type: string
-            updated_at:
-              description: 更新時間
-              type: string
-            updated_by:
-              description: 更新者
-              type: string
-          type: object
-        type: array
-      limit:
-        description: 筆數(請從1開始帶入,最高上限20)
-        type: integer
-      page:
-        description: 頁數(請從1開始帶入)
-        type: integer
-      pages:
-        description: 總頁數
-        type: integer
-      total:
-        description: 總筆數
-        type: integer
-    required:
-    - limit
-    - page
-    type: object
-  companies.Single:
-    properties:
-      address:
-        description: 營業地址
-        type: string
-      created_at:
-        description: 創建時間
-        type: string
-      created_by:
-        description: 創建者
-        type: string
-      deleted_at:
-        description: 刪除時間
-        type: string
-      domain:
-        description: 網域
-        type: string
-      id:
-        description: 表ID
-        type: string
-      name:
-        description: 名稱
-        type: string
-      phone:
-        description: 電話
-        type: string
-      remarks:
-        description: 備註
-        type: string
-      tax_id_number:
-        description: 統一編號
-        type: string
-      updated_at:
-        description: 更新時間
-        type: string
-      updated_by:
-        description: 更新者
-        type: string
-    type: object
-  companies.Update:
-    properties:
-      address:
-        description: 營業地址
-        type: string
-      domain:
-        description: 網域
-        type: string
-      name:
-        description: 名稱
-        type: string
-      phone:
-        description: 電話
-        type: string
-      remarks:
-        description: 備註
-        type: string
-      tax_id_number:
-        description: 統一編號
-        type: string
-    type: object
   event_marks.Create:
     properties:
       day:
@@ -416,6 +272,150 @@ definitions:
     - domain
     - passcode
     - user_name
+    type: object
+  organizations.Create:
+    properties:
+      address:
+        description: 營業地址
+        type: string
+      domain:
+        description: 網域
+        type: string
+      name:
+        description: 名稱
+        type: string
+      phone:
+        description: 電話
+        type: string
+      remarks:
+        description: 備註
+        type: string
+      tax_id_number:
+        description: 統一編號
+        type: string
+    required:
+    - domain
+    - name
+    type: object
+  organizations.List:
+    properties:
+      limit:
+        description: 筆數(請從1開始帶入,最高上限20)
+        type: integer
+      organizations:
+        description: 多筆
+        items:
+          properties:
+            address:
+              description: 營業地址
+              type: string
+            created_at:
+              description: 創建時間
+              type: string
+            created_by:
+              description: 創建者
+              type: string
+            deleted_at:
+              description: 刪除時間
+              type: string
+            domain:
+              description: 網域
+              type: string
+            id:
+              description: 表ID
+              type: string
+            name:
+              description: 名稱
+              type: string
+            phone:
+              description: 電話
+              type: string
+            remarks:
+              description: 備註
+              type: string
+            tax_id_number:
+              description: 統一編號
+              type: string
+            updated_at:
+              description: 更新時間
+              type: string
+            updated_by:
+              description: 更新者
+              type: string
+          type: object
+        type: array
+      page:
+        description: 頁數(請從1開始帶入)
+        type: integer
+      pages:
+        description: 總頁數
+        type: integer
+      total:
+        description: 總筆數
+        type: integer
+    required:
+    - limit
+    - page
+    type: object
+  organizations.Single:
+    properties:
+      address:
+        description: 營業地址
+        type: string
+      created_at:
+        description: 創建時間
+        type: string
+      created_by:
+        description: 創建者
+        type: string
+      deleted_at:
+        description: 刪除時間
+        type: string
+      domain:
+        description: 網域
+        type: string
+      id:
+        description: 表ID
+        type: string
+      name:
+        description: 名稱
+        type: string
+      phone:
+        description: 電話
+        type: string
+      remarks:
+        description: 備註
+        type: string
+      tax_id_number:
+        description: 統一編號
+        type: string
+      updated_at:
+        description: 更新時間
+        type: string
+      updated_by:
+        description: 更新者
+        type: string
+    type: object
+  organizations.Update:
+    properties:
+      address:
+        description: 營業地址
+        type: string
+      domain:
+        description: 網域
+        type: string
+      name:
+        description: 名稱
+        type: string
+      phone:
+        description: 電話
+        type: string
+      remarks:
+        description: 備註
+        type: string
+      tax_id_number:
+        description: 統一編號
+        type: string
     type: object
   policies.PolicyRule:
     properties:
@@ -1561,14 +1561,14 @@ definitions:
     type: object
   users.Create:
     properties:
-      company_id:
-        description: 公司ID
-        type: string
       email:
         description: 使用者電子郵件
         type: string
       name:
         description: 使用者中文名稱
+        type: string
+      organization_id:
+        description: 組織ID
         type: string
       password:
         description: 使用者密碼
@@ -1583,9 +1583,9 @@ definitions:
         description: 使用者名稱
         type: string
     required:
-    - company_id
     - email
     - name
+    - organization_id
     - password
     - role_id
     - user_name
@@ -1717,9 +1717,6 @@ definitions:
     type: object
   users.Update:
     properties:
-      company_id:
-        description: 公司ID
-        type: string
       email:
         description: 使用者電子郵件
         type: string
@@ -1728,6 +1725,9 @@ definitions:
         type: string
       old_password:
         description: 使用者舊密碼
+        type: string
+      organization_id:
+        description: 組織ID
         type: string
       otp_auth_url:
         description: otp auth url
@@ -1876,304 +1876,6 @@ info:
   title: HTA GANTT APIs
   version: "0.1"
 paths:
-  /companies:
-    get:
-      consumes:
-      - application/json
-      description: 取得全部公司
-      parameters:
-      - description: JWE Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: 目前頁數,請從1開始帶入
-        in: query
-        name: page
-        required: true
-        type: integer
-      - description: 一次回傳比數,請從1開始帶入,最高上限20
-        in: query
-        name: limit
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 成功後返回的值
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.SuccessfulMessage'
-            - properties:
-                body:
-                  $ref: '#/definitions/companies.List'
-              type: object
-        "415":
-          description: 必要欄位帶入錯誤
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.ErrorMessage'
-            - properties:
-                detailed:
-                  type: string
-              type: object
-        "500":
-          description: 伺服器非預期錯誤
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.ErrorMessage'
-            - properties:
-                detailed:
-                  type: string
-              type: object
-      summary: 取得全部公司
-      tags:
-      - company
-    post:
-      consumes:
-      - application/json
-      description: 新增公司
-      parameters:
-      - description: JWE Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: 新增公司
-        in: body
-        name: '*'
-        required: true
-        schema:
-          $ref: '#/definitions/companies.Create'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 成功後返回的值
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.SuccessfulMessage'
-            - properties:
-                body:
-                  type: string
-              type: object
-        "415":
-          description: 必要欄位帶入錯誤
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.ErrorMessage'
-            - properties:
-                detailed:
-                  type: string
-              type: object
-        "500":
-          description: 伺服器非預期錯誤
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.ErrorMessage'
-            - properties:
-                detailed:
-                  type: string
-              type: object
-      summary: 新增公司
-      tags:
-      - company
-  /companies/{id}:
-    delete:
-      consumes:
-      - application/json
-      description: 刪除單一公司
-      parameters:
-      - description: JWE Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: 公司UUID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 成功後返回的值
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.SuccessfulMessage'
-            - properties:
-                body:
-                  type: string
-              type: object
-        "415":
-          description: 必要欄位帶入錯誤
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.ErrorMessage'
-            - properties:
-                detailed:
-                  type: string
-              type: object
-        "500":
-          description: 伺服器非預期錯誤
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.ErrorMessage'
-            - properties:
-                detailed:
-                  type: string
-              type: object
-      summary: 刪除單一公司
-      tags:
-      - company
-    get:
-      consumes:
-      - application/json
-      description: 取得單一公司
-      parameters:
-      - description: JWE Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: 公司UUID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 成功後返回的值
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.SuccessfulMessage'
-            - properties:
-                body:
-                  $ref: '#/definitions/companies.Single'
-              type: object
-        "415":
-          description: 必要欄位帶入錯誤
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.ErrorMessage'
-            - properties:
-                detailed:
-                  type: string
-              type: object
-        "500":
-          description: 伺服器非預期錯誤
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.ErrorMessage'
-            - properties:
-                detailed:
-                  type: string
-              type: object
-      summary: 取得單一公司
-      tags:
-      - company
-    patch:
-      consumes:
-      - application/json
-      description: 更新單一公司
-      parameters:
-      - description: JWE Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: 公司UUID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: 更新公司
-        in: body
-        name: '*'
-        required: true
-        schema:
-          $ref: '#/definitions/companies.Update'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 成功後返回的值
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.SuccessfulMessage'
-            - properties:
-                body:
-                  type: string
-              type: object
-        "415":
-          description: 必要欄位帶入錯誤
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.ErrorMessage'
-            - properties:
-                detailed:
-                  type: string
-              type: object
-        "500":
-          description: 伺服器非預期錯誤
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.ErrorMessage'
-            - properties:
-                detailed:
-                  type: string
-              type: object
-      summary: 更新單一公司
-      tags:
-      - company
-  /companies/no-pagination:
-    get:
-      consumes:
-      - application/json
-      description: 取得全部公司
-      parameters:
-      - description: JWE Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 成功後返回的值
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.SuccessfulMessage'
-            - properties:
-                body:
-                  $ref: '#/definitions/tasks.List'
-              type: object
-        "415":
-          description: 必要欄位帶入錯誤
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.ErrorMessage'
-            - properties:
-                detailed:
-                  type: string
-              type: object
-        "500":
-          description: 伺服器非預期錯誤
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.ErrorMessage'
-            - properties:
-                detailed:
-                  type: string
-              type: object
-      summary: 取得全部公司(不用page&limit)
-      tags:
-      - company
   /event-marks:
     post:
       consumes:
@@ -2715,6 +2417,304 @@ paths:
       summary: 使用者登入
       tags:
       - login
+  /organizations:
+    get:
+      consumes:
+      - application/json
+      description: 取得全部組織
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 目前頁數,請從1開始帶入
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 一次回傳比數,請從1開始帶入,最高上限20
+        in: query
+        name: limit
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/organizations.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得全部組織
+      tags:
+      - organization
+    post:
+      consumes:
+      - application/json
+      description: 新增組織
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 新增組織
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/organizations.Create'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 新增組織
+      tags:
+      - organization
+  /organizations/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 刪除單一組織
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 組織UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 刪除單一組織
+      tags:
+      - organization
+    get:
+      consumes:
+      - application/json
+      description: 取得單一組織
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 組織UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/organizations.Single'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得單一組織
+      tags:
+      - organization
+    patch:
+      consumes:
+      - application/json
+      description: 更新單一組織
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 組織UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 更新組織
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/organizations.Update'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 更新單一組織
+      tags:
+      - organization
+  /organizations/no-pagination:
+    get:
+      consumes:
+      - application/json
+      description: 取得全部組織
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/tasks.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得全部組織(不用page&limit)
+      tags:
+      - organization
   /project-resources:
     post:
       consumes:

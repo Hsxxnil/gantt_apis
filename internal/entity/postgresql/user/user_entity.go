@@ -78,8 +78,8 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 		query.Where("resource_uuid = ?", input.ResourceUUID)
 	}
 
-	if input.CompanyID != nil {
-		query.Where("company_id = ?", input.CompanyID)
+	if input.OrgID != nil {
+		query.Where("organization_id = ?", input.OrgID)
 	}
 
 	err = query.Count(&quantity).Offset(int((input.Page - 1) * input.Limit)).
@@ -110,8 +110,8 @@ func (s *storage) GetByListNoPagination(input *model.Base) (output []*model.Tabl
 		query.Where("resource_uuid = ?", input.ResourceUUID)
 	}
 
-	if input.CompanyID != nil {
-		query.Where("company_id = ?", input.CompanyID)
+	if input.OrgID != nil {
+		query.Where("organization_id = ?", input.OrgID)
 	}
 
 	err = query.Order("created_at desc").Find(&output).Error
@@ -141,8 +141,8 @@ func (s *storage) GetBySingle(input *model.Base) (output *model.Table, err error
 		query.Where("resource_uuid = ?", input.ResourceUUID)
 	}
 
-	if input.CompanyID != nil {
-		query.Where("company_id = ?", input.CompanyID)
+	if input.OrgID != nil {
+		query.Where("organization_id = ?", input.OrgID)
 	}
 
 	if input.Email != nil {
@@ -172,8 +172,8 @@ func (s *storage) GetByQuantity(input *model.Base) (quantity int64, err error) {
 		query.Where("resource_uuid = ?", input.ResourceUUID)
 	}
 
-	if input.CompanyID != nil {
-		query.Where("company_id = ?", input.CompanyID)
+	if input.OrgID != nil {
+		query.Where("organization_id = ?", input.OrgID)
 	}
 
 	err = query.Count(&quantity).Select("*").Error
@@ -217,8 +217,8 @@ func (s *storage) Update(input *model.Base) (err error) {
 		data["otp_auth_url"] = input.OtpAuthUrl
 	}
 
-	if input.CompanyID != nil {
-		data["company_id"] = input.CompanyID
+	if input.OrgID != nil {
+		data["organization_id"] = input.OrgID
 	}
 
 	if input.UpdatedBy != nil {
