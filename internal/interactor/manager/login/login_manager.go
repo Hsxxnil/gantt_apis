@@ -1,9 +1,9 @@
 package login
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/bytedance/sonic"
 	"github.com/ggwhite/go-masker"
 	"gorm.io/gorm"
 	"hta/config"
@@ -192,8 +192,8 @@ func (m *manager) Verify(input *loginModel.Verify) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	accessTokenByte, _ := json.Marshal(accessToken)
-	err = json.Unmarshal(accessTokenByte, &output)
+	accessTokenByte, _ := sonic.Marshal(accessToken)
+	err = sonic.Unmarshal(accessTokenByte, &output)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -209,8 +209,8 @@ func (m *manager) Verify(input *loginModel.Verify) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	refreshTokenByte, _ := json.Marshal(refreshToken)
-	err = json.Unmarshal(refreshTokenByte, &output)
+	refreshTokenByte, _ := sonic.Marshal(refreshToken)
+	err = sonic.Unmarshal(refreshTokenByte, &output)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())

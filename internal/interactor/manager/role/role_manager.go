@@ -1,8 +1,8 @@
 package role
 
 import (
-	"encoding/json"
 	"errors"
+	"github.com/bytedance/sonic"
 
 	"hta/internal/interactor/pkg/util"
 
@@ -66,13 +66,13 @@ func (m *manager) GetByList(input *roleModel.Fields) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 	output.Total.Total = quantity
-	roleByte, err := json.Marshal(roleBase)
+	roleByte, err := sonic.Marshal(roleBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 	output.Pages = util.Pagination(quantity, output.Limit)
-	err = json.Unmarshal(roleByte, &output.Roles)
+	err = sonic.Unmarshal(roleByte, &output.Roles)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -93,8 +93,8 @@ func (m *manager) GetBySingle(input *roleModel.Field) (int, any) {
 	}
 
 	output := &roleModel.Single{}
-	roleByte, _ := json.Marshal(roleBase)
-	err = json.Unmarshal(roleByte, &output)
+	roleByte, _ := sonic.Marshal(roleBase)
+	err = sonic.Unmarshal(roleByte, &output)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())

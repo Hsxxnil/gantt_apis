@@ -1,8 +1,8 @@
 package project
 
 import (
-	"encoding/json"
 	"errors"
+	"github.com/bytedance/sonic"
 	eventMarkModel "hta/internal/interactor/models/event_marks"
 	projectResourceModel "hta/internal/interactor/models/project_resources"
 	projectTypeModel "hta/internal/interactor/models/project_types"
@@ -133,13 +133,13 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 	}
 	output.Total.Total = quantity
 	output.Pages = util.Pagination(quantity, output.Limit)
-	projectByte, err := json.Marshal(projectBase)
+	projectByte, err := sonic.Marshal(projectBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = json.Unmarshal(projectByte, &output.Projects)
+	err = sonic.Unmarshal(projectByte, &output.Projects)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -175,13 +175,13 @@ func (m *manager) GetByListNoPagination(input *projectModel.Field) (int, any) {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
-	projectByte, err := json.Marshal(projectBase)
+	projectByte, err := sonic.Marshal(projectBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = json.Unmarshal(projectByte, &output.Projects)
+	err = sonic.Unmarshal(projectByte, &output.Projects)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -222,8 +222,8 @@ func (m *manager) GetBySingle(input *projectModel.Field) (int, any) {
 	}
 
 	output := &projectModel.Single{}
-	projectByte, _ := json.Marshal(projectBase)
-	err = json.Unmarshal(projectByte, &output)
+	projectByte, _ := sonic.Marshal(projectBase)
+	err = sonic.Unmarshal(projectByte, &output)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())

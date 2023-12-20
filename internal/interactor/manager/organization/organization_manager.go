@@ -1,8 +1,8 @@
 package organization
 
 import (
-	"encoding/json"
 	"errors"
+	"github.com/bytedance/sonic"
 	"hta/internal/interactor/pkg/util"
 
 	"gorm.io/gorm"
@@ -57,13 +57,13 @@ func (m *manager) GetByList(input *organizationModel.Fields) (int, any) {
 	}
 	output.Total.Total = quantity
 	output.Pages = util.Pagination(quantity, output.Limit)
-	organizationByte, err := json.Marshal(organizationBase)
+	organizationByte, err := sonic.Marshal(organizationBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = json.Unmarshal(organizationByte, &output.Organizations)
+	err = sonic.Unmarshal(organizationByte, &output.Organizations)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -85,13 +85,13 @@ func (m *manager) GetByListNoPagination(input *organizationModel.Field) (int, an
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 	output.Total.Total = quantity
-	organizationByte, err := json.Marshal(organizationBase)
+	organizationByte, err := sonic.Marshal(organizationBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = json.Unmarshal(organizationByte, &output.Organizations)
+	err = sonic.Unmarshal(organizationByte, &output.Organizations)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -117,8 +117,8 @@ func (m *manager) GetBySingle(input *organizationModel.Field) (int, any) {
 	}
 
 	output := &organizationModel.Single{}
-	organizationByte, _ := json.Marshal(organizationBase)
-	err = json.Unmarshal(organizationByte, &output)
+	organizationByte, _ := sonic.Marshal(organizationBase)
+	err = sonic.Unmarshal(organizationByte, &output)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
