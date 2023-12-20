@@ -1,8 +1,8 @@
 package work_day
 
 import (
-	"encoding/json"
 	"errors"
+	"github.com/bytedance/sonic"
 	"hta/internal/interactor/pkg/util"
 
 	"gorm.io/gorm"
@@ -38,13 +38,13 @@ func (m *manager) Create(trx *gorm.DB, input *workDayModel.Create) (int, any) {
 
 	// transform workWeek to JSON
 	if len(input.WorkWeeks) > 0 {
-		weekJson, _ := json.Marshal(input.WorkWeeks)
+		weekJson, _ := sonic.Marshal(input.WorkWeeks)
 		input.WorkWeek = string(weekJson)
 	}
 
 	// transform workingTime to JSON
 	if len(input.WorkingTimes) > 0 {
-		timeJson, _ := json.Marshal(input.WorkingTimes)
+		timeJson, _ := sonic.Marshal(input.WorkingTimes)
 		input.WorkingTime = string(timeJson)
 	}
 
@@ -69,13 +69,13 @@ func (m *manager) GetByList(input *workDayModel.Fields) (int, any) {
 	}
 	output.Total.Total = quantity
 	output.Pages = util.Pagination(quantity, output.Limit)
-	workDayByte, err := json.Marshal(workDayBase)
+	workDayByte, err := sonic.Marshal(workDayBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = json.Unmarshal(workDayByte, &output.WorkDays)
+	err = sonic.Unmarshal(workDayByte, &output.WorkDays)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -88,7 +88,7 @@ func (m *manager) GetByList(input *workDayModel.Fields) (int, any) {
 		// transform workWeek to array
 		var workWeeks []string
 		if *workDayBase[i].WorkWeek != "" {
-			err = json.Unmarshal([]byte(*workDayBase[i].WorkWeek), &workWeeks)
+			err = sonic.Unmarshal([]byte(*workDayBase[i].WorkWeek), &workWeeks)
 			if err != nil {
 				log.Error(err)
 				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -99,7 +99,7 @@ func (m *manager) GetByList(input *workDayModel.Fields) (int, any) {
 		// transform workingTime to array
 		var workingTimes []workDayModel.WorkingTimes
 		if *workDayBase[i].WorkingTime != "" {
-			err = json.Unmarshal([]byte(*workDayBase[i].WorkingTime), &workingTimes)
+			err = sonic.Unmarshal([]byte(*workDayBase[i].WorkingTime), &workingTimes)
 			if err != nil {
 				log.Error(err)
 				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -119,13 +119,13 @@ func (m *manager) GetByListNoPagination(input *workDayModel.Field) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 	output.Total.Total = quantity
-	workDayByte, err := json.Marshal(workDayBase)
+	workDayByte, err := sonic.Marshal(workDayBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = json.Unmarshal(workDayByte, &output.WorkDays)
+	err = sonic.Unmarshal(workDayByte, &output.WorkDays)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -138,7 +138,7 @@ func (m *manager) GetByListNoPagination(input *workDayModel.Field) (int, any) {
 		// transform workWeek to array
 		var workWeeks []string
 		if *workDayBase[i].WorkWeek != "" {
-			err = json.Unmarshal([]byte(*workDayBase[i].WorkWeek), &workWeeks)
+			err = sonic.Unmarshal([]byte(*workDayBase[i].WorkWeek), &workWeeks)
 			if err != nil {
 				log.Error(err)
 				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -149,7 +149,7 @@ func (m *manager) GetByListNoPagination(input *workDayModel.Field) (int, any) {
 		// transform workingTime to array
 		var workingTimes []workDayModel.WorkingTimes
 		if *workDayBase[i].WorkingTime != "" {
-			err = json.Unmarshal([]byte(*workDayBase[i].WorkingTime), &workingTimes)
+			err = sonic.Unmarshal([]byte(*workDayBase[i].WorkingTime), &workingTimes)
 			if err != nil {
 				log.Error(err)
 				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -173,8 +173,8 @@ func (m *manager) GetBySingle(input *workDayModel.Field) (int, any) {
 	}
 
 	output := &workDayModel.Single{}
-	workDayByte, _ := json.Marshal(workDayBase)
-	err = json.Unmarshal(workDayByte, &output)
+	workDayByte, _ := sonic.Marshal(workDayBase)
+	err = sonic.Unmarshal(workDayByte, &output)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -186,7 +186,7 @@ func (m *manager) GetBySingle(input *workDayModel.Field) (int, any) {
 	// transform workWeek to array
 	var workWeeks []string
 	if *workDayBase.WorkWeek != "" {
-		err = json.Unmarshal([]byte(*workDayBase.WorkWeek), &workWeeks)
+		err = sonic.Unmarshal([]byte(*workDayBase.WorkWeek), &workWeeks)
 		if err != nil {
 			log.Error(err)
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -197,7 +197,7 @@ func (m *manager) GetBySingle(input *workDayModel.Field) (int, any) {
 	// transform workingTime to array
 	var workingTimes []workDayModel.WorkingTimes
 	if *workDayBase.WorkingTime != "" {
-		err = json.Unmarshal([]byte(*workDayBase.WorkingTime), &workingTimes)
+		err = sonic.Unmarshal([]byte(*workDayBase.WorkingTime), &workingTimes)
 		if err != nil {
 			log.Error(err)
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -245,13 +245,13 @@ func (m *manager) Update(input *workDayModel.Update) (int, any) {
 
 	// transform workWeek to JSON
 	if len(input.WorkWeeks) > 0 {
-		weekJson, _ := json.Marshal(input.WorkWeeks)
+		weekJson, _ := sonic.Marshal(input.WorkWeeks)
 		input.WorkWeek = util.PointerString(string(weekJson))
 	}
 
 	// transform workingTime to JSON
 	if len(input.WorkingTimes) > 0 {
-		timeJson, _ := json.Marshal(input.WorkingTimes)
+		timeJson, _ := sonic.Marshal(input.WorkingTimes)
 		input.WorkingTime = util.PointerString(string(timeJson))
 	}
 

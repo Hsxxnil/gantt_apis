@@ -1,8 +1,8 @@
 package user
 
 import (
-	"encoding/json"
 	"errors"
+	"github.com/bytedance/sonic"
 
 	"hta/internal/interactor/pkg/util"
 
@@ -70,13 +70,13 @@ func (m *manager) GetByList(input *userModel.Fields) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 	output.Total.Total = quantity
-	userByte, err := json.Marshal(userBase)
+	userByte, err := sonic.Marshal(userBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 	output.Pages = util.Pagination(quantity, output.Limit)
-	err = json.Unmarshal(userByte, &output.Users)
+	err = sonic.Unmarshal(userByte, &output.Users)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -96,12 +96,12 @@ func (m *manager) GetByListNoPagination(input *userModel.Field) (int, any) {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
-	userByte, err := json.Marshal(userBase)
+	userByte, err := sonic.Marshal(userBase)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
-	err = json.Unmarshal(userByte, &output.Users)
+	err = sonic.Unmarshal(userByte, &output.Users)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -122,8 +122,8 @@ func (m *manager) GetBySingle(input *userModel.Field) (int, any) {
 	}
 
 	output := &userModel.Single{}
-	userByte, _ := json.Marshal(userBase)
-	err = json.Unmarshal(userByte, &output)
+	userByte, _ := sonic.Marshal(userBase)
+	err = sonic.Unmarshal(userByte, &output)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -223,13 +223,13 @@ func (m *manager) ResetPassword(input *userModel.ResetPassword) (int, any) {
 
 	// transform input to Update struct
 	update := &userModel.Update{}
-	inputByte, err := json.Marshal(input)
+	inputByte, err := sonic.Marshal(input)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = json.Unmarshal(inputByte, update)
+	err = sonic.Unmarshal(inputByte, update)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())

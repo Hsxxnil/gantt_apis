@@ -1,7 +1,7 @@
 package policy
 
 import (
-	"encoding/json"
+	"github.com/bytedance/sonic"
 	policyModel "hta/internal/interactor/models/policies"
 	"hta/internal/interactor/pkg/util/code"
 	"hta/internal/interactor/pkg/util/log"
@@ -23,13 +23,13 @@ func Init() Manager {
 
 func (m *manager) Create(input *policyModel.PolicyRule) (int, any) {
 	field := policyModel.PolicyModel{}
-	policyByte, err := json.Marshal(input)
+	policyByte, err := sonic.Marshal(input)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = json.Unmarshal(policyByte, &field)
+	err = sonic.Unmarshal(policyByte, &field)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -69,13 +69,13 @@ func (m *manager) GetByList() (int, any) {
 
 func (m *manager) Delete(input *policyModel.PolicyRule) (int, any) {
 	field := policyModel.PolicyModel{}
-	policyByte, err := json.Marshal(input)
+	policyByte, err := sonic.Marshal(input)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = json.Unmarshal(policyByte, &field)
+	err = sonic.Unmarshal(policyByte, &field)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
