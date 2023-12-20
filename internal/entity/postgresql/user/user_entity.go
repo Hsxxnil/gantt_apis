@@ -201,10 +201,6 @@ func (s *storage) Update(input *model.Base) (err error) {
 		data["password"] = input.Password
 	}
 
-	if input.PhoneNumber != nil {
-		data["phone_number"] = input.PhoneNumber
-	}
-
 	if input.Email != nil {
 		data["email"] = input.Email
 	}

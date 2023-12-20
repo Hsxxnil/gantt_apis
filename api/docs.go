@@ -8562,10 +8562,6 @@ const docTemplate = `{
                     "description": "使用者密碼",
                     "type": "string"
                 },
-                "phone_number": {
-                    "description": "使用者電話",
-                    "type": "string"
-                },
                 "resource_uuid": {
                     "description": "資源UUID",
                     "type": "string"
@@ -8631,10 +8627,6 @@ const docTemplate = `{
                             },
                             "name": {
                                 "description": "使用者中文名稱",
-                                "type": "string"
-                            },
-                            "phone_number": {
-                                "description": "使用者電話",
                                 "type": "string"
                             },
                             "resource_uuid": {
@@ -8731,10 +8723,6 @@ const docTemplate = `{
                     "description": "otp auth url",
                     "type": "string"
                 },
-                "phone_number": {
-                    "description": "使用者電話",
-                    "type": "string"
-                },
                 "resource_uuid": {
                     "description": "資源UUID",
                     "type": "string"
@@ -8790,10 +8778,6 @@ const docTemplate = `{
                 },
                 "password": {
                     "description": "使用者密碼",
-                    "type": "string"
-                },
-                "phone_number": {
-                    "description": "使用者電話",
                     "type": "string"
                 },
                 "resource_uuid": {
