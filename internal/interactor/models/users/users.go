@@ -20,7 +20,7 @@ type Create struct {
 	// 角色ID
 	RoleID string `json:"role_id,omitempty" binding:"required,uuid4" validate:"required,uuid4"`
 	// 組織ID
-	OrgID string `json:"organization_id,omitempty" binding:"required,uuid4" validate:"required,uuid4"`
+	OrgID string `json:"org_id,omitempty" binding:"required,uuid4" validate:"required,uuid4"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }
@@ -42,7 +42,7 @@ type Field struct {
 	// 角色ID
 	RoleID string `json:"role_id,omitempty" form:"role_id"`
 	// 組織ID
-	OrgID *string `json:"organization_id,omitempty" form:"organization_id"`
+	OrgID *string `json:"org_id,omitempty" form:"org_id"`
 	// 是否啟用
 	IsEnable *bool `json:"is_enable,omitempty" form:"is_enable"`
 	// 是否使用驗證器
@@ -146,7 +146,7 @@ type Update struct {
 	// otp auth url
 	OtpAuthUrl *string `json:"otp_auth_url,omitempty"`
 	// 組織ID
-	OrgID *string `json:"organization_id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
+	OrgID *string `json:"org_id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
 	// 更新者
 	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }
