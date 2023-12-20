@@ -1,5 +1,5 @@
 alter table users
-    add column company_id uuid references companies (id);
+    add column org_id uuid references organizations (id);
 
-create index idx_users_company_id
-    on users using hash (company_id);
+create index idx_users_org_id
+    on users using hash (org_id);

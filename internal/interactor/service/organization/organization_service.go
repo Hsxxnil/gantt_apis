@@ -1,11 +1,11 @@
-package company
+package organization
 
 import (
 	"encoding/json"
 
-	store "hta/internal/entity/postgresql/company"
-	db "hta/internal/entity/postgresql/db/companies"
-	model "hta/internal/interactor/models/companies"
+	db "hta/internal/entity/postgresql/db/organizations"
+	store "hta/internal/entity/postgresql/organization"
+	model "hta/internal/interactor/models/organizations"
 	"hta/internal/interactor/pkg/util"
 	"hta/internal/interactor/pkg/util/log"
 	"hta/internal/interactor/pkg/util/uuid"
