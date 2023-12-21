@@ -27,6 +27,125 @@ definitions:
         example: "2021-07-29T07:23:47Z"
         type: string
     type: object
+  departments.Create:
+    properties:
+      fax:
+        description: 傳真
+        type: string
+      name:
+        description: 名稱
+        type: string
+      supervisor_id:
+        description: 部門主管ID(user_id)
+        type: string
+      tel:
+        description: 電話
+        type: string
+    required:
+    - name
+    type: object
+  departments.List:
+    properties:
+      departments:
+        description: 多筆
+        items:
+          properties:
+            created_at:
+              description: 創建時間
+              type: string
+            created_by:
+              description: 創建者
+              type: string
+            deleted_at:
+              description: 刪除時間
+              type: string
+            fax:
+              description: 傳真
+              type: string
+            id:
+              description: 表ID
+              type: string
+            name:
+              description: 名稱
+              type: string
+            supervisor_id:
+              description: 部門主管ID(user_id)
+              type: string
+            tel:
+              description: 電話
+              type: string
+            updated_at:
+              description: 更新時間
+              type: string
+            updated_by:
+              description: 更新者
+              type: string
+          type: object
+        type: array
+      limit:
+        description: 筆數(請從1開始帶入,最高上限20)
+        type: integer
+      page:
+        description: 頁數(請從1開始帶入)
+        type: integer
+      pages:
+        description: 總頁數
+        type: integer
+      total:
+        description: 總筆數
+        type: integer
+    required:
+    - limit
+    - page
+    type: object
+  departments.Single:
+    properties:
+      created_at:
+        description: 創建時間
+        type: string
+      created_by:
+        description: 創建者
+        type: string
+      deleted_at:
+        description: 刪除時間
+        type: string
+      fax:
+        description: 傳真
+        type: string
+      id:
+        description: 表ID
+        type: string
+      name:
+        description: 名稱
+        type: string
+      supervisor_id:
+        description: 部門主管ID(user_id)
+        type: string
+      tel:
+        description: 電話
+        type: string
+      updated_at:
+        description: 更新時間
+        type: string
+      updated_by:
+        description: 更新者
+        type: string
+    type: object
+  departments.Update:
+    properties:
+      fax:
+        description: 傳真
+        type: string
+      name:
+        description: 名稱
+        type: string
+      supervisor_id:
+        description: 部門主管ID(user_id)
+        type: string
+      tel:
+        description: 電話
+        type: string
+    type: object
   event_marks.Create:
     properties:
       day:
@@ -623,8 +742,8 @@ definitions:
       end_date:
         description: 結束日期
         type: string
-      manager:
-        description: 負責人
+      manager_id:
+        description: 負責人ID
         type: string
       project_name:
         description: 名稱
@@ -640,8 +759,8 @@ definitions:
       status:
         description: 狀態
         type: string
-      type:
-        description: 類別
+      type_id:
+        description: 類別ID
         type: string
     required:
     - status
@@ -820,8 +939,8 @@ definitions:
       end_date:
         description: 結束日期
         type: string
-      manager:
-        description: 負責人
+      manager_id:
+        description: 負責人ID
         type: string
       project_name:
         description: 名稱
@@ -837,8 +956,8 @@ definitions:
       status:
         description: 狀態
         type: string
-      type:
-        description: 類別
+      type_id:
+        description: 類別ID
         type: string
     type: object
   resources.Create:
@@ -1876,6 +1995,304 @@ info:
   title: HTA GANTT APIs
   version: "0.1"
 paths:
+  /departments:
+    get:
+      consumes:
+      - application/json
+      description: 取得全部部門
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 目前頁數,請從1開始帶入
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 一次回傳比數,請從1開始帶入,最高上限20
+        in: query
+        name: limit
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/departments.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得全部部門
+      tags:
+      - department
+    post:
+      consumes:
+      - application/json
+      description: 新增部門
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 新增部門
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/departments.Create'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 新增部門
+      tags:
+      - department
+  /departments/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 刪除單一部門
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 部門UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 刪除單一部門
+      tags:
+      - department
+    get:
+      consumes:
+      - application/json
+      description: 取得單一部門
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 部門UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/departments.Single'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得單一部門
+      tags:
+      - department
+    patch:
+      consumes:
+      - application/json
+      description: 更新單一部門
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 部門UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 更新部門
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/departments.Update'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 更新單一部門
+      tags:
+      - department
+  /departments/no-pagination:
+    get:
+      consumes:
+      - application/json
+      description: 取得全部部門
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  $ref: '#/definitions/tasks.List'
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得全部部門(不用page&limit)
+      tags:
+      - department
   /event-marks:
     post:
       consumes:

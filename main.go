@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"hta/internal/interactor/pkg/connect"
+	"hta/internal/router/department"
 	"hta/internal/router/event_mark"
 	"hta/internal/router/holiday"
 	"hta/internal/router/login"
@@ -66,6 +67,7 @@ func main() {
 	role.GetRouter(engine, db)
 	task.GetRouter(engine, db)
 	organization.GetRouter(engine, db)
+	department.GetRouter(engine, db)
 
 	url := ginSwagger.URL(fmt.Sprintf("http://localhost:8080/swagger/doc.json"))
 	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
