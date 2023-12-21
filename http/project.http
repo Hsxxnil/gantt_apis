@@ -4,7 +4,8 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "password": "12345"
+  "password": "12345",
+  "domain": "localhost"
 }
 
 ### verify
@@ -13,7 +14,8 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "passcode": "799517"
+  "passcode": "927146",
+  "domain": "localhost"
 }
 
 > {% client.global.set("accessToken", response.body.body.access_token); %}
@@ -25,12 +27,12 @@ Authorization: Bearer {{accessToken}}
 
 {
   "filter": {
-    "status": ["已終止"],
+    "status": ["建檔中"],
     "type": ["test"],
-    "client": "A",
-    "project_name": "A",
-    "manager": "A",
-    "code": "A"
+    "client": "",
+    "project_name": "",
+    "manager": "",
+    "code": ""
   }
 }
 
