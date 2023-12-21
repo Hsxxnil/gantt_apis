@@ -380,10 +380,10 @@ func getParentOutlineNumber(outlineNumber string) string {
 }
 
 // findParentTaskByOutlineNumber is a helper function to find the parent task by outline number.
-func findParentTaskByOutlineNumber(tasks []taskModel.Single, outlineNumber string) *taskModel.Single {
+func findParentTaskByOutlineNumber(tasks []*taskModel.Single, outlineNumber string) *taskModel.Single {
 	for _, task := range tasks {
 		if task.OutlineNumber == outlineNumber {
-			return &task
+			return task
 		}
 	}
 	return nil
@@ -690,7 +690,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 	}
 
 	// get project tasks
-	projectTaskMap := make(map[*string][]taskModel.Single)
+	projectTaskMap := make(map[*string][]*taskModel.Single)
 	var (
 		wg sync.WaitGroup
 		mu sync.Mutex
@@ -718,7 +718,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 				goroutineErr <- err
 			}
 
-			var projectTasks []taskModel.Single
+			var projectTasks []*taskModel.Single
 			taskByte, err := sonic.Marshal(taskBase)
 			if err != nil {
 				log.Error(err)
@@ -734,7 +734,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 			// create a map of taskUUID
 			taskMap := make(map[string]*taskModel.Single)
 			for _, task := range projectTasks {
-				taskMap[task.TaskUUID] = &task
+				taskMap[task.TaskUUID] = task
 			}
 
 			for i, task := range projectTasks {
@@ -814,7 +814,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 			if len(input.Projects) == 1 {
 				if !input.FilterMilestone {
 					// filter out the subtasks that have been included in each SubTask
-					var filteredTasks []taskModel.Single
+					var filteredTasks []*taskModel.Single
 					for _, task := range projectTaskMap[projectsUUID] {
 						if !task.IsSubTask {
 							filteredTasks = append(filteredTasks, task)
@@ -837,7 +837,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 
 				var projectSubtasks []*taskModel.Single
 				for _, task := range projectTaskMap[projectsUUID] {
-					projectSubtasks = append(projectSubtasks, &task)
+					projectSubtasks = append(projectSubtasks, task)
 				}
 				projectTask.Subtask = projectSubtasks
 
@@ -856,10 +856,10 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 				}
 
 				// add project to output.Tasks
-				output.Tasks = append(output.Tasks, *projectTask)
+				output.Tasks = append(output.Tasks, projectTask)
 			}
 		} else {
-			output.Tasks = []taskModel.Single{}
+			output.Tasks = []*taskModel.Single{}
 		}
 
 		// get event_marks
