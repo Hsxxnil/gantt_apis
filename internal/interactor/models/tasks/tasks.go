@@ -132,7 +132,7 @@ type Filter struct {
 // List is multiple return structure files
 type List struct {
 	// 多筆
-	Tasks []*Single `json:"tasks"`
+	Tasks []Single `json:"tasks"`
 	// event_marks
 	EventMarks []*event_marks.Single `json:"event_marks"`
 	// 專案狀態
