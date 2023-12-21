@@ -9,8 +9,8 @@ import (
 type Table struct {
 	// 表ID
 	ID string `gorm:"<-:create;column:id;type:uuid;not null;primaryKey;" json:"id"`
-	// 部門主管
-	Supervisor string `gorm:"column:supervisor;type:uuid;" json:"supervisor"`
+	// 部門主管ID(user_id)
+	SupervisorID *string `gorm:"column:supervisor_id;type:uuid;" json:"supervisor_id"`
 	// 名稱
 	Name string `gorm:"column:name;type:text;not null;" json:"name"`
 	// 傳真
@@ -31,8 +31,8 @@ type Table struct {
 type Base struct {
 	// 表ID
 	ID *string `json:"id,omitempty"`
-	// 部門主管
-	Supervisor *string `json:"supervisor,omitempty"`
+	// 部門主管ID(user_id)
+	SupervisorID *string `json:"supervisor_id,omitempty"`
 	// 名稱
 	Name *string `json:"name,omitempty"`
 	// 傳真

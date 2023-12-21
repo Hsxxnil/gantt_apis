@@ -14,60 +14,46 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "passcode": "927146",
+  "passcode": "169624",
   "domain": "localhost"
 }
 
 > {% client.global.set("accessToken", response.body.body.access_token); %}
 
 ### GetByList
-POST {{host}}/hta-gantt/v1.0/projects/list?page=1&limit=20
-Content-Type: application/json
+GET {{host}}/hta-gantt/v1.0/departments?page=1&limit=20
+Accept: application/json
 Authorization: Bearer {{accessToken}}
 
-{
-  "filter": {
-    "status": ["建檔中"],
-    "type": ["test"],
-    "client": "",
-    "project_name": "",
-    "manager": "",
-    "code": ""
-  }
-}
-
 ### GetByListNoPagination
-GET {{host}}/hta-gantt/v1.0/projects/no-pagination
+GET {{host}}/hta-gantt/v1.0/departments/no-pagination
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### GetBySingle
-GET {{host}}/hta-gantt/v1.0/projects/ed76ede3-7956-4d18-a1ed-6d7df3943b77
+GET {{host}}/hta-gantt/v1.0/departments/9db74c35-804e-48f2-910c-6bf80494cbf0
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### Create
-POST {{host}}/hta-gantt/v1.0/projects
+POST {{host}}/hta-gantt/v1.0/departments
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-  "project_name": "test",
-  "type": "1a5c6ba3-a97c-4d81-ab44-4755e9d6ae4e",
-  "manager": "8b5ca145-665f-4039-b7e1-50ae94dfb5eb",
-  "code": "123456"
+  "name": "業務部"
 }
 
 ### Update
-PATCH {{host}}/hta-gantt/v1.0/projects/f58324b7-99dd-45a0-9036-1954a77138ca
+PATCH {{host}}/hta-gantt/v1.0/departments/de0a714b-a332-4a32-890b-e10036ffad01
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-  "project_name": "123",
-  "resource": []
+  "name": "pre-production"
 }
 
 ### Delete
-DELETE {{host}}/hta-gantt/v1.0/projects/5e13ee25-536a-40f7-8585-2aea56ba0191
+DELETE {{host}}/hta-gantt/v1.0/departments/f01fabb7-bce5-44ab-a20f-aa78589b5409
 Accept: application/json
+Authorization: Bearer {{accessToken}}

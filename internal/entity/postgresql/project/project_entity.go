@@ -75,7 +75,7 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 	}
 
 	if input.FilterTypes != nil {
-		query.Where("type in (?)", input.FilterTypes)
+		query.Where("type_id in (?)", input.FilterTypes)
 	}
 
 	// filter
@@ -96,9 +96,9 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 
 	if input.FilterManagers != nil {
 		if isFiltered {
-			filter.Or("manager in (?)", input.FilterManagers)
+			filter.Or("manager_id in (?)", input.FilterManagers)
 		} else {
-			filter.Where("manager in (?)", input.FilterManagers)
+			filter.Where("manager_id in (?)", input.FilterManagers)
 		}
 	}
 
@@ -220,16 +220,16 @@ func (s *storage) Update(input *model.Base) (err error) {
 		data["project_name"] = input.ProjectName
 	}
 
-	if input.Type != nil {
-		data["type"] = input.Type
+	if input.TypeID != nil {
+		data["type_id"] = input.TypeID
 	}
 
 	if input.Code != nil {
 		data["code"] = input.Code
 	}
 
-	if input.Manager != nil {
-		data["manager"] = input.Manager
+	if input.ManagerID != nil {
+		data["manager_id"] = input.ManagerID
 	}
 
 	if input.StartDate != nil {
