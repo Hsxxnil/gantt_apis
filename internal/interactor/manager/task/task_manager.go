@@ -860,6 +860,10 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 			}
 		} else {
 			output.Tasks = []*taskModel.Single{}
+			if len(input.Projects) == 1 {
+				// return project status
+				output.ProjectStatus = *projectBase[0].Status
+			}
 		}
 
 		// get event_marks
