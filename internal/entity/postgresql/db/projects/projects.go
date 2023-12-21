@@ -18,15 +18,15 @@ type Table struct {
 	// 名稱
 	ProjectName string `gorm:"column:project_name;type:varchar;" json:"project_name"`
 	// 類別
-	Type string `gorm:"column:type;type:uuid;" json:"type"`
+	TypeID string `gorm:"column:type_id;type:uuid;" json:"type_id"`
 	// project_types data
-	ProjectTypes project_types.Table `gorm:"foreignKey:ID;references:Type" json:"project_types,omitempty"`
+	ProjectTypes project_types.Table `gorm:"foreignKey:ID;references:TypeID" json:"project_types,omitempty"`
 	// 代號
 	Code string `gorm:"column:code;type:varchar;" json:"code"`
-	// 負責人
-	Manager string `gorm:"column:manager;type:uuid;" json:"manager"`
+	// 負責人ID
+	ManagerID string `gorm:"column:manager_id;type:uuid;" json:"manager_id"`
 	// resources data
-	Resources resources.Table `gorm:"foreignKey:ResourceUUID;references:Manager" json:"resources,omitempty"`
+	Resources resources.Table `gorm:"foreignKey:ResourceUUID;references:ManagerID" json:"resources,omitempty"`
 	// 起始日期
 	StartDate *time.Time `gorm:"column:start_date;type:timestamp;" json:"start_date"`
 	// 結束日期
@@ -52,13 +52,13 @@ type Base struct {
 	// 名稱
 	ProjectName *string `json:"project_name,omitempty"`
 	// 類別
-	Type *string `json:"type,omitempty"`
+	TypeID *string `json:"type_id,omitempty"`
 	// project_types data
 	ProjectTypes project_types.Base `json:"project_types,omitempty"`
 	// 代號
 	Code *string `json:"code,omitempty"`
-	// 負責人
-	Manager *string `json:"manager,omitempty"`
+	// 負責人ID
+	ManagerID *string `json:"manager_id,omitempty"`
 	// resources data
 	Resources resources.Base `json:"resources,omitempty"`
 	// 起始日期

@@ -10,12 +10,12 @@ import (
 type Create struct {
 	// 名稱
 	ProjectName string `json:"project_name,omitempty"`
-	// 類別
-	Type string `json:"type,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
+	// 類別ID
+	TypeID string `json:"type_id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
 	// 代號
 	Code string `json:"code,omitempty"`
-	// 負責人
-	Manager string `json:"manager,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
+	// 負責人ID
+	ManagerID string `json:"manager_id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
 	// 起始日期
 	StartDate *time.Time `json:"start_date,omitempty"`
 	// 結束日期
@@ -36,12 +36,12 @@ type Field struct {
 	ProjectUUID string `json:"project_uuid,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
 	// 名稱
 	ProjectName *string `json:"project_name,omitempty" form:"project_name"`
-	// 類別
-	Type *string `json:"type,omitempty" form:"type"`
+	// 類別ID
+	TypeID *string `json:"type_id,omitempty" form:"type_id"`
 	// 代號
 	Code *string `json:"code,omitempty" form:"code"`
-	// 負責人
-	Manager *string `json:"manager,omitempty" form:"manager"`
+	// 負責人ID
+	ManagerID *string `json:"manager_id,omitempty" form:"manager_id"`
 	// 起始日期
 	StartDate *time.Time `json:"start_date,omitempty" form:"start_date"`
 	// 結束日期
@@ -165,12 +165,12 @@ type Update struct {
 	ProjectUUID string `json:"project_uuid,omitempty"  binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
 	// 名稱
 	ProjectName *string `json:"project_name,omitempty"`
-	// 類別
-	Type *string `json:"type,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
+	// 類別ID
+	TypeID *string `json:"type_id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
 	// 代號
 	Code *string `json:"code,omitempty"`
-	// 負責人
-	Manager *string `json:"manager,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
+	// 負責人ID
+	ManagerID *string `json:"manager_id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
 	// 起始日期
 	StartDate *time.Time `json:"start_date,omitempty"`
 	// 結束日期
