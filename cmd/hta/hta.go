@@ -4,6 +4,7 @@ import (
 	"hta/internal/interactor/pkg/connect"
 	"hta/internal/interactor/pkg/util/log"
 	"hta/internal/router"
+	"hta/internal/router/department"
 	"hta/internal/router/event_mark"
 	"hta/internal/router/holiday"
 	"hta/internal/router/login"
@@ -42,6 +43,7 @@ func main() {
 	engine = policy.GetRouter(engine, db)
 	engine = role.GetRouter(engine, db)
 	engine = organization.GetRouter(engine, db)
+	engine = department.GetRouter(engine, db)
 
 	log.Fatal(gateway.ListenAndServe(":8080", engine))
 }

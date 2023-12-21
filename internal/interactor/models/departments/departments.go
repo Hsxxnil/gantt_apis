@@ -7,8 +7,8 @@ import (
 
 // Create struct is used end_date create achieves
 type Create struct {
-	// 部門主管
-	Supervisor string `json:"supervisor,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
+	// 部門主管ID(user_id)
+	SupervisorID *string `json:"supervisor_id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
 	// 名稱
 	Name string `json:"name,omitempty" binding:"required" validate:"required"`
 	// 傳真
@@ -25,8 +25,8 @@ type Create struct {
 type Field struct {
 	// 表ID
 	ID string `json:"id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
-	// 部門主管
-	Supervisor *string `json:"supervisor,omitempty" form:"supervisor"`
+	// 部門主管ID(user_id)
+	SupervisorID *string `json:"supervisor_id,omitempty" form:"supervisor_id"`
 	// 名稱
 	Name *string `json:"name,omitempty" form:"name"`
 	// 傳真
@@ -51,8 +51,8 @@ type List struct {
 	Departments []*struct {
 		// 表ID
 		ID string `json:"id,omitempty"`
-		// 部門主管
-		Supervisor string `json:"supervisor,omitempty"`
+		// 部門主管ID(user_id)
+		SupervisorID string `json:"supervisor_id,omitempty"`
 		// 名稱
 		Name string `json:"name,omitempty"`
 		// 傳真
@@ -74,8 +74,8 @@ type List struct {
 type Single struct {
 	// 表ID
 	ID string `json:"id,omitempty"`
-	// 部門主管
-	Supervisor string `json:"supervisor,omitempty"`
+	// 部門主管ID(user_id)
+	SupervisorID string `json:"supervisor_id,omitempty"`
 	// 名稱
 	Name string `json:"name,omitempty"`
 	// 傳真
@@ -94,8 +94,8 @@ type Single struct {
 type Update struct {
 	// 表ID
 	ID string `json:"id,omitempty"  binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
-	// 部門主管
-	Supervisor *string `json:"supervisor,omitempty" binding:"omitempty,url" validate:"omitempty,url"`
+	// 部門主管ID(user_id)
+	SupervisorID *string `json:"supervisor_id,omitempty" binding:"omitempty,url" validate:"omitempty,url"`
 	// 名稱
 	Name *string `json:"name,omitempty"`
 	// 傳真
