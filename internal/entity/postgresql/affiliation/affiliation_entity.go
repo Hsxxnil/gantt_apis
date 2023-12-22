@@ -98,6 +98,10 @@ func (s *storage) GetBySingle(input *model.Base) (output *model.Table, err error
 		query.Where("id = ?", input.ID)
 	}
 
+	if input.IsSupervisor != nil {
+		query.Where("is_supervisor = ?", input.IsSupervisor)
+	}
+
 	err = query.First(&output).Error
 	if err != nil {
 		log.Error(err)

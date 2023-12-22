@@ -160,6 +160,7 @@ func (c *control) GetBySingle(ctx *gin.Context) {
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
 // @Router /departments/{id} [delete]
 func (c *control) Delete(ctx *gin.Context) {
+	trx := ctx.MustGet("db_trx").(*gorm.DB)
 	id := ctx.Param("id")
 	input := &departmentModel.Field{}
 	input.ID = id
@@ -170,7 +171,7 @@ func (c *control) Delete(ctx *gin.Context) {
 		return
 	}
 
-	httpCode, codeMessage := c.Manager.Delete(input)
+	httpCode, codeMessage := c.Manager.Delete(trx, input)
 	ctx.JSON(httpCode, codeMessage)
 }
 
@@ -189,6 +190,7 @@ func (c *control) Delete(ctx *gin.Context) {
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
 // @Router /departments/{id} [patch]
 func (c *control) Update(ctx *gin.Context) {
+	trx := ctx.MustGet("db_trx").(*gorm.DB)
 	id := ctx.Param("id")
 	input := &departmentModel.Update{}
 	input.ID = id
@@ -200,6 +202,6 @@ func (c *control) Update(ctx *gin.Context) {
 		return
 	}
 
-	httpCode, codeMessage := c.Manager.Update(input)
+	httpCode, codeMessage := c.Manager.Update(trx, input)
 	ctx.JSON(httpCode, codeMessage)
 }
