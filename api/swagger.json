@@ -5147,6 +5147,191 @@
                 }
             }
         },
+        "/users/enable/current-user": {
+            "patch": {
+                "description": "啟用當前使用者",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "啟用當前使用者",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "JWE Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "啟用或停用使用者",
+                        "name": "*",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/users.Enable"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功後返回的值",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.SuccessfulMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "body": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "415": {
+                        "description": "必要欄位帶入錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "伺服器非預期錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/users/enable/{id}": {
+            "patch": {
+                "description": "啟用或停用使用者",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "啟用或停用使用者",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "JWE Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "使用者ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "啟用或停用使用者",
+                        "name": "*",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/users.Enable"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功後返回的值",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.SuccessfulMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "body": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "415": {
+                        "description": "必要欄位帶入錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "伺服器非預期錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/users/list": {
             "post": {
                 "description": "取得全部使用者",
@@ -8568,6 +8753,18 @@
                 }
             }
         },
+        "users.Enable": {
+            "type": "object",
+            "required": [
+                "is_enabled"
+            ],
+            "properties": {
+                "is_enabled": {
+                    "description": "是否啟用",
+                    "type": "boolean"
+                }
+            }
+        },
         "users.List": {
             "type": "object",
             "required": [
@@ -8609,12 +8806,28 @@
                                 "description": "刪除時間",
                                 "type": "string"
                             },
+                            "dept": {
+                                "description": "部門",
+                                "type": "string"
+                            },
+                            "dept_id": {
+                                "description": "部門ID",
+                                "type": "string"
+                            },
                             "email": {
                                 "description": "使用者電子郵件",
                                 "type": "string"
                             },
                             "id": {
                                 "description": "表ID",
+                                "type": "string"
+                            },
+                            "is_enabled": {
+                                "description": "是否啟用",
+                                "type": "boolean"
+                            },
+                            "job_title": {
+                                "description": "職稱",
                                 "type": "string"
                             },
                             "name": {
@@ -8699,12 +8912,24 @@
                     "description": "刪除時間",
                     "type": "string"
                 },
+                "dept": {
+                    "description": "部門",
+                    "type": "string"
+                },
+                "dept_id": {
+                    "description": "部門ID",
+                    "type": "string"
+                },
                 "email": {
                     "description": "使用者電子郵件",
                     "type": "string"
                 },
                 "id": {
                     "description": "表ID",
+                    "type": "string"
+                },
+                "job_title": {
+                    "description": "職稱",
                     "type": "string"
                 },
                 "name": {

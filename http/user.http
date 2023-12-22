@@ -18,7 +18,9 @@ Content-Type: application/json
   "domain": "localhost"
 }
 
-> {% client.global.set("accessToken", response.body.body.access_token); %}
+> {%
+    client.global.set("accessToken", response.body.body.access_token);
+%}
 
 ### GetByList
 POST {{host}}/hta-gantt/v1.0/users/list?page=1&limit=20
@@ -62,6 +64,20 @@ Authorization: Bearer {{accessToken}}
   "password": "12345",
   "old_password": "54321"
 }
+
+### Enable
+PATCH {{host}}/hta-gantt/v1.0/users/enable/85cee689-bcb2-461f-8b0a-ea6922f1cb07
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "is_enabled": false
+}
+
+### EnableByCurrent
+PATCH {{host}}/hta-gantt/v1.0/users/enable/current-user
+Accept: application/json
+Authorization: Bearer {{accessToken}}
 
 ### ResetPassword
 PATCH {{host}}/hta-gantt/v1.0/users/reset-password/current-user

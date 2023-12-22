@@ -22,6 +22,7 @@ type Manager interface {
 	GetBySingle(input *userModel.Field) (int, any)
 	Delete(input *userModel.Update) (int, any)
 	Update(input *userModel.Update) (int, any)
+	Enable(input *userModel.Enable) (int, any)
 	ResetPassword(input *userModel.ResetPassword) (int, any)
 }
 
@@ -205,6 +206,47 @@ func (m *manager) Update(input *userModel.Update) (int, any) {
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, userBase.ID)
+}
+
+func (m *manager) Enable(input *userModel.Enable) (int, any) {
+	_, err := m.UserService.GetBySingle(&userModel.Field{
+		ID: input.ID,
+	})
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, err.Error())
+		}
+
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// set default value
+	if input.IsEnabled == nil {
+		input.IsEnabled = util.PointerBool(true)
+	}
+
+	// transform input to Update struct
+	update := &userModel.Update{}
+	inputByte, err := sonic.Marshal(input)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	err = sonic.Unmarshal(inputByte, &update)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	err = m.UserService.Update(update)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	return code.Successful, code.GetCodeMessage(code.Successful, "Enable ok!")
 }
 
 func (m *manager) ResetPassword(input *userModel.ResetPassword) (int, any) {
