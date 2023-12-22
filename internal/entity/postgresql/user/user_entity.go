@@ -78,10 +78,6 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 		query.Where("resource_uuid = ?", input.ResourceUUID)
 	}
 
-	if input.OrgID != nil {
-		query.Where("org_id = ?", input.OrgID)
-	}
-
 	err = query.Count(&quantity).Offset(int((input.Page - 1) * input.Limit)).
 		Limit(int(input.Limit)).Order("created_at desc").Find(&output).Error
 	if err != nil {
@@ -108,10 +104,6 @@ func (s *storage) GetByListNoPagination(input *model.Base) (output []*model.Tabl
 
 	if input.ResourceUUID != nil {
 		query.Where("resource_uuid = ?", input.ResourceUUID)
-	}
-
-	if input.OrgID != nil {
-		query.Where("org_id = ?", input.OrgID)
 	}
 
 	err = query.Order("created_at desc").Find(&output).Error
@@ -141,10 +133,6 @@ func (s *storage) GetBySingle(input *model.Base) (output *model.Table, err error
 		query.Where("resource_uuid = ?", input.ResourceUUID)
 	}
 
-	if input.OrgID != nil {
-		query.Where("org_id = ?", input.OrgID)
-	}
-
 	if input.Email != nil {
 		query.Where("email = ?", input.Email)
 	}
@@ -170,10 +158,6 @@ func (s *storage) GetByQuantity(input *model.Base) (quantity int64, err error) {
 
 	if input.ResourceUUID != nil {
 		query.Where("resource_uuid = ?", input.ResourceUUID)
-	}
-
-	if input.OrgID != nil {
-		query.Where("org_id = ?", input.OrgID)
 	}
 
 	err = query.Count(&quantity).Select("*").Error
@@ -215,10 +199,6 @@ func (s *storage) Update(input *model.Base) (err error) {
 
 	if input.OtpAuthUrl != nil {
 		data["otp_auth_url"] = input.OtpAuthUrl
-	}
-
-	if input.OrgID != nil {
-		data["org_id"] = input.OrgID
 	}
 
 	if input.UpdatedBy != nil {

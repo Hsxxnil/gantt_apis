@@ -5,7 +5,6 @@ create table departments
     supervisor_id UUID references users (id),
     fax           text,
     tel           text,
-    org_id        UUID not null references organizations (id),
     created_at    TIMESTAMP default now(),
     created_by    UUID,
     updated_at    TIMESTAMP,
@@ -27,9 +26,6 @@ create index idx_departments_fax
 
 create index idx_departments_tel
     on departments using gin (tel gin_trgm_ops);
-
-create index idx_departments_org_id
-    on departments using hash (org_id);
 
 create index idx_departments_created_at
     on departments (created_at desc);

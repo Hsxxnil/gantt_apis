@@ -15,8 +15,6 @@ type Create struct {
 	Fax string `json:"fax,omitempty"`
 	// 電話
 	Tel string `json:"tel,omitempty"`
-	// 組織ID
-	OrgID string `json:"org_id,omitempty" binding:"required,uuid4" validate:"required,uuid4"  swaggerignore:"true"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }
@@ -33,8 +31,6 @@ type Field struct {
 	Fax *string `json:"fax,omitempty" form:"fax"`
 	// 電話
 	Tel *string `json:"tel,omitempty" form:"tel"`
-	// 組織ID
-	OrgID *string `json:"org_id,omitempty" form:"org_id"`
 }
 
 // Fields is the searched structure file (including pagination)
@@ -102,8 +98,6 @@ type Update struct {
 	Fax *string `json:"fax,omitempty"`
 	// 電話
 	Tel *string `json:"tel,omitempty"`
-	// 組織ID
-	OrgID *string `json:"org_id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"  swaggerignore:"true"`
 	// 更新者
 	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }
