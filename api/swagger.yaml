@@ -1,5 +1,32 @@
 basePath: /hta-gantt/v1.0
 definitions:
+  affiliations.Single:
+    properties:
+      created_at:
+        description: 創建時間
+        type: string
+      deleted_at:
+        description: 刪除時間
+        type: string
+      id:
+        description: 表ID
+        type: string
+      is_supervisor:
+        description: 是否為主管
+        type: boolean
+      job_title:
+        description: 職稱
+        type: string
+      name:
+        description: 使用者名稱
+        type: string
+      updated_at:
+        description: 更新時間
+        type: string
+      user_id:
+        description: 使用者ID
+        type: string
+    type: object
   code.ErrorMessage:
     properties:
       code:
@@ -50,6 +77,11 @@ definitions:
         description: 多筆
         items:
           properties:
+            affiliations:
+              description: affiliations data
+              items:
+                $ref: '#/definitions/affiliations.Single'
+              type: array
             created_at:
               description: 創建時間
               type: string
@@ -67,9 +99,6 @@ definitions:
               type: string
             name:
               description: 名稱
-              type: string
-            supervisor_id:
-              description: 部門主管ID(user_id)
               type: string
             tel:
               description: 電話
@@ -100,6 +129,11 @@ definitions:
     type: object
   departments.Single:
     properties:
+      affiliations:
+        description: affiliations data
+        items:
+          $ref: '#/definitions/affiliations.Single'
+        type: array
       created_at:
         description: 創建時間
         type: string
@@ -117,9 +151,6 @@ definitions:
         type: string
       name:
         description: 名稱
-        type: string
-      supervisor_id:
-        description: 部門主管ID(user_id)
         type: string
       tel:
         description: 電話

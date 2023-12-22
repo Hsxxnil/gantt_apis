@@ -6382,6 +6382,43 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "affiliations.Single": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "創建時間",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "description": "刪除時間",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "表ID",
+                    "type": "string"
+                },
+                "is_supervisor": {
+                    "description": "是否為主管",
+                    "type": "boolean"
+                },
+                "job_title": {
+                    "description": "職稱",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "使用者名稱",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "更新時間",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "使用者ID",
+                    "type": "string"
+                }
+            }
+        },
         "code.ErrorMessage": {
             "type": "object",
             "properties": {
@@ -6457,6 +6494,13 @@ const docTemplate = `{
                     "items": {
                         "type": "object",
                         "properties": {
+                            "affiliations": {
+                                "description": "affiliations data",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/affiliations.Single"
+                                }
+                            },
                             "created_at": {
                                 "description": "創建時間",
                                 "type": "string"
@@ -6479,10 +6523,6 @@ const docTemplate = `{
                             },
                             "name": {
                                 "description": "名稱",
-                                "type": "string"
-                            },
-                            "supervisor_id": {
-                                "description": "部門主管ID(user_id)",
                                 "type": "string"
                             },
                             "tel": {
@@ -6521,6 +6561,13 @@ const docTemplate = `{
         "departments.Single": {
             "type": "object",
             "properties": {
+                "affiliations": {
+                    "description": "affiliations data",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/affiliations.Single"
+                    }
+                },
                 "created_at": {
                     "description": "創建時間",
                     "type": "string"
@@ -6543,10 +6590,6 @@ const docTemplate = `{
                 },
                 "name": {
                     "description": "名稱",
-                    "type": "string"
-                },
-                "supervisor_id": {
-                    "description": "部門主管ID(user_id)",
                     "type": "string"
                 },
                 "tel": {

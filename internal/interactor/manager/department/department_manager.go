@@ -72,6 +72,9 @@ func (m *manager) GetByList(input *departmentModel.Fields) (int, any) {
 	for i, department := range output.Departments {
 		department.CreatedBy = *departmentBase[i].CreatedByUsers.Name
 		department.UpdatedBy = *departmentBase[i].UpdatedByUsers.Name
+		for j, affiliation := range department.Affiliations {
+			affiliation.Name = *departmentBase[i].Affiliations[j].Users.Name
+		}
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
@@ -126,6 +129,9 @@ func (m *manager) GetBySingle(input *departmentModel.Field) (int, any) {
 
 	output.CreatedBy = *departmentBase.CreatedByUsers.Name
 	output.UpdatedBy = *departmentBase.UpdatedByUsers.Name
+	for i, affiliation := range output.Affiliations {
+		affiliation.Name = *departmentBase.Affiliations[i].Users.Name
+	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }

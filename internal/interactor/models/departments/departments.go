@@ -1,6 +1,7 @@
 package departments
 
 import (
+	"hta/internal/interactor/models/affiliations"
 	"hta/internal/interactor/models/page"
 	"hta/internal/interactor/models/section"
 )
@@ -59,6 +60,8 @@ type List struct {
 		UpdatedBy string `json:"updated_by,omitempty"`
 		// 時間戳記
 		section.TimeAt
+		// affiliations data
+		Affiliations []*affiliations.Single `json:"affiliations,omitempty"`
 	} `json:"departments"`
 	// 分頁返回結構檔
 	page.Total
@@ -80,6 +83,8 @@ type Single struct {
 	UpdatedBy string `json:"updated_by,omitempty"`
 	// 時間戳記
 	section.TimeAt
+	// affiliations data
+	Affiliations []*affiliations.Single `json:"affiliations,omitempty"`
 }
 
 // Update struct is used end_date update achieves

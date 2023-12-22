@@ -2,6 +2,7 @@ package affiliations
 
 import (
 	"hta/internal/interactor/models/page"
+	"hta/internal/interactor/models/section"
 )
 
 // Create struct is used end_date create achieves
@@ -30,6 +31,22 @@ type Field struct {
 	JobTitle *string `json:"job_title,omitempty" form:"job_title"`
 	// 是否為主管
 	IsSupervisor *bool `json:"is_supervisor,omitempty" form:"is_supervisor"`
+}
+
+// Single is single return structure file
+type Single struct {
+	// 表ID
+	ID string `json:"id,omitempty"`
+	// 使用者ID
+	UserID string `json:"user_id,omitempty"`
+	// 使用者名稱
+	Name string `json:"name,omitempty"`
+	// 職稱
+	JobTitle string `json:"job_title,omitempty"`
+	// 是否為主管
+	IsSupervisor bool `json:"is_supervisor"`
+	// 時間戳記
+	section.TimeAt
 }
 
 // Fields is the searched structure file (including pagination)
