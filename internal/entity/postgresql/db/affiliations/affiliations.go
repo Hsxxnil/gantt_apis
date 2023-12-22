@@ -11,6 +11,8 @@ type Table struct {
 	ID string `gorm:"<-:create;column:id;type:uuid;not null;primaryKey;" json:"id"`
 	// 使用者ID
 	UserID string `gorm:"column:user_id;type:uuid;not null;" json:"user_id"`
+	// users data
+	Users users.Table `gorm:"foreignKey:ID;references:UserID" json:"users,omitempty"`
 	// 部門ID
 	DeptID string `gorm:"column:dept_id;type:uuid;not null;" json:"dept_id"`
 	// 職稱
@@ -31,6 +33,8 @@ type Base struct {
 	ID *string `json:"id,omitempty"`
 	// 使用者ID
 	UserID *string `json:"user_id,omitempty"`
+	// users data
+	Users users.Base `json:"users,omitempty"`
 	// 部門ID
 	DeptID *string `json:"dept_id,omitempty"`
 	// 職稱

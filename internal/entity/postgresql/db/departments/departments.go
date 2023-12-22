@@ -1,6 +1,7 @@
 package departments
 
 import (
+	"hta/internal/entity/postgresql/db/affiliations"
 	"hta/internal/entity/postgresql/db/users"
 	"hta/internal/interactor/models/special"
 )
@@ -15,6 +16,8 @@ type Table struct {
 	Fax string `gorm:"column:fax;type:text;" json:"fax"`
 	// 電話
 	Tel string `gorm:"column:tel;type:text;" json:"tel,omitempty"`
+	// affiliations data
+	Affiliations []affiliations.Table `gorm:"foreignKey:DeptID;references:ID;" json:"affiliations,omitempty"`
 	// create_users data
 	CreatedByUsers users.Table `gorm:"foreignKey:ID;references:CreatedBy" json:"created_by_users,omitempty"`
 	// update_users data
@@ -33,6 +36,8 @@ type Base struct {
 	Fax *string `json:"fax,omitempty"`
 	// 電話
 	Tel *string `json:"tel,omitempty"`
+	// affiliations data
+	Affiliations []affiliations.Base `json:"affiliations,omitempty"`
 	// create_users data
 	CreatedByUsers users.Base `json:"created_by_users,omitempty"`
 	// update_users data
