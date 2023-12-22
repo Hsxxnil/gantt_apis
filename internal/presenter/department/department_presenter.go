@@ -51,7 +51,6 @@ func (c *control) Create(ctx *gin.Context) {
 	trx := ctx.MustGet("db_trx").(*gorm.DB)
 	input := &departmentModel.Create{}
 	input.CreatedBy = ctx.MustGet("user_id").(string)
-	input.OrgID = ctx.MustGet("org_id").(string)
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
@@ -79,7 +78,6 @@ func (c *control) Create(ctx *gin.Context) {
 // @Router /departments [get]
 func (c *control) GetByList(ctx *gin.Context) {
 	input := &departmentModel.Fields{}
-	input.OrgID = util.PointerString(ctx.MustGet("org_id").(string))
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
@@ -109,7 +107,6 @@ func (c *control) GetByList(ctx *gin.Context) {
 // @Router /departments/no-pagination [get]
 func (c *control) GetByListNoPagination(ctx *gin.Context) {
 	input := &departmentModel.Field{}
-	input.OrgID = util.PointerString(ctx.MustGet("org_id").(string))
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
