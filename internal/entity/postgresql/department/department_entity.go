@@ -66,10 +66,6 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 		query.Where("id = ?", input.ID)
 	}
 
-	if input.OrgID != nil {
-		query.Where("org_id = ?", input.OrgID)
-	}
-
 	err = query.Count(&quantity).Offset(int((input.Page - 1) * input.Limit)).
 		Limit(int(input.Limit)).Order("created_at desc").Find(&output).Error
 	if err != nil {
@@ -85,10 +81,6 @@ func (s *storage) GetByListNoPagination(input *model.Base) (quantity int64, outp
 
 	if input.ID != nil {
 		query.Where("id = ?", input.ID)
-	}
-
-	if input.OrgID != nil {
-		query.Where("org_id = ?", input.OrgID)
 	}
 
 	err = query.Count(&quantity).Order("created_at desc").Find(&output).Error
@@ -121,10 +113,6 @@ func (s *storage) GetByQuantity(input *model.Base) (quantity int64, err error) {
 		query.Where("id = ?", input.ID)
 	}
 
-	if input.OrgID != nil {
-		query.Where("org_id = ?", input.OrgID)
-	}
-
 	err = query.Count(&quantity).Select("*").Error
 	if err != nil {
 		log.Error(err)
@@ -152,10 +140,6 @@ func (s *storage) Update(input *model.Base) (err error) {
 
 	if input.Tel != nil {
 		data["tel"] = input.Tel
-	}
-
-	if input.OrgID != nil {
-		data["org_id"] = input.OrgID
 	}
 
 	if input.UpdatedBy != nil {

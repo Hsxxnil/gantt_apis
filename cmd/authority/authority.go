@@ -7,7 +7,6 @@ import (
 	"hta/internal/router"
 	"hta/internal/router/department"
 	"hta/internal/router/login"
-	"hta/internal/router/organization"
 	"hta/internal/router/policy"
 	"hta/internal/router/role"
 	"hta/internal/router/user"
@@ -25,7 +24,6 @@ func main() {
 	engine = login.GetRouter(engine, db)
 	engine = policy.GetRouter(engine, db)
 	engine = role.GetRouter(engine, db)
-	engine = organization.GetRouter(engine, db)
 	engine = department.GetRouter(engine, db)
 
 	log.Fatal(gateway.ListenAndServe(":8080", engine))

@@ -28,7 +28,6 @@ func (s service) CreateAccessToken(input *model.JWX) (output *model.Token, err e
 		"name":        input.Name,
 		"resource_id": input.ResourceID,
 		"role":        input.Role,
-		"org_id":      input.OrgID,
 	}
 
 	accessExpiration := util.NowToUTC().Add(time.Minute * 5).Unix()

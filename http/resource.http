@@ -4,8 +4,7 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "password": "12345",
-  "domain": "d.pmip.likbox.com"
+  "password": "12345"
 }
 
 ### verify
@@ -14,8 +13,7 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "passcode": "905499",
-  "domain": "d.pmip.likbox.com"
+  "passcode": "905499"
 }
 
 > {% client.global.set("accessToken", response.body.body.access_token); %}

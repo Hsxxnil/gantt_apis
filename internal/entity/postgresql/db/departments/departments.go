@@ -17,8 +17,6 @@ type Table struct {
 	Fax string `gorm:"column:fax;type:text;" json:"fax"`
 	// 電話
 	Tel string `gorm:"column:tel;type:text;" json:"tel,omitempty"`
-	// 組織ID
-	OrgID string `gorm:"column:org_id;type:uuid;" json:"org_id,omitempty"`
 	// create_users data
 	CreatedByUsers users.Table `gorm:"foreignKey:ID;references:CreatedBy" json:"created_by_users,omitempty"`
 	// update_users data
@@ -39,8 +37,6 @@ type Base struct {
 	Fax *string `json:"fax,omitempty"`
 	// 電話
 	Tel *string `json:"tel,omitempty"`
-	// 組織ID
-	OrgID *string `json:"org_id,omitempty"`
 	// create_users data
 	CreatedByUsers users.Base `json:"created_by_users,omitempty"`
 	// update_users data
