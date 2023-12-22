@@ -1,20 +1,22 @@
-package departments
+package affiliations
 
 import (
 	"hta/internal/entity/postgresql/db/users"
 	"hta/internal/interactor/models/special"
 )
 
-// Table struct is departments database table struct
+// Table struct is affiliations database table struct
 type Table struct {
 	// 表ID
 	ID string `gorm:"<-:create;column:id;type:uuid;not null;primaryKey;" json:"id"`
-	// 名稱
-	Name string `gorm:"column:name;type:text;not null;" json:"name"`
-	// 傳真
-	Fax string `gorm:"column:fax;type:text;" json:"fax"`
-	// 電話
-	Tel string `gorm:"column:tel;type:text;" json:"tel,omitempty"`
+	// 使用者ID
+	UserID string `gorm:"column:user_id;type:uuid;not null;" json:"user_id"`
+	// 部門ID
+	DeptID string `gorm:"column:dept_id;type:uuid;not null;" json:"dept_id"`
+	// 職稱
+	JobTitle string `gorm:"column:job_title;type:text;" json:"job_title,omitempty"`
+	// 是否為主管
+	IsSupervisor bool `gorm:"column:is_supervisor;type:boolean;default:false;" json:"is_supervisor,omitempty"`
 	// create_users data
 	CreatedByUsers users.Table `gorm:"foreignKey:ID;references:CreatedBy" json:"created_by_users,omitempty"`
 	// update_users data
@@ -23,16 +25,18 @@ type Table struct {
 	special.Table
 }
 
-// Base struct is corresponding to departments table structure file
+// Base struct is corresponding to affiliations table structure file
 type Base struct {
 	// 表ID
 	ID *string `json:"id,omitempty"`
-	// 名稱
-	Name *string `json:"name,omitempty"`
-	// 傳真
-	Fax *string `json:"fax,omitempty"`
-	// 電話
-	Tel *string `json:"tel,omitempty"`
+	// 使用者ID
+	UserID *string `json:"user_id,omitempty"`
+	// 部門ID
+	DeptID *string `json:"dept_id,omitempty"`
+	// 職稱
+	JobTitle *string `json:"job_title,omitempty"`
+	// 是否為主管
+	IsSupervisor *bool `json:"is_supervisor,omitempty"`
 	// create_users data
 	CreatedByUsers users.Base `json:"created_by_users,omitempty"`
 	// update_users data
@@ -42,5 +46,5 @@ type Base struct {
 }
 
 func (t *Table) TableName() string {
-	return "departments"
+	return "affiliations"
 }

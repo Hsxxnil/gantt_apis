@@ -1,8 +1,8 @@
-package department
+package affiliation
 
 import (
 	"github.com/bytedance/sonic"
-	model "hta/internal/entity/postgresql/db/departments"
+	model "hta/internal/entity/postgresql/db/affiliations"
 	"hta/internal/interactor/pkg/util/log"
 
 	"gorm.io/gorm"
@@ -126,16 +126,20 @@ func (s *storage) Update(input *model.Base) (err error) {
 	query := s.db.Model(&model.Table{}).Omit(clause.Associations)
 	data := map[string]any{}
 
-	if input.Name != nil {
-		data["name"] = input.Name
+	if input.UserID != nil {
+		data["user_id"] = input.UserID
 	}
 
-	if input.Fax != nil {
-		data["fax"] = input.Fax
+	if input.DeptID != nil {
+		data["dept_id"] = input.DeptID
 	}
 
-	if input.Tel != nil {
-		data["tel"] = input.Tel
+	if input.JobTitle != nil {
+		data["job_title"] = input.JobTitle
+	}
+
+	if input.IsSupervisor != nil {
+		data["is_supervisor"] = input.IsSupervisor
 	}
 
 	if input.UpdatedBy != nil {
