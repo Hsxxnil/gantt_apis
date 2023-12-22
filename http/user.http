@@ -50,8 +50,7 @@ Authorization: Bearer {{accessToken}}
   "name": "林中庸",
   "password": "12345",
   "email": "Kevin_lin@hta.com.tw",
-  "role_id": "d56fc184-9441-4396-be6c-d48580650171",
-  "org_id": "d2de3502-bafb-4434-96fa-b191dcfce44d"
+  "role_id": "d56fc184-9441-4396-be6c-d48580650171"
 }
 
 ### Update

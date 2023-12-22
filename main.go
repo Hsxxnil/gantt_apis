@@ -7,7 +7,6 @@ import (
 	"hta/internal/router/event_mark"
 	"hta/internal/router/holiday"
 	"hta/internal/router/login"
-	"hta/internal/router/organization"
 	"hta/internal/router/policy"
 	"hta/internal/router/project"
 	"hta/internal/router/project_resource"
@@ -66,7 +65,6 @@ func main() {
 	policy.GetRouter(engine, db)
 	role.GetRouter(engine, db)
 	task.GetRouter(engine, db)
-	organization.GetRouter(engine, db)
 	department.GetRouter(engine, db)
 
 	url := ginSwagger.URL(fmt.Sprintf("http://localhost:8080/swagger/doc.json"))

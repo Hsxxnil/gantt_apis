@@ -9,7 +9,6 @@ import (
 	"hta/config"
 	jwxModel "hta/internal/interactor/models/jwx"
 	loginModel "hta/internal/interactor/models/logins"
-	organizationModel "hta/internal/interactor/models/organizations"
 	roleModel "hta/internal/interactor/models/roles"
 	userModel "hta/internal/interactor/models/users"
 	"hta/internal/interactor/pkg/email"
@@ -19,7 +18,6 @@ import (
 	"hta/internal/interactor/pkg/util/code"
 	"hta/internal/interactor/pkg/util/log"
 	jwxService "hta/internal/interactor/service/jwx"
-	organizationService "hta/internal/interactor/service/organization"
 	roleService "hta/internal/interactor/service/role"
 	userService "hta/internal/interactor/service/user"
 )
@@ -32,40 +30,24 @@ type Manager interface {
 }
 
 type manager struct {
-	UserService         userService.Service
-	JwxService          jwxService.Service
-	RoleService         roleService.Service
-	OrganizationService organizationService.Service
+	UserService userService.Service
+	JwxService  jwxService.Service
+	RoleService roleService.Service
 }
 
 func Init(db *gorm.DB) Manager {
 	return &manager{
-		UserService:         userService.Init(db),
-		JwxService:          jwxService.Init(),
-		RoleService:         roleService.Init(db),
-		OrganizationService: organizationService.Init(db),
+		UserService: userService.Init(db),
+		JwxService:  jwxService.Init(),
+		RoleService: roleService.Init(db),
 	}
 }
 
 func (m *manager) Login(input *loginModel.Login) (int, any) {
-	// get organization
-	organizationBase, err := m.OrganizationService.GetBySingle(&organizationModel.Field{
-		Domain: util.PointerString(input.Domain),
-	})
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "Invalid domain.")
-		}
-
-		log.Error(err)
-		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-	}
-
 	// verify username & password
 	acknowledge, userBase, err := m.UserService.AcknowledgeUser(&userModel.Field{
 		UserName: util.PointerString(input.UserName),
 		Password: util.PointerString(input.Password),
-		OrgID:    util.PointerString(*organizationBase.ID),
 	})
 	if err != nil {
 		log.Error(err)
@@ -78,7 +60,7 @@ func (m *manager) Login(input *loginModel.Login) (int, any) {
 
 	// generate otp secret & otp auth url
 	// todo move to sign up
-	otpSecret, optAuthURL, err := otp.GenerateOTP(*organizationBase.Name, input.UserName)
+	otpSecret, optAuthURL, err := otp.GenerateOTP("hta", input.UserName)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -130,23 +112,9 @@ func (m *manager) Login(input *loginModel.Login) (int, any) {
 }
 
 func (m *manager) Verify(input *loginModel.Verify) (int, any) {
-	// get organization
-	organizationBase, err := m.OrganizationService.GetBySingle(&organizationModel.Field{
-		Domain: util.PointerString(input.Domain),
-	})
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "Invalid domain.")
-		}
-
-		log.Error(err)
-		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-	}
-
 	// get user
 	userBase, err := m.UserService.GetBySingle(&userModel.Field{
 		UserName: util.PointerString(input.UserName),
-		OrgID:    organizationBase.ID,
 	})
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -184,7 +152,6 @@ func (m *manager) Verify(input *loginModel.Verify) (int, any) {
 		Name:       userBase.Name,
 		ResourceID: userBase.ResourceUUID,
 		Role:       roleBase.Name,
-		OrgID:      userBase.OrgID,
 	})
 
 	if err != nil {
@@ -271,7 +238,6 @@ func (m *manager) Refresh(input *jwxModel.Refresh) (int, any) {
 		Name:       field.Name,
 		ResourceID: field.ResourceUUID,
 		Role:       roleBase.Name,
-		OrgID:      field.OrgID,
 	})
 	if err != nil {
 		log.Error(err)
@@ -285,23 +251,9 @@ func (m *manager) Refresh(input *jwxModel.Refresh) (int, any) {
 }
 
 func (m *manager) Forget(input *loginModel.Forget) (int, any) {
-	// get organization
-	organizationBase, err := m.OrganizationService.GetBySingle(&organizationModel.Field{
-		Domain: util.PointerString(input.Domain),
-	})
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "Invalid domain.")
-		}
-
-		log.Error(err)
-		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-	}
-
 	// get user by email
 	userBase, err := m.UserService.GetBySingle(&userModel.Field{
 		Email: util.PointerString(input.Email),
-		OrgID: organizationBase.ID,
 	})
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -331,7 +283,6 @@ func (m *manager) Forget(input *loginModel.Forget) (int, any) {
 		Name:       userBase.Name,
 		ResourceID: userBase.ResourceUUID,
 		Role:       roleBase.Name,
-		OrgID:      userBase.OrgID,
 		Expiration: util.PointerInt64(30),
 	})
 
@@ -350,12 +301,11 @@ func (m *manager) Forget(input *loginModel.Forget) (int, any) {
 	httpMod := "https"
 	// modify localhost port and httpMod for testing
 	if input.Domain == "localhost" {
-		if input.Port != "" {
-			domain = fmt.Sprintf("%s:%s", input.Domain, input.Port)
-			httpMod = "http"
-		} else {
+		if input.Port == "" {
 			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "Invalid port.")
 		}
+		domain = fmt.Sprintf("%s:%s", input.Domain, input.Port)
+		httpMod = "http"
 	}
 	resetPasswordLink := fmt.Sprintf("%s://%s/password_reset/%s", httpMod, domain, accessToken.AccessToken)
 	message := fmt.Sprintf(`
