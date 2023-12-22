@@ -47,8 +47,6 @@ type List struct {
 	Departments []*struct {
 		// 表ID
 		ID string `json:"id,omitempty"`
-		// 部門主管ID(user_id)
-		SupervisorID string `json:"supervisor_id,omitempty"`
 		// 名稱
 		Name string `json:"name,omitempty"`
 		// 傳真
@@ -70,8 +68,6 @@ type List struct {
 type Single struct {
 	// 表ID
 	ID string `json:"id,omitempty"`
-	// 部門主管ID(user_id)
-	SupervisorID string `json:"supervisor_id,omitempty"`
 	// 名稱
 	Name string `json:"name,omitempty"`
 	// 傳真
