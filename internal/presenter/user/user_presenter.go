@@ -17,7 +17,6 @@ import (
 )
 
 type Control interface {
-	Create(ctx *gin.Context)
 	GetByList(ctx *gin.Context)
 	GetByListNoPagination(ctx *gin.Context)
 	GetBySingle(ctx *gin.Context)
@@ -38,34 +37,6 @@ func Init(db *gorm.DB) Control {
 	return &control{
 		Manager: user.Init(db),
 	}
-}
-
-// Create
-// @Summary 新增使用者
-// @description 新增使用者
-// @Tags user
-// @version 1.0
-// @Accept json
-// @produce json
-// @param Authorization header string  true "JWE Token"
-// @param * body users.Create true "新增使用者"
-// @success 200 object code.SuccessfulMessage{body=string} "成功後返回的值"
-// @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
-// @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
-// @Router /users [post]
-func (c *control) Create(ctx *gin.Context) {
-	trx := ctx.MustGet("db_trx").(*gorm.DB)
-	input := &userModel.Create{}
-	input.CreatedBy = ctx.MustGet("user_id").(string)
-	if err := ctx.ShouldBindJSON(input); err != nil {
-		log.Error(err)
-		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
-		return
-	}
-
-	httpCode, codeMessage := c.Manager.Create(trx, input)
-	ctx.JSON(httpCode, codeMessage)
 }
 
 // GetByList
@@ -222,6 +193,7 @@ func (c *control) Delete(ctx *gin.Context) {
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
 // @Router /users/current-user [patch]
 func (c *control) Update(ctx *gin.Context) {
+	trx := ctx.MustGet("db_trx").(*gorm.DB)
 	input := &userModel.Update{}
 	input.ID = ctx.MustGet("user_id").(string)
 	input.UpdatedBy = util.PointerString(ctx.MustGet("user_id").(string))
@@ -231,7 +203,7 @@ func (c *control) Update(ctx *gin.Context) {
 		return
 	}
 
-	httpCode, codeMessage := c.Manager.Update(input)
+	httpCode, codeMessage := c.Manager.Update(trx, input)
 	ctx.JSON(httpCode, codeMessage)
 }
 

@@ -25,3 +25,17 @@ type Forget struct {
 	// 連接埠
 	Port string `json:"port,omitempty"`
 }
+
+// Register struct is used to register
+type Register struct {
+	// 使用者名稱
+	UserName string `json:"user_name,omitempty" binding:"required" validate:"required"`
+	// 使用者密碼
+	Password string `json:"password,omitempty" binding:"required" validate:"required"`
+	// 使用者電子郵件
+	Email string `json:"email,omitempty" binding:"required,email" validate:"required,email"`
+	// 角色ID
+	RoleID string `json:"role_id,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
+	// 創建者
+	CreatedBy string `json:"created_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
+}

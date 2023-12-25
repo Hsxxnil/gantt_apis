@@ -17,7 +17,9 @@ import (
 	"hta/internal/interactor/pkg/util"
 	"hta/internal/interactor/pkg/util/code"
 	"hta/internal/interactor/pkg/util/log"
+	affiliationService "hta/internal/interactor/service/affiliation"
 	jwxService "hta/internal/interactor/service/jwx"
+	resourceService "hta/internal/interactor/service/resource"
 	roleService "hta/internal/interactor/service/role"
 	userService "hta/internal/interactor/service/user"
 )
@@ -27,19 +29,24 @@ type Manager interface {
 	Refresh(input *jwxModel.Refresh) (int, any)
 	Verify(input *loginModel.Verify) (int, any)
 	Forget(input *loginModel.Forget) (int, any)
+	Register(input *loginModel.Register) (int, any)
 }
 
 type manager struct {
-	UserService userService.Service
-	JwxService  jwxService.Service
-	RoleService roleService.Service
+	UserService        userService.Service
+	JwxService         jwxService.Service
+	RoleService        roleService.Service
+	ResourceService    resourceService.Service
+	AffiliationService affiliationService.Service
 }
 
 func Init(db *gorm.DB) Manager {
 	return &manager{
-		UserService: userService.Init(db),
-		JwxService:  jwxService.Init(),
-		RoleService: roleService.Init(db),
+		UserService:        userService.Init(db),
+		JwxService:         jwxService.Init(),
+		RoleService:        roleService.Init(db),
+		ResourceService:    resourceService.Init(db),
+		AffiliationService: affiliationService.Init(db),
 	}
 }
 
@@ -58,28 +65,8 @@ func (m *manager) Login(input *loginModel.Login) (int, any) {
 		return code.PermissionDenied, code.GetCodeMessage(code.PermissionDenied, "Incorrect username or password.")
 	}
 
-	// generate otp secret & otp auth url
-	// todo move to sign up
-	otpSecret, optAuthURL, err := otp.GenerateOTP("hta", input.UserName)
-	if err != nil {
-		log.Error(err)
-		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-	}
-
 	// generate passcode
-	passcode, err := otp.GeneratePasscode(otpSecret)
-	if err != nil {
-		log.Error(err)
-		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-	}
-
-	// update otp secret & otp auth url
-	err = m.UserService.Update(&userModel.Update{
-		ID:         *userBase.ID,
-		OtpSecret:  util.PointerString(otpSecret),
-		OtpAuthUrl: util.PointerString(optAuthURL),
-	})
-
+	passcode, err := otp.GeneratePasscode(*userBase.OtpSecret)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -363,4 +350,40 @@ func (m *manager) Forget(input *loginModel.Forget) (int, any) {
 	obscuredEmail := masker.Email(*userBase.Email)
 
 	return code.Successful, code.GetCodeMessage(code.Successful, obscuredEmail)
+}
+
+func (m *manager) Register(input *loginModel.Register) (int, any) {
+	// determine if the username is duplicate
+	quantity, _ := m.UserService.GetByQuantity(&userModel.Field{
+		UserName: util.PointerString(input.UserName),
+		Email:    util.PointerString(input.Email),
+	})
+
+	if quantity > 0 {
+		log.Info("User already exists. UserName: ", input.UserName, "email: ", input.Email)
+		return code.BadRequest, code.GetCodeMessage(code.BadRequest, "User already exists.")
+	}
+
+	// generate otp secret & otp auth url
+	otpSecret, optAuthURL, err := otp.GenerateOTP("hta", input.UserName)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	userBase, err := m.UserService.Create(&userModel.Create{
+		UserName:   input.UserName,
+		Password:   input.Password,
+		Email:      input.Email,
+		RoleID:     input.RoleID,
+		OtpSecret:  otpSecret,
+		OtpAuthUrl: optAuthURL,
+		CreatedBy:  input.CreatedBy,
+	})
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	return code.Successful, code.GetCodeMessage(code.Successful, userBase.ID)
 }

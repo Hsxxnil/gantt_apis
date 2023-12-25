@@ -1,5 +1,16 @@
 basePath: /hta-gantt/v1.0
 definitions:
+  affiliations.Create:
+    properties:
+      dept_id:
+        description: 部門ID
+        type: string
+      job_title:
+        description: 職稱
+        type: string
+    required:
+    - dept_id
+    type: object
   affiliations.Single:
     properties:
       created_at:
@@ -366,9 +377,6 @@ definitions:
       access_token:
         description: 授權令牌
         type: string
-      otp_verified:
-        description: "是否驗證過\totp"
-        type: boolean
       refresh_token:
         description: 刷新令牌
         type: string
@@ -397,6 +405,22 @@ definitions:
         description: 使用者名稱
         type: string
     required:
+    - password
+    - user_name
+    type: object
+  logins.Register:
+    properties:
+      email:
+        description: 使用者電子郵件
+        type: string
+      password:
+        description: 使用者密碼
+        type: string
+      user_name:
+        description: 使用者名稱
+        type: string
+    required:
+    - email
     - password
     - user_name
     type: object
@@ -867,6 +891,8 @@ definitions:
         description: 總負載
         minimum: 0
         type: number
+    required:
+    - email
     type: object
   resources.Filter:
     properties:
@@ -1554,33 +1580,6 @@ definitions:
         description: 預留：外部連結
         type: string
     type: object
-  users.Create:
-    properties:
-      email:
-        description: 使用者電子郵件
-        type: string
-      name:
-        description: 使用者中文名稱
-        type: string
-      password:
-        description: 使用者密碼
-        type: string
-      resource_uuid:
-        description: 資源UUID
-        type: string
-      role_id:
-        description: 角色ID
-        type: string
-      user_name:
-        description: 使用者名稱
-        type: string
-    required:
-    - email
-    - name
-    - password
-    - role_id
-    - user_name
-    type: object
   users.Enable:
     properties:
       is_enabled:
@@ -1716,6 +1715,9 @@ definitions:
       id:
         description: 表ID
         type: string
+      is_enabled:
+        description: 是否啟用
+        type: boolean
       job_title:
         description: 職稱
         type: string
@@ -1746,9 +1748,17 @@ definitions:
     type: object
   users.Update:
     properties:
+      affiliations:
+        description: affiliations
+        items:
+          $ref: '#/definitions/affiliations.Create'
+        type: array
       email:
         description: 使用者電子郵件
         type: string
+      is_enabled:
+        description: 是否啟用
+        type: boolean
       name:
         description: 使用者中文名稱
         type: string
@@ -2177,7 +2187,7 @@ paths:
             - $ref: '#/definitions/code.SuccessfulMessage'
             - properties:
                 body:
-                  $ref: '#/definitions/tasks.List'
+                  $ref: '#/definitions/departments.List'
               type: object
         "415":
           description: 必要欄位帶入錯誤
@@ -2700,7 +2710,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: 使用者登入
+      description: 登入
       parameters:
       - description: 登入帶入
         in: body
@@ -2738,7 +2748,7 @@ paths:
                 detailed:
                   type: string
               type: object
-      summary: 使用者登入
+      summary: 登入
       tags:
       - login
   /project-resources:
@@ -3543,6 +3553,51 @@ paths:
                   type: string
               type: object
       summary: 換新的令牌
+      tags:
+      - login
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: 註冊
+      parameters:
+      - description: 註冊
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/logins.Register'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 註冊
       tags:
       - login
   /resources:
@@ -4657,55 +4712,6 @@ paths:
       summary: 取得全部使用者(不用page和limit)
       tags:
       - user
-    post:
-      consumes:
-      - application/json
-      description: 新增使用者
-      parameters:
-      - description: JWE Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: 新增使用者
-        in: body
-        name: '*'
-        required: true
-        schema:
-          $ref: '#/definitions/users.Create'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 成功後返回的值
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.SuccessfulMessage'
-            - properties:
-                body:
-                  type: string
-              type: object
-        "415":
-          description: 必要欄位帶入錯誤
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.ErrorMessage'
-            - properties:
-                detailed:
-                  type: string
-              type: object
-        "500":
-          description: 伺服器非預期錯誤
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.ErrorMessage'
-            - properties:
-                detailed:
-                  type: string
-              type: object
-      summary: 新增使用者
-      tags:
-      - user
   /users/{id}:
     delete:
       consumes:
@@ -5304,7 +5310,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: 使用者驗證
+      description: 驗證
       parameters:
       - description: 驗證帶入
         in: body
@@ -5342,7 +5348,7 @@ paths:
                 detailed:
                   type: string
               type: object
-      summary: 使用者驗證
+      summary: 驗證
       tags:
       - login
   /work-days:

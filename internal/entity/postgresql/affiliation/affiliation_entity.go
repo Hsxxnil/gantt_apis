@@ -189,6 +189,10 @@ func (s *storage) Delete(input *model.Base) (err error) {
 		query.Where("id = ?", input.ID)
 	}
 
+	if input.UserID != nil {
+		query.Where("user_id = ?", input.UserID)
+	}
+
 	err = query.Delete(&model.Table{}).Error
 	if err != nil {
 		log.Error(err)
