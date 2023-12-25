@@ -7163,14 +7163,6 @@ const docTemplate = `{
                 "refresh_token": {
                     "description": "刷新令牌",
                     "type": "string"
-                },
-                "role": {
-                    "description": "角色",
-                    "type": "string"
-                },
-                "user_id": {
-                    "description": "使用者ID",
-                    "type": "string"
                 }
             }
         },
