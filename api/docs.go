@@ -7167,6 +7167,10 @@ const docTemplate = `{
                     "description": "授權令牌",
                     "type": "string"
                 },
+                "is_complete": {
+                    "description": "是否填寫完整",
+                    "type": "boolean"
+                },
                 "refresh_token": {
                     "description": "刷新令牌",
                     "type": "string"
