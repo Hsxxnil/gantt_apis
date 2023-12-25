@@ -38,6 +38,16 @@ func Init(db *gorm.DB) Manager {
 func (m *manager) Create(trx *gorm.DB, input *resourceModel.Create) (int, any) {
 	defer trx.Rollback()
 
+	// determine if the resource's email is duplicate
+	quantity, _ := m.ResourceService.GetByQuantity(&resourceModel.Field{
+		Email: util.PointerString(input.Email),
+	})
+
+	if quantity > 0 {
+		log.Error("Email already exists. Email: ", input.Email)
+		return code.BadRequest, code.GetCodeMessage(code.BadRequest, "Email already exists.")
+	}
+
 	resourceBase, err := m.ResourceService.WithTrx(trx).Create(input)
 	if err != nil {
 		log.Error(err)
