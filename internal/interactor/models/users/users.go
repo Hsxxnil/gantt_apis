@@ -43,6 +43,8 @@ type Field struct {
 	IsEnabled *bool `json:"is_enabled,omitempty" form:"is_enabled"`
 	// 是否使用驗證器
 	IsAuthenticator *bool `json:"is_authenticator,omitempty" form:"is_authenticator"`
+	// 搜尋欄位
+	Filter `json:"filter"`
 }
 
 // Fields is the searched structure file (including pagination)
@@ -51,6 +53,14 @@ type Fields struct {
 	Field
 	// 分頁搜尋結構檔
 	page.Pagination
+}
+
+// Filter struct is used to store the search field
+type Filter struct {
+	// 使用者名稱
+	FilterUserName string `json:"user_name,omitempty"`
+	// 使用者電子郵件
+	FilterEmail string `json:"email,omitempty"`
 }
 
 // List is multiple return structure files
@@ -177,4 +187,10 @@ type Enable struct {
 	IsEnabled *bool `json:"is_enabled,omitempty" binding:"required" validate:"required"`
 	// 更新者
 	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
+}
+
+// IsDuplicate struct is used to check duplicate
+type IsDuplicate struct {
+	// 是否重複
+	IsDuplicate bool `json:"is_duplicate"`
 }

@@ -27,6 +27,7 @@ type Manager interface {
 	Update(input *userModel.Update) (int, any)
 	Enable(input *userModel.Enable) (int, any)
 	ResetPassword(input *userModel.ResetPassword) (int, any)
+	Duplicate(input *userModel.Field) (int, any)
 }
 
 type manager struct {
@@ -383,4 +384,22 @@ func (m *manager) ResetPassword(input *userModel.ResetPassword) (int, any) {
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, userBase.ID)
+}
+
+func (m *manager) Duplicate(input *userModel.Field) (int, any) {
+	output := &userModel.IsDuplicate{}
+	quantity, err := m.UserService.GetByQuantity(input)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	if quantity > 0 {
+		log.Info("User already exists. UserName: ", input.FilterUserName, "email: ", input.FilterEmail)
+		output.IsDuplicate = true
+	} else {
+		output.IsDuplicate = false
+	}
+
+	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }

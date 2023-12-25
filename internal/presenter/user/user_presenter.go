@@ -27,6 +27,7 @@ type Control interface {
 	Enable(ctx *gin.Context)
 	EnableByCurrent(ctx *gin.Context)
 	ResetPassword(ctx *gin.Context)
+	Duplicate(ctx *gin.Context)
 }
 
 type control struct {
@@ -314,5 +315,29 @@ func (c *control) ResetPassword(ctx *gin.Context) {
 	}
 
 	httpCode, codeMessage := c.Manager.ResetPassword(input)
+	ctx.JSON(httpCode, codeMessage)
+}
+
+// Duplicate
+// @Summary 檢查使用者是否重複
+// @description 檢查使用者是否重複
+// @Tags user
+// @version 1.0
+// @Accept json
+// @produce json
+// @param * body users.Filter true "檢查使用者是否重複"
+// @success 200 object code.SuccessfulMessage{body=string} "成功後返回的值"
+// @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
+// @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
+// @Router /users/check-duplicate [post]
+func (c *control) Duplicate(ctx *gin.Context) {
+	input := &userModel.Field{}
+	if err := ctx.ShouldBindJSON(input); err != nil {
+		log.Error(err)
+		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
+		return
+	}
+
+	httpCode, codeMessage := c.Manager.Duplicate(input)
 	ctx.JSON(httpCode, codeMessage)
 }

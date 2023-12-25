@@ -13,6 +13,7 @@ func GetRouter(router *gin.Engine, db *gorm.DB) *gin.Engine {
 	{
 		v10.POST("", middleware.Verify(), middleware.Transaction(db), control.Create)
 		v10.POST("list", middleware.Verify(), middleware.CheckPermission(), control.GetByList)
+		v10.POST("check-duplicate", control.Duplicate)
 		v10.GET("", middleware.Verify(), middleware.CheckPermission(), control.GetByListNoPagination)
 		v10.GET("current-user", middleware.Verify(), middleware.CheckPermission(), control.GetByCurrent)
 		v10.GET(":id", middleware.Verify(), middleware.CheckPermission(), control.GetBySingle)
