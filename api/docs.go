@@ -6651,6 +6651,22 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "affiliations.Create": {
+            "type": "object",
+            "required": [
+                "dept_id"
+            ],
+            "properties": {
+                "dept_id": {
+                    "description": "部門ID",
+                    "type": "string"
+                },
+                "job_title": {
+                    "description": "職稱",
+                    "type": "string"
+                }
+            }
+        },
         "affiliations.Single": {
             "type": "object",
             "properties": {
@@ -9059,6 +9075,13 @@ const docTemplate = `{
         "users.Update": {
             "type": "object",
             "properties": {
+                "affiliations": {
+                    "description": "affiliations",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/affiliations.Create"
+                    }
+                },
                 "email": {
                     "description": "使用者電子郵件",
                     "type": "string"

@@ -1,5 +1,16 @@
 basePath: /hta-gantt/v1.0
 definitions:
+  affiliations.Create:
+    properties:
+      dept_id:
+        description: 部門ID
+        type: string
+      job_title:
+        description: 職稱
+        type: string
+    required:
+    - dept_id
+    type: object
   affiliations.Single:
     properties:
       created_at:
@@ -1741,6 +1752,11 @@ definitions:
     type: object
   users.Update:
     properties:
+      affiliations:
+        description: affiliations
+        items:
+          $ref: '#/definitions/affiliations.Create'
+        type: array
       email:
         description: 使用者電子郵件
         type: string

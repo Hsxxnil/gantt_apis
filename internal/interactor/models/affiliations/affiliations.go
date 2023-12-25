@@ -8,13 +8,13 @@ import (
 // Create struct is used end_date create achieves
 type Create struct {
 	// 使用者ID
-	UserID string `json:"user_id,omitempty" binding:"required,uuid4" validate:"required,uuid4"`
+	UserID string `json:"user_id,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 	// 部門ID
 	DeptID string `json:"dept_id,omitempty" binding:"required,uuid4" validate:"required,uuid4"`
 	// 職稱
 	JobTitle string `json:"job_title,omitempty"`
 	// 是否為主管
-	IsSupervisor bool `json:"is_supervisor,omitempty" binding:"required" validate:"required"`
+	IsSupervisor bool `json:"is_supervisor,omitempty" binding:"required" validate:"required" swaggerignore:"true"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }

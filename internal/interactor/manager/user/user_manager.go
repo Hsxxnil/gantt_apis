@@ -5,6 +5,7 @@ import (
 	"github.com/bytedance/sonic"
 	affiliationModel "hta/internal/interactor/models/affiliations"
 	departmentModel "hta/internal/interactor/models/departments"
+	resourceModel "hta/internal/interactor/models/resources"
 	"hta/internal/interactor/pkg/util"
 	affiliationService "hta/internal/interactor/service/affiliation"
 	departmentService "hta/internal/interactor/service/department"
@@ -24,7 +25,7 @@ type Manager interface {
 	GetByListNoPagination(input *userModel.Field) (int, any)
 	GetBySingle(input *userModel.Field) (int, any)
 	Delete(input *userModel.Update) (int, any)
-	Update(input *userModel.Update) (int, any)
+	Update(trx *gorm.DB, input *userModel.Update) (int, any)
 	Enable(input *userModel.Enable) (int, any)
 	ResetPassword(input *userModel.ResetPassword) (int, any)
 	Duplicate(input *userModel.Field) (int, any)
@@ -235,7 +236,9 @@ func (m *manager) Delete(input *userModel.Update) (int, any) {
 	return code.Successful, code.GetCodeMessage(code.Successful, "Delete ok!")
 }
 
-func (m *manager) Update(input *userModel.Update) (int, any) {
+func (m *manager) Update(trx *gorm.DB, input *userModel.Update) (int, any) {
+	defer trx.Rollback()
+
 	// validate old password
 	if input.Password != nil {
 		acknowledge, _, err := m.UserService.AcknowledgeUser(&userModel.Field{
@@ -278,12 +281,68 @@ func (m *manager) Update(input *userModel.Update) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = m.UserService.Update(input)
+	// if the user has no resource, bind the resource to the user
+	var resourceID *string
+	if userBase.ResourceUUID == nil {
+		// check if the resource with the same email exists
+		resourceBase, err := m.ResourceService.GetBySingle(&resourceModel.Field{
+			Email: userBase.Email,
+		})
+		if err != nil {
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+		}
+
+		if resourceBase != nil {
+			resourceID = resourceBase.ResourceUUID
+		} else {
+			// sync create resource
+			newResourceBase, err := m.ResourceService.WithTrx(trx).Create(&resourceModel.Create{
+				ResourceName: *userBase.Name,
+				Email:        *userBase.Email,
+				CreatedBy:    *input.UpdatedBy,
+			})
+			if err != nil {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+			resourceID = newResourceBase.ResourceUUID
+		}
+		input.ResourceUUID = resourceID
+	}
+
+	// sync delete affiliation
+	err = m.AffiliationService.WithTrx(trx).Delete(&affiliationModel.Field{
+		UserID: userBase.ID,
+	})
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
+	// sync create affiliation
+	for _, affiliation := range input.Affiliations {
+		_, err = m.AffiliationService.WithTrx(trx).Create(&affiliationModel.Create{
+			UserID:    *userBase.ID,
+			DeptID:    affiliation.DeptID,
+			JobTitle:  affiliation.JobTitle,
+			CreatedBy: *input.UpdatedBy,
+		})
+		if err != nil {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
+	err = m.UserService.WithTrx(trx).Update(input)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	trx.Commit()
 	return code.Successful, code.GetCodeMessage(code.Successful, userBase.ID)
 }
 
