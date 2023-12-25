@@ -1592,8 +1592,6 @@ definitions:
       is_enabled:
         description: 是否啟用
         type: boolean
-    required:
-    - is_enabled
     type: object
   users.Filter:
     properties:
