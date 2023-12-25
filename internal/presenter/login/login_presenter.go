@@ -32,8 +32,8 @@ func Init(db *gorm.DB) Control {
 }
 
 // Login
-// @Summary 使用者登入
-// @description 使用者登入
+// @Summary 登入
+// @description 登入
 // @Tags login
 // @version 1.0
 // @Accept json
@@ -57,8 +57,8 @@ func (c *control) Login(ctx *gin.Context) {
 }
 
 // Verify
-// @Summary 使用者驗證
-// @description 使用者驗證
+// @Summary 驗證
+// @description 驗證
 // @Tags login
 // @version 1.0
 // @Accept json
@@ -137,7 +137,6 @@ func (c *control) Forget(ctx *gin.Context) {
 // @version 1.0
 // @Accept json
 // @produce json
-// @param Authorization header string  true "JWE Token"
 // @param * body logins.Register true "註冊"
 // @success 200 object code.SuccessfulMessage{body=string} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"

@@ -234,7 +234,7 @@ const docTemplate = `{
                                     "type": "object",
                                     "properties": {
                                         "body": {
-                                            "$ref": "#/definitions/tasks.List"
+                                            "$ref": "#/definitions/departments.List"
                                         }
                                     }
                                 }
@@ -1427,7 +1427,7 @@ const docTemplate = `{
         },
         "/login": {
             "post": {
-                "description": "使用者登入",
+                "description": "登入",
                 "consumes": [
                     "application/json"
                 ],
@@ -1437,7 +1437,7 @@ const docTemplate = `{
                 "tags": [
                     "login"
                 ],
-                "summary": "使用者登入",
+                "summary": "登入",
                 "parameters": [
                     {
                         "description": "登入帶入",
@@ -2943,13 +2943,6 @@ const docTemplate = `{
                 ],
                 "summary": "註冊",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "description": "JWE Token",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
                     {
                         "description": "註冊",
                         "name": "*",
@@ -6042,7 +6035,7 @@ const docTemplate = `{
         },
         "/verify": {
             "post": {
-                "description": "使用者驗證",
+                "description": "驗證",
                 "consumes": [
                     "application/json"
                 ],
@@ -6052,7 +6045,7 @@ const docTemplate = `{
                 "tags": [
                     "login"
                 ],
-                "summary": "使用者驗證",
+                "summary": "驗證",
                 "parameters": [
                     {
                         "description": "驗證帶入",
@@ -7223,7 +7216,6 @@ const docTemplate = `{
             "required": [
                 "email",
                 "password",
-                "role_id",
                 "user_name"
             ],
             "properties": {
@@ -7233,10 +7225,6 @@ const docTemplate = `{
                 },
                 "password": {
                     "description": "使用者密碼",
-                    "type": "string"
-                },
-                "role_id": {
-                    "description": "角色ID",
                     "type": "string"
                 },
                 "user_name": {
