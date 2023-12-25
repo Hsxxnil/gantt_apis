@@ -8,6 +8,7 @@ import (
 	"hta/internal/interactor/pkg/util"
 	affiliationService "hta/internal/interactor/service/affiliation"
 	departmentService "hta/internal/interactor/service/department"
+	resourceService "hta/internal/interactor/service/resource"
 
 	userModel "hta/internal/interactor/models/users"
 	userService "hta/internal/interactor/service/user"
@@ -19,7 +20,6 @@ import (
 )
 
 type Manager interface {
-	Create(trx *gorm.DB, input *userModel.Create) (int, any)
 	GetByList(input *userModel.Fields) (int, any)
 	GetByListNoPagination(input *userModel.Field) (int, any)
 	GetBySingle(input *userModel.Field) (int, any)
@@ -34,6 +34,7 @@ type manager struct {
 	UserService        userService.Service
 	AffiliationService affiliationService.Service
 	DepartmentService  departmentService.Service
+	ResourceService    resourceService.Service
 }
 
 func Init(db *gorm.DB) Manager {
@@ -41,31 +42,8 @@ func Init(db *gorm.DB) Manager {
 		UserService:        userService.Init(db),
 		AffiliationService: affiliationService.Init(db),
 		DepartmentService:  departmentService.Init(db),
+		ResourceService:    resourceService.Init(db),
 	}
-}
-
-func (m *manager) Create(trx *gorm.DB, input *userModel.Create) (int, any) {
-	defer trx.Rollback()
-
-	// determine if the username is duplicate
-	quantity, _ := m.UserService.GetByQuantity(&userModel.Field{
-		UserName: util.PointerString(input.UserName),
-		Email:    util.PointerString(input.Email),
-	})
-
-	if quantity > 0 {
-		log.Info("User already exists. UserName: ", input.UserName, "email: ", input.Email)
-		return code.BadRequest, code.GetCodeMessage(code.BadRequest, "User already exists.")
-	}
-
-	userBase, err := m.UserService.WithTrx(trx).Create(input)
-	if err != nil {
-		log.Error(err)
-		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-	}
-
-	trx.Commit()
-	return code.Successful, code.GetCodeMessage(code.Successful, userBase.ID)
 }
 
 func (m *manager) GetByList(input *userModel.Fields) (int, any) {

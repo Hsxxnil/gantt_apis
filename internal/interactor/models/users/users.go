@@ -9,10 +9,6 @@ import (
 type Create struct {
 	// 使用者名稱
 	UserName string `json:"user_name,omitempty" binding:"required" validate:"required"`
-	// 使用者中文名稱
-	Name string `json:"name,omitempty" binding:"required" validate:"required"`
-	// 資源UUID
-	ResourceUUID *string `json:"resource_uuid,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
 	// 使用者密碼
 	Password string `json:"password,omitempty" binding:"required" validate:"required"`
 	// 使用者電子郵件
@@ -135,6 +131,8 @@ type Single struct {
 	Dept string `json:"dept,omitempty"`
 	// 職稱
 	JobTitle string `json:"job_title,omitempty"`
+	// 是否啟用
+	IsEnabled bool `json:"is_enabled"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty"`
 	// 更新者
@@ -165,6 +163,8 @@ type Update struct {
 	OtpSecret *string `json:"otp_secret,omitempty"`
 	// otp auth url
 	OtpAuthUrl *string `json:"otp_auth_url,omitempty"`
+	// 是否啟用
+	IsEnabled bool `json:"is_enabled"`
 	// 更新者
 	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }

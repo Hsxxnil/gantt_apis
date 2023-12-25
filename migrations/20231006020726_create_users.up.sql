@@ -50,6 +50,6 @@ create index idx_users_updated_by
     on users using hash (updated_by);
 
 insert into users(id, user_name, name, password, role_id)
-values ('a1bb0141-68e3-420c-8a92-9332fc21bd25', 'admin', '管理員',
+values ('7c0595cf-2d9a-4e77-858c-a33f9d1e8452', 'admin', '管理員',
         '9HXSglPqDWrOyA29croTTu8O8ahmj2EMHhxrsfzrEpJBVykaIkDJ211tJ03aq25Q2iHvkECACPDI/yJXiDsRQDojG1iLqTMQp3nUSmfV/9Yhc3i+ovXLuiRoapCluqw4oxkiuLtqlQMivNTnphmOF+iHnu6sz8N6aouA3mOS89aSoPpHwbWbo4ilh3sPIyEnwLT9npq3ICQwP7FxXPFxaw==',
         'd56fc184-9441-4396-be6c-d48580650171')

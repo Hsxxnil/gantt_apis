@@ -2929,6 +2929,95 @@ const docTemplate = `{
                 }
             }
         },
+        "/register": {
+            "post": {
+                "description": "註冊",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "login"
+                ],
+                "summary": "註冊",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "JWE Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "註冊",
+                        "name": "*",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/logins.Register"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功後返回的值",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.SuccessfulMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "body": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "415": {
+                        "description": "必要欄位帶入錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "伺服器非預期錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/resources": {
             "post": {
                 "description": "新增資源",
@@ -4851,93 +4940,6 @@ const docTemplate = `{
                                     "properties": {
                                         "body": {
                                             "$ref": "#/definitions/users.ListNoPagination"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "415": {
-                        "description": "必要欄位帶入錯誤",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/code.ErrorMessage"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "detailed": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    "500": {
-                        "description": "伺服器非預期錯誤",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/code.ErrorMessage"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "detailed": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "新增使用者",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "新增使用者",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "JWE Token",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "description": "新增使用者",
-                        "name": "*",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/users.Create"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "成功後返回的值",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/code.SuccessfulMessage"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "body": {
-                                            "type": "string"
                                         }
                                     }
                                 }
@@ -7156,10 +7158,6 @@ const docTemplate = `{
                     "description": "授權令牌",
                     "type": "string"
                 },
-                "otp_verified": {
-                    "description": "是否驗證過\totp",
-                    "type": "boolean"
-                },
                 "refresh_token": {
                     "description": "刷新令牌",
                     "type": "string"
@@ -7196,6 +7194,33 @@ const docTemplate = `{
             "properties": {
                 "password": {
                     "description": "密碼",
+                    "type": "string"
+                },
+                "user_name": {
+                    "description": "使用者名稱",
+                    "type": "string"
+                }
+            }
+        },
+        "logins.Register": {
+            "type": "object",
+            "required": [
+                "email",
+                "password",
+                "role_id",
+                "user_name"
+            ],
+            "properties": {
+                "email": {
+                    "description": "使用者電子郵件",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "使用者密碼",
+                    "type": "string"
+                },
+                "role_id": {
+                    "description": "角色ID",
                     "type": "string"
                 },
                 "user_name": {
@@ -7810,6 +7835,9 @@ const docTemplate = `{
         },
         "resources.Create": {
             "type": "object",
+            "required": [
+                "email"
+            ],
             "properties": {
                 "email": {
                     "description": "信箱",
@@ -8798,42 +8826,6 @@ const docTemplate = `{
                 }
             }
         },
-        "users.Create": {
-            "type": "object",
-            "required": [
-                "email",
-                "name",
-                "password",
-                "role_id",
-                "user_name"
-            ],
-            "properties": {
-                "email": {
-                    "description": "使用者電子郵件",
-                    "type": "string"
-                },
-                "name": {
-                    "description": "使用者中文名稱",
-                    "type": "string"
-                },
-                "password": {
-                    "description": "使用者密碼",
-                    "type": "string"
-                },
-                "resource_uuid": {
-                    "description": "資源UUID",
-                    "type": "string"
-                },
-                "role_id": {
-                    "description": "角色ID",
-                    "type": "string"
-                },
-                "user_name": {
-                    "description": "使用者名稱",
-                    "type": "string"
-                }
-            }
-        },
         "users.Enable": {
             "type": "object",
             "required": [
@@ -9022,6 +9014,10 @@ const docTemplate = `{
                     "description": "表ID",
                     "type": "string"
                 },
+                "is_enabled": {
+                    "description": "是否啟用",
+                    "type": "boolean"
+                },
                 "job_title": {
                     "description": "職稱",
                     "type": "string"
@@ -9066,6 +9062,10 @@ const docTemplate = `{
                 "email": {
                     "description": "使用者電子郵件",
                     "type": "string"
+                },
+                "is_enabled": {
+                    "description": "是否啟用",
+                    "type": "boolean"
                 },
                 "name": {
                     "description": "使用者中文名稱",
