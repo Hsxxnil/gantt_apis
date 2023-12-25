@@ -170,6 +170,13 @@ func (m *manager) Verify(input *loginModel.Verify) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
+	// determine if the user has completed the information
+	if userBase.ResourceUUID == nil {
+		output.IsComplete = false
+	} else {
+		output.IsComplete = true
+	}
+
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
 

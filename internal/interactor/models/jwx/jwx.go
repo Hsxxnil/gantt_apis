@@ -20,6 +20,8 @@ type Token struct {
 	AccessToken string `json:"access_token,omitempty"`
 	// 刷新令牌
 	RefreshToken string `json:"refresh_token,omitempty"`
+	// 是否填寫完整
+	IsComplete bool `json:"is_complete"`
 }
 
 // Refresh struct is used to refresh token
