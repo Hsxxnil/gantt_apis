@@ -1595,6 +1595,15 @@ definitions:
     required:
     - is_enabled
     type: object
+  users.Filter:
+    properties:
+      email:
+        description: 使用者電子郵件
+        type: string
+      user_name:
+        description: 使用者名稱
+        type: string
+    type: object
   users.List:
     properties:
       limit:
@@ -4804,6 +4813,51 @@ paths:
                   type: string
               type: object
       summary: 取得單一使用者
+      tags:
+      - user
+  /users/check-duplicate:
+    post:
+      consumes:
+      - application/json
+      description: 檢查使用者是否重複
+      parameters:
+      - description: 檢查使用者是否重複
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/users.Filter'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 檢查使用者是否重複
       tags:
       - user
   /users/current-user:
