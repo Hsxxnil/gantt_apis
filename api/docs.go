@@ -6578,6 +6578,10 @@ const docTemplate = `{
                     "description": "刪除時間",
                     "type": "string"
                 },
+                "dept_id": {
+                    "description": "部門ID",
+                    "type": "string"
+                },
                 "id": {
                     "description": "表ID",
                     "type": "string"

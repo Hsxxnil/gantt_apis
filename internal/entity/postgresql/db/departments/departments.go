@@ -30,6 +30,8 @@ type Table struct {
 type Base struct {
 	// 表ID
 	ID *string `json:"id,omitempty"`
+	// 部門IDs (後端查詢用)
+	DeptIDs []*string `json:"dept_ids,omitempty"`
 	// 名稱
 	Name *string `json:"name,omitempty"`
 	// 傳真

@@ -25,6 +25,8 @@ type Field struct {
 	ID string `json:"id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
 	// 使用者ID
 	UserID *string `json:"user_id,omitempty" form:"user_id"`
+	// 使用者IDs (後端查詢用)
+	UserIDs []*string `json:"user_ids,omitempty" form:"user_ids" swaggerignore:"true"`
 	// 部門ID
 	DeptID *string `json:"dept_id,omitempty" form:"dept_id"`
 	// 職稱
@@ -41,6 +43,8 @@ type Single struct {
 	UserID string `json:"user_id,omitempty"`
 	// 使用者名稱
 	Name string `json:"name,omitempty"`
+	// 部門ID
+	DeptID string `json:"dept_id,omitempty"`
 	// 職稱
 	JobTitle string `json:"job_title,omitempty"`
 	// 是否為主管
