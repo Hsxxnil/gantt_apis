@@ -18,6 +18,7 @@ type Control interface {
 	Verify(ctx *gin.Context)
 	Refresh(ctx *gin.Context)
 	Forget(ctx *gin.Context)
+	Register(ctx *gin.Context)
 }
 
 type control struct {
@@ -31,8 +32,8 @@ func Init(db *gorm.DB) Control {
 }
 
 // Login
-// @Summary 使用者登入
-// @description 使用者登入
+// @Summary 登入
+// @description 登入
 // @Tags login
 // @version 1.0
 // @Accept json
@@ -56,8 +57,8 @@ func (c *control) Login(ctx *gin.Context) {
 }
 
 // Verify
-// @Summary 使用者驗證
-// @description 使用者驗證
+// @Summary 驗證
+// @description 驗證
 // @Tags login
 // @version 1.0
 // @Accept json
@@ -126,5 +127,33 @@ func (c *control) Forget(ctx *gin.Context) {
 	}
 
 	httpCode, codeMessage := c.Manager.Forget(input)
+	ctx.JSON(httpCode, codeMessage)
+}
+
+// Register
+// @Summary 註冊
+// @description 註冊
+// @Tags login
+// @version 1.0
+// @Accept json
+// @produce json
+// @param * body logins.Register true "註冊"
+// @success 200 object code.SuccessfulMessage{body=string} "成功後返回的值"
+// @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
+// @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
+// @Router /register [post]
+func (c *control) Register(ctx *gin.Context) {
+	input := &loginModel.Register{}
+	// set default value (created by admin & role id is user)
+	input.CreatedBy = "7c0595cf-2d9a-4e77-858c-a33f9d1e8452"
+	input.RoleID = "d56fc184-9441-4396-be6c-d48580650171"
+	if err := ctx.ShouldBindJSON(input); err != nil {
+		log.Error(err)
+		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
+
+		return
+	}
+
+	httpCode, codeMessage := c.Manager.Register(input)
 	ctx.JSON(httpCode, codeMessage)
 }

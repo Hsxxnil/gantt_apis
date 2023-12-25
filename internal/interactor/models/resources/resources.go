@@ -12,7 +12,7 @@ type Create struct {
 	// 名字
 	ResourceName string `json:"resource_name,omitempty"`
 	// 信箱
-	Email string `json:"email,omitempty"`
+	Email string `json:"email,omitempty" binding:"required,email" validate:"required,email"`
 	// 電話
 	Phone string `json:"phone,omitempty"`
 	//
