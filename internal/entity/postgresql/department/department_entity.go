@@ -60,7 +60,8 @@ func (s *storage) Create(input *model.Base) (err error) {
 }
 
 func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.Table, err error) {
-	query := s.db.Model(&model.Table{}).Count(&quantity).Preload(clause.Associations)
+	query := s.db.Model(&model.Table{}).Count(&quantity).
+		Preload("Affiliations.Users").Preload(clause.Associations)
 
 	if input.ID != nil {
 		query.Where("id = ?", input.ID)
@@ -83,6 +84,10 @@ func (s *storage) GetByListNoPagination(input *model.Base) (quantity int64, outp
 		query.Where("id = ?", input.ID)
 	}
 
+	if input.DeptIDs != nil {
+		query.Where("id in (?)", input.DeptIDs)
+	}
+
 	err = query.Count(&quantity).Order("created_at desc").Find(&output).Error
 	if err != nil {
 		log.Error(err)
@@ -93,7 +98,7 @@ func (s *storage) GetByListNoPagination(input *model.Base) (quantity int64, outp
 }
 
 func (s *storage) GetBySingle(input *model.Base) (output *model.Table, err error) {
-	query := s.db.Model(&model.Table{}).Preload(clause.Associations)
+	query := s.db.Model(&model.Table{}).Preload("Affiliations.Users").Preload(clause.Associations)
 	if input.ID != nil {
 		query.Where("id = ?", input.ID)
 	}
@@ -125,10 +130,6 @@ func (s *storage) GetByQuantity(input *model.Base) (quantity int64, err error) {
 func (s *storage) Update(input *model.Base) (err error) {
 	query := s.db.Model(&model.Table{}).Omit(clause.Associations)
 	data := map[string]any{}
-
-	if input.SupervisorID != nil {
-		data["supervisor_id"] = input.SupervisorID
-	}
 
 	if input.Name != nil {
 		data["name"] = input.Name

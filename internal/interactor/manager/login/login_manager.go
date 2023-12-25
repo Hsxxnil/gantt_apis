@@ -126,7 +126,7 @@ func (m *manager) Verify(input *loginModel.Verify) (int, any) {
 	}
 
 	// validate otp
-	otpValid, err := otp.ValidateOTP(input.Passcode, *userBase.OtpSecret)
+	_, err = otp.ValidateOTP(input.Passcode, *userBase.OtpSecret)
 	if err != nil {
 		log.Error(err)
 		return code.PermissionDenied, code.GetCodeMessage(code.PermissionDenied, "Incorrect passcode.")
@@ -183,9 +183,6 @@ func (m *manager) Verify(input *loginModel.Verify) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	output.Role = *roleBase.Name
-	output.UserID = *userBase.ID
-	output.OtpVerified = otpValid
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
 
@@ -245,8 +242,6 @@ func (m *manager) Refresh(input *jwxModel.Refresh) (int, any) {
 	}
 
 	token.RefreshToken = input.RefreshToken
-	token.Role = *roleBase.Name
-	token.UserID = *field.ID
 	return code.Successful, code.GetCodeMessage(code.Successful, token)
 }
 

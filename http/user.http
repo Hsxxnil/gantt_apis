@@ -4,8 +4,7 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "password": "12345",
-  "domain": "localhost"
+  "password": "12345"
 }
 
 ### verify
@@ -14,11 +13,12 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "passcode": "781174",
-  "domain": "localhost"
+  "passcode": "210320"
 }
 
-> {% client.global.set("accessToken", response.body.body.access_token); %}
+> {%
+    client.global.set("accessToken", response.body.body.access_token);
+%}
 
 ### GetByList
 POST {{host}}/hta-gantt/v1.0/users/list?page=1&limit=20
@@ -31,7 +31,7 @@ Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### GetBySingle
-GET {{host}}/hta-gantt/v1.0/users/85cee689-bcb2-461f-8b0a-ea6922f1cb07
+GET {{host}}/hta-gantt/v1.0/users/552daa60-f9a6-4d90-9a31-16fcbf7d62e8
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -63,6 +63,20 @@ Authorization: Bearer {{accessToken}}
   "old_password": "54321"
 }
 
+### Enable
+PATCH {{host}}/hta-gantt/v1.0/users/enable/85cee689-bcb2-461f-8b0a-ea6922f1cb07
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "is_enabled": false
+}
+
+### EnableByCurrent
+PATCH {{host}}/hta-gantt/v1.0/users/enable/current-user
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
 ### ResetPassword
 PATCH {{host}}/hta-gantt/v1.0/users/reset-password/current-user
 Content-Type: application/json
@@ -72,8 +86,18 @@ Authorization: Bearer REMOVEDREMOVED
   "password": "12345"
 }
 
-
 ### Delete
 DELETE {{host}}/hta-gantt/v1.0/users/fef3c69f-7375-45ed-986f-2b07eabca892
 Accept: application/json
 Authorization: Bearer {{accessToken}}
+
+### Duplicate
+POST {{host}}/hta-gantt/v1.0/users/check-duplicate
+Content-Type: application/json
+
+{
+  "filter": {
+    "user_name": "",
+    "email": "REMOVED"
+  }
+}

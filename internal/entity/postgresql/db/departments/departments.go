@@ -1,6 +1,7 @@
 package departments
 
 import (
+	"hta/internal/entity/postgresql/db/affiliations"
 	"hta/internal/entity/postgresql/db/users"
 	"hta/internal/interactor/models/special"
 )
@@ -9,14 +10,14 @@ import (
 type Table struct {
 	// 表ID
 	ID string `gorm:"<-:create;column:id;type:uuid;not null;primaryKey;" json:"id"`
-	// 部門主管ID(user_id)
-	SupervisorID *string `gorm:"column:supervisor_id;type:uuid;" json:"supervisor_id"`
 	// 名稱
 	Name string `gorm:"column:name;type:text;not null;" json:"name"`
 	// 傳真
 	Fax string `gorm:"column:fax;type:text;" json:"fax"`
 	// 電話
 	Tel string `gorm:"column:tel;type:text;" json:"tel,omitempty"`
+	// affiliations data
+	Affiliations []affiliations.Table `gorm:"foreignKey:DeptID;references:ID;" json:"affiliations,omitempty"`
 	// create_users data
 	CreatedByUsers users.Table `gorm:"foreignKey:ID;references:CreatedBy" json:"created_by_users,omitempty"`
 	// update_users data
@@ -29,14 +30,16 @@ type Table struct {
 type Base struct {
 	// 表ID
 	ID *string `json:"id,omitempty"`
-	// 部門主管ID(user_id)
-	SupervisorID *string `json:"supervisor_id,omitempty"`
+	// 部門IDs (後端查詢用)
+	DeptIDs []*string `json:"dept_ids,omitempty"`
 	// 名稱
 	Name *string `json:"name,omitempty"`
 	// 傳真
 	Fax *string `json:"fax,omitempty"`
 	// 電話
 	Tel *string `json:"tel,omitempty"`
+	// affiliations data
+	Affiliations []affiliations.Base `json:"affiliations,omitempty"`
 	// create_users data
 	CreatedByUsers users.Base `json:"created_by_users,omitempty"`
 	// update_users data
