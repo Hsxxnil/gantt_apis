@@ -36,3 +36,13 @@ Content-Type: application/json
   "port": "4200"
 }
 
+### register
+POST {{host}}/hta-gantt/v1.0/register
+Content-Type: application/json
+
+{
+  "user_name": "hsxxnil",
+  "password": "12345",
+  "email": ""
+}
+
