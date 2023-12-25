@@ -16,6 +16,10 @@ type Create struct {
 	Email string `json:"email,omitempty" binding:"required,email" validate:"required,email"`
 	// 角色ID
 	RoleID string `json:"role_id,omitempty" binding:"required,uuid4" validate:"required,uuid4"`
+	// otp secret
+	OtpSecret string `json:"otp_secret,omitempty" swaggerignore:"true"`
+	// otp auth url
+	OtpAuthUrl string `json:"otp_auth_url,omitempty" swaggerignore:"true"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }
