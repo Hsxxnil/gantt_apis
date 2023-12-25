@@ -378,7 +378,6 @@ func (m *manager) Enable(input *userModel.Enable) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	log.Debug("update: ", update.IsEnabled)
 	err = m.UserService.Update(update)
 	if err != nil {
 		log.Error(err)
