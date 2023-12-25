@@ -219,6 +219,10 @@ func (s *storage) Update(input *model.Base) (err error) {
 		data["otp_auth_url"] = input.OtpAuthUrl
 	}
 
+	if input.IsEnabled != nil {
+		data["is_enabled"] = input.IsEnabled
+	}
+
 	if input.UpdatedBy != nil {
 		data["updated_by"] = input.UpdatedBy
 	}
