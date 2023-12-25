@@ -65,28 +65,8 @@ func (m *manager) Login(input *loginModel.Login) (int, any) {
 		return code.PermissionDenied, code.GetCodeMessage(code.PermissionDenied, "Incorrect username or password.")
 	}
 
-	// generate otp secret & otp auth url
-	// todo move to sign up
-	otpSecret, optAuthURL, err := otp.GenerateOTP("hta", input.UserName)
-	if err != nil {
-		log.Error(err)
-		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-	}
-
 	// generate passcode
-	passcode, err := otp.GeneratePasscode(otpSecret)
-	if err != nil {
-		log.Error(err)
-		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-	}
-
-	// update otp secret & otp auth url
-	err = m.UserService.Update(&userModel.Update{
-		ID:         *userBase.ID,
-		OtpSecret:  util.PointerString(otpSecret),
-		OtpAuthUrl: util.PointerString(optAuthURL),
-	})
-
+	passcode, err := otp.GeneratePasscode(*userBase.OtpSecret)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -384,21 +364,22 @@ func (m *manager) Register(input *loginModel.Register) (int, any) {
 		return code.BadRequest, code.GetCodeMessage(code.BadRequest, "User already exists.")
 	}
 
-	// transform input to user's create struct
-	user := &userModel.Create{}
-	inputByte, err := sonic.Marshal(input)
+	// generate otp secret & otp auth url
+	otpSecret, optAuthURL, err := otp.GenerateOTP("hta", input.UserName)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = sonic.Unmarshal(inputByte, &user)
-	if err != nil {
-		log.Error(err)
-		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-	}
-
-	userBase, err := m.UserService.Create(user)
+	userBase, err := m.UserService.Create(&userModel.Create{
+		UserName:   input.UserName,
+		Password:   input.Password,
+		Email:      input.Email,
+		RoleID:     input.RoleID,
+		OtpSecret:  otpSecret,
+		OtpAuthUrl: optAuthURL,
+		CreatedBy:  input.CreatedBy,
+	})
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
