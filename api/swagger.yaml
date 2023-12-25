@@ -416,16 +416,12 @@ definitions:
       password:
         description: 使用者密碼
         type: string
-      role_id:
-        description: 角色ID
-        type: string
       user_name:
         description: 使用者名稱
         type: string
     required:
     - email
     - password
-    - role_id
     - user_name
     type: object
   logins.Verify:
@@ -2191,7 +2187,7 @@ paths:
             - $ref: '#/definitions/code.SuccessfulMessage'
             - properties:
                 body:
-                  $ref: '#/definitions/tasks.List'
+                  $ref: '#/definitions/departments.List'
               type: object
         "415":
           description: 必要欄位帶入錯誤
@@ -2714,7 +2710,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: 使用者登入
+      description: 登入
       parameters:
       - description: 登入帶入
         in: body
@@ -2752,7 +2748,7 @@ paths:
                 detailed:
                   type: string
               type: object
-      summary: 使用者登入
+      summary: 登入
       tags:
       - login
   /project-resources:
@@ -3565,11 +3561,6 @@ paths:
       - application/json
       description: 註冊
       parameters:
-      - description: JWE Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
       - description: 註冊
         in: body
         name: '*'
@@ -5319,7 +5310,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: 使用者驗證
+      description: 驗證
       parameters:
       - description: 驗證帶入
         in: body
@@ -5357,7 +5348,7 @@ paths:
                 detailed:
                   type: string
               type: object
-      summary: 使用者驗證
+      summary: 驗證
       tags:
       - login
   /work-days:

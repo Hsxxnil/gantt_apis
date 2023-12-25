@@ -35,7 +35,7 @@ type Register struct {
 	// 使用者電子郵件
 	Email string `json:"email,omitempty" binding:"required,email" validate:"required,email"`
 	// 角色ID
-	RoleID string `json:"role_id,omitempty" binding:"required,uuid4" validate:"required,uuid4"`
+	RoleID string `json:"role_id,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }
