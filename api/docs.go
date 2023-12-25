@@ -7214,17 +7214,26 @@ const docTemplate = `{
         "logins.Register": {
             "type": "object",
             "required": [
+                "domain",
                 "email",
                 "password",
                 "user_name"
             ],
             "properties": {
+                "domain": {
+                    "description": "網域",
+                    "type": "string"
+                },
                 "email": {
                     "description": "使用者電子郵件",
                     "type": "string"
                 },
                 "password": {
                     "description": "使用者密碼",
+                    "type": "string"
+                },
+                "port": {
+                    "description": "連接埠",
                     "type": "string"
                 },
                 "user_name": {

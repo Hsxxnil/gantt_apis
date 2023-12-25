@@ -385,5 +385,108 @@ func (m *manager) Register(input *loginModel.Register) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	return code.Successful, code.GetCodeMessage(code.Successful, userBase.ID)
+	// get role
+	roleBase, err := m.RoleService.GetBySingle(&roleModel.Field{
+		ID: *userBase.RoleID,
+	})
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, "Role does not exist.")
+		}
+
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// generate access token
+	accessToken, err := m.JwxService.CreateAccessToken(&jwxModel.JWX{
+		UserID:     userBase.ID,
+		Name:       userBase.Name,
+		ResourceID: userBase.ResourceUUID,
+		Role:       roleBase.Name,
+		Expiration: util.PointerInt64(30),
+	})
+
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// send link to email
+	to := input.Email
+	fromAddress := "REMOVED"
+	fromName := "PMIS平台"
+	mailPwd := "REMOVED"
+	subject := "【PMIS平台】請驗證信箱以完成註冊(請勿回覆此郵件)"
+	domain := input.Domain
+	httpMod := "https"
+	// modify localhost port and httpMod for testing
+	if input.Domain == "localhost" {
+		if input.Port == "" {
+			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "Invalid port.")
+		}
+		domain = fmt.Sprintf("%s:%s", input.Domain, input.Port)
+		httpMod = "http"
+	}
+	resetPasswordLink := fmt.Sprintf("%s://%s/activate/%s", httpMod, domain, accessToken.AccessToken)
+	message := fmt.Sprintf(`
+    <html>
+        <head>
+            <style>
+                body {
+                    font-family: 'Arial', sans-serif;
+                    text-align: center;
+                    margin: 20px;
+                }
+
+                p {
+                    margin-bottom: 10px;
+                }
+
+                a {
+                    text-decoration: none;
+                }
+
+                button {
+                    padding: 10px;
+                    background-color: #4CAF50;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    text-decoration: none;
+                }
+
+                button:hover {
+                    background-color: #45a049;
+                }
+            </style>
+        </head>
+        <body>
+            <p>親愛的用戶：</p>
+            <p>感謝您註冊本平台，請點擊以下連結驗證信箱：</p>
+            <a href="%s">
+                <button>
+                    驗證信箱
+                </button>
+            </a>
+            <br>
+            <p>祝您使用愉快！</p>
+            <p><注意></p>
+            <p>*此郵件由系統自動發出，請勿直接回覆。</p>
+            <p>*此連結有效期限為30分鐘。</p>
+        </body>
+    </html>
+`, resetPasswordLink)
+
+	err = email.SendEmailWithHtml(to, fromAddress, fromName, mailPwd, subject, message)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// mask email
+	obscuredEmail := masker.Email(*userBase.Email)
+
+	return code.Successful, code.GetCodeMessage(code.Successful, obscuredEmail)
 }
