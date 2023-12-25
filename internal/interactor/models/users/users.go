@@ -1,6 +1,7 @@
 package users
 
 import (
+	"hta/internal/interactor/models/affiliations"
 	"hta/internal/interactor/models/page"
 	"hta/internal/interactor/models/section"
 )
@@ -164,7 +165,9 @@ type Update struct {
 	// otp auth url
 	OtpAuthUrl *string `json:"otp_auth_url,omitempty"`
 	// 是否啟用
-	IsEnabled bool `json:"is_enabled"`
+	IsEnabled *bool `json:"is_enabled"`
+	// affiliations
+	Affiliations []*affiliations.Create `json:"affiliations,omitempty"`
 	// 更新者
 	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }
