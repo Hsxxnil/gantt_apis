@@ -140,6 +140,10 @@ func (s *storage) GetBySingle(input *model.Base) (output *model.Table, err error
 		query.Where("resource_name like ?", "%"+*input.ResourceName+"%")
 	}
 
+	if input.Email != nil {
+		query.Where("email = ?", input.Email)
+	}
+
 	err = query.First(&output).Error
 	if err != nil {
 		log.Error(err)
