@@ -66,6 +66,14 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 		query.Where("id = ?", input.ID)
 	}
 
+	if input.UserID != nil {
+		query.Where("user_id = ?", input.UserID)
+	}
+
+	if input.UserIDs != nil {
+		query.Where("user_id in (?)", input.UserIDs)
+	}
+
 	err = query.Count(&quantity).Offset(int((input.Page - 1) * input.Limit)).
 		Limit(int(input.Limit)).Order("created_at desc").Find(&output).Error
 	if err != nil {
@@ -83,6 +91,14 @@ func (s *storage) GetByListNoPagination(input *model.Base) (quantity int64, outp
 		query.Where("id = ?", input.ID)
 	}
 
+	if input.UserID != nil {
+		query.Where("user_id = ?", input.UserID)
+	}
+
+	if input.UserIDs != nil {
+		query.Where("user_id in (?)", input.UserIDs)
+	}
+
 	err = query.Count(&quantity).Order("created_at desc").Find(&output).Error
 	if err != nil {
 		log.Error(err)
@@ -96,6 +112,10 @@ func (s *storage) GetBySingle(input *model.Base) (output *model.Table, err error
 	query := s.db.Model(&model.Table{}).Preload(clause.Associations)
 	if input.ID != nil {
 		query.Where("id = ?", input.ID)
+	}
+
+	if input.UserID != nil {
+		query.Where("user_id = ?", input.UserID)
 	}
 
 	if input.IsSupervisor != nil {

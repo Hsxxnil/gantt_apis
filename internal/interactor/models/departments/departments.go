@@ -24,6 +24,8 @@ type Create struct {
 type Field struct {
 	// 表ID
 	ID string `json:"id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
+	// 部門IDs (後端查詢用)
+	DeptIDs []*string `json:"dept_ids,omitempty" form:"dept_ids" swaggerignore:"true"`
 	// 部門主管ID(user_id)
 	SupervisorID *string `json:"supervisor_id,omitempty" form:"supervisor_id"`
 	// 名稱
