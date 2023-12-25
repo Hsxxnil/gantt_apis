@@ -191,7 +191,7 @@ type Enable struct {
 	// 表ID
 	ID string `json:"id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
 	// 是否啟用
-	IsEnabled *bool `json:"is_enabled,omitempty" binding:"required" validate:"required"`
+	IsEnabled *bool `json:"is_enabled,omitempty"`
 	// 更新者
 	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }

@@ -13,7 +13,7 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "passcode": "210320"
+  "passcode": "136793"
 }
 
 > {%
@@ -75,7 +75,7 @@ Authorization: Bearer {{accessToken}}
 ### EnableByCurrent
 PATCH {{host}}/hta-gantt/v1.0/users/enable/current-user
 Accept: application/json
-Authorization: Bearer {{accessToken}}
+Authorization: Bearer eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwidHlwZSI6IkpXRSIsInppcCI6IkRFRiJ9.RTImcoleqj9IVtSty5tJyP1PXnQPih5uYGJ5tJpZsym-8b8jnYQQ3DlNcpih19VFVObnlpgziNbeIUpJGAEOKTkcfcHGp8KdFMSdYn73oBeSkx6ok-wjsAxBF355sdqYLVT1f_ysrl6cJWdVWJT27cCZ_LjQK031xj7CZm7lvWyUnbfbtMxhbWtMGqmuv-HVBTlFTYqo1FqrEPZvo7txK66yfQILuwVkqHZWZj6zOl0PCiQRTcSA3vv_LXjWyvztAwZ-ymvDKhd1TiRop62Shl30PMIm1hAzLwJR5rVJrCNQQyRTStMiEvw79D3TJt3t9BouVs-8kUIkLKiRxXJP4Q.HHJH9KC9UTw2S8D2eIPklQ.VBdvHECznODDisfd9v0432rsMl7KrI_KnAG_EH5ALQoTin_V1uMR6lVAj_7rC4OLSm8lteb5zFBtcCciedIh8KWrohCP34kO23O4G6bNfukaxK1BjoANspv0mj-j5Cte1CWcgiYepDpg_HOFOngn9iGBCVohPhSw3v6u_l7oB1nrhWsQBTBbDoetmfVCEDYz.mXoaFQmzYiVRrax5MAFgqDeuXWQ_Y3ELu9msHgLC4Bk
 
 ### ResetPassword
 PATCH {{host}}/hta-gantt/v1.0/users/reset-password/current-user

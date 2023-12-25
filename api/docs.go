@@ -8841,9 +8841,6 @@ const docTemplate = `{
         },
         "users.Enable": {
             "type": "object",
-            "required": [
-                "is_enabled"
-            ],
             "properties": {
                 "is_enabled": {
                     "description": "是否啟用",
