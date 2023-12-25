@@ -1,9 +1,8 @@
-package user
+package affiliation
 
 import (
 	"github.com/bytedance/sonic"
-
-	model "hta/internal/entity/postgresql/db/users"
+	model "hta/internal/entity/postgresql/db/affiliations"
 	"hta/internal/interactor/pkg/util/log"
 
 	"gorm.io/gorm"
@@ -14,7 +13,7 @@ type Entity interface {
 	WithTrx(trx *gorm.DB) Entity
 	Create(input *model.Base) (err error)
 	GetByList(input *model.Base) (quantity int64, output []*model.Table, err error)
-	GetByListNoPagination(input *model.Base) (output []*model.Table, err error)
+	GetByListNoPagination(input *model.Base) (quantity int64, output []*model.Table, err error)
 	GetBySingle(input *model.Base) (output *model.Table, err error)
 	GetByQuantity(input *model.Base) (quantity int64, err error)
 	Delete(input *model.Base) (err error)
@@ -61,21 +60,18 @@ func (s *storage) Create(input *model.Base) (err error) {
 }
 
 func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.Table, err error) {
-	query := s.db.Model(&model.Table{}).Preload(clause.Associations)
+	query := s.db.Model(&model.Table{}).Count(&quantity).Preload(clause.Associations)
+
 	if input.ID != nil {
 		query.Where("id = ?", input.ID)
 	}
 
-	if input.UserName != nil {
-		query.Where("user_name = ?", input.UserName)
+	if input.UserID != nil {
+		query.Where("user_id = ?", input.UserID)
 	}
 
-	if input.Name != nil {
-		query.Where("name like %?%", *input.Name)
-	}
-
-	if input.ResourceUUID != nil {
-		query.Where("resource_uuid = ?", input.ResourceUUID)
+	if input.UserIDs != nil {
+		query.Where("user_id in (?)", input.UserIDs)
 	}
 
 	err = query.Count(&quantity).Offset(int((input.Page - 1) * input.Limit)).
@@ -88,31 +84,28 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 	return quantity, output, nil
 }
 
-func (s *storage) GetByListNoPagination(input *model.Base) (output []*model.Table, err error) {
-	query := s.db.Model(&model.Table{}).Preload(clause.Associations)
+func (s *storage) GetByListNoPagination(input *model.Base) (quantity int64, output []*model.Table, err error) {
+	query := s.db.Model(&model.Table{}).Count(&quantity).Preload(clause.Associations)
+
 	if input.ID != nil {
 		query.Where("id = ?", input.ID)
 	}
 
-	if input.UserName != nil {
-		query.Where("user_name = ?", input.UserName)
+	if input.UserID != nil {
+		query.Where("user_id = ?", input.UserID)
 	}
 
-	if input.Name != nil {
-		query.Where("name like %?%", *input.Name)
+	if input.UserIDs != nil {
+		query.Where("user_id in (?)", input.UserIDs)
 	}
 
-	if input.ResourceUUID != nil {
-		query.Where("resource_uuid = ?", input.ResourceUUID)
-	}
-
-	err = query.Order("created_at desc").Find(&output).Error
+	err = query.Count(&quantity).Order("created_at desc").Find(&output).Error
 	if err != nil {
 		log.Error(err)
-		return nil, err
+		return 0, nil, err
 	}
 
-	return output, nil
+	return quantity, output, nil
 }
 
 func (s *storage) GetBySingle(input *model.Base) (output *model.Table, err error) {
@@ -121,20 +114,12 @@ func (s *storage) GetBySingle(input *model.Base) (output *model.Table, err error
 		query.Where("id = ?", input.ID)
 	}
 
-	if input.UserName != nil {
-		query.Where("user_name = ?", input.UserName)
+	if input.UserID != nil {
+		query.Where("user_id = ?", input.UserID)
 	}
 
-	if input.Name != nil {
-		query.Where("name like %?%", *input.Name)
-	}
-
-	if input.ResourceUUID != nil {
-		query.Where("resource_uuid = ?", input.ResourceUUID)
-	}
-
-	if input.Email != nil {
-		query.Where("email = ?", input.Email)
+	if input.IsSupervisor != nil {
+		query.Where("is_supervisor = ?", input.IsSupervisor)
 	}
 
 	err = query.First(&output).Error
@@ -152,32 +137,6 @@ func (s *storage) GetByQuantity(input *model.Base) (quantity int64, err error) {
 		query.Where("id = ?", input.ID)
 	}
 
-	if input.UserName != nil {
-		query.Where("user_name = ?", input.UserName)
-	}
-
-	if input.ResourceUUID != nil {
-		query.Where("resource_uuid = ?", input.ResourceUUID)
-	}
-
-	// filter
-	isFiltered := false
-	filter := s.db.Model(&model.Table{})
-	if input.FilterUserName != "" {
-		filter.Where("user_name = ?", input.FilterUserName)
-		isFiltered = true
-	}
-
-	if input.FilterEmail != "" {
-		if isFiltered {
-			filter.Or("email = ?", input.FilterEmail)
-		} else {
-			filter.Where("email = ?", input.FilterEmail)
-		}
-	}
-
-	query.Where(filter)
-
 	err = query.Count(&quantity).Select("*").Error
 	if err != nil {
 		log.Error(err)
@@ -191,32 +150,20 @@ func (s *storage) Update(input *model.Base) (err error) {
 	query := s.db.Model(&model.Table{}).Omit(clause.Associations)
 	data := map[string]any{}
 
-	if input.UserName != nil {
-		data["user_name"] = input.UserName
+	if input.UserID != nil {
+		data["user_id"] = input.UserID
 	}
 
-	if input.Name != nil {
-		data["name"] = input.Name
+	if input.DeptID != nil {
+		data["dept_id"] = input.DeptID
 	}
 
-	if input.Password != nil {
-		data["password"] = input.Password
+	if input.JobTitle != nil {
+		data["job_title"] = input.JobTitle
 	}
 
-	if input.Email != nil {
-		data["email"] = input.Email
-	}
-
-	if input.RoleID != nil {
-		data["role_id"] = input.RoleID
-	}
-
-	if input.OtpSecret != nil {
-		data["otp_secret"] = input.OtpSecret
-	}
-
-	if input.OtpAuthUrl != nil {
-		data["otp_auth_url"] = input.OtpAuthUrl
+	if input.IsSupervisor != nil {
+		data["is_supervisor"] = input.IsSupervisor
 	}
 
 	if input.UpdatedBy != nil {

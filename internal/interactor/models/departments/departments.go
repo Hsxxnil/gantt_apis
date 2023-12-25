@@ -1,6 +1,7 @@
 package departments
 
 import (
+	"hta/internal/interactor/models/affiliations"
 	"hta/internal/interactor/models/page"
 	"hta/internal/interactor/models/section"
 )
@@ -23,6 +24,8 @@ type Create struct {
 type Field struct {
 	// 表ID
 	ID string `json:"id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
+	// 部門IDs (後端查詢用)
+	DeptIDs []*string `json:"dept_ids,omitempty" form:"dept_ids" swaggerignore:"true"`
 	// 部門主管ID(user_id)
 	SupervisorID *string `json:"supervisor_id,omitempty" form:"supervisor_id"`
 	// 名稱
@@ -47,8 +50,6 @@ type List struct {
 	Departments []*struct {
 		// 表ID
 		ID string `json:"id,omitempty"`
-		// 部門主管ID(user_id)
-		SupervisorID string `json:"supervisor_id,omitempty"`
 		// 名稱
 		Name string `json:"name,omitempty"`
 		// 傳真
@@ -61,6 +62,8 @@ type List struct {
 		UpdatedBy string `json:"updated_by,omitempty"`
 		// 時間戳記
 		section.TimeAt
+		// affiliations data
+		Affiliations []*affiliations.Single `json:"affiliations,omitempty"`
 	} `json:"departments"`
 	// 分頁返回結構檔
 	page.Total
@@ -70,8 +73,6 @@ type List struct {
 type Single struct {
 	// 表ID
 	ID string `json:"id,omitempty"`
-	// 部門主管ID(user_id)
-	SupervisorID string `json:"supervisor_id,omitempty"`
 	// 名稱
 	Name string `json:"name,omitempty"`
 	// 傳真
@@ -84,6 +85,8 @@ type Single struct {
 	UpdatedBy string `json:"updated_by,omitempty"`
 	// 時間戳記
 	section.TimeAt
+	// affiliations data
+	Affiliations []*affiliations.Single `json:"affiliations,omitempty"`
 }
 
 // Update struct is used end_date update achieves

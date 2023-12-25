@@ -4,8 +4,7 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "password": "12345",
-  "domain": "localhost"
+  "password": "12345"
 }
 
 ### verify
@@ -14,8 +13,7 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "passcode": "169624",
-  "domain": "localhost"
+  "passcode": "068769"
 }
 
 > {% client.global.set("accessToken", response.body.body.access_token); %}
@@ -31,7 +29,7 @@ Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### GetBySingle
-GET {{host}}/hta-gantt/v1.0/departments/9db74c35-804e-48f2-910c-6bf80494cbf0
+GET {{host}}/hta-gantt/v1.0/departments/39a2d69c-452b-410f-8753-f8a92802c3a2
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 

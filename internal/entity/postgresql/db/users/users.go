@@ -3,6 +3,7 @@ package users
 import (
 	"hta/internal/entity/postgresql/db/roles"
 	"hta/internal/interactor/models/special"
+	model "hta/internal/interactor/models/users"
 )
 
 // Table struct is users database table struct
@@ -61,6 +62,8 @@ type Base struct {
 	IsEnabled *bool `json:"is_enabled,omitempty"`
 	// 是否使用驗證器
 	IsAuthenticator *bool `json:"is_authenticator,omitempty"`
+	// 搜尋欄位
+	model.Filter `json:"filter"`
 	// 引入後端專用
 	special.Base
 }

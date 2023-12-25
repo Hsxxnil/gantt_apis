@@ -4983,6 +4983,88 @@ const docTemplate = `{
                 }
             }
         },
+        "/users/check-duplicate": {
+            "post": {
+                "description": "檢查使用者是否重複",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "檢查使用者是否重複",
+                "parameters": [
+                    {
+                        "description": "檢查使用者是否重複",
+                        "name": "*",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/users.Filter"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功後返回的值",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.SuccessfulMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "body": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "415": {
+                        "description": "必要欄位帶入錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "伺服器非預期錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/users/current-user": {
             "get": {
                 "description": "取得當前使用者",
@@ -5089,6 +5171,191 @@ const docTemplate = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/users.Update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功後返回的值",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.SuccessfulMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "body": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "415": {
+                        "description": "必要欄位帶入錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "伺服器非預期錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/users/enable/current-user": {
+            "patch": {
+                "description": "啟用當前使用者",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "啟用當前使用者",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "JWE Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "啟用或停用使用者",
+                        "name": "*",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/users.Enable"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功後返回的值",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.SuccessfulMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "body": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "415": {
+                        "description": "必要欄位帶入錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "伺服器非預期錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/users/enable/{id}": {
+            "patch": {
+                "description": "啟用或停用使用者",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "啟用或停用使用者",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "JWE Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "使用者ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "啟用或停用使用者",
+                        "name": "*",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/users.Enable"
                         }
                     }
                 ],
@@ -6382,6 +6649,47 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "affiliations.Single": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "創建時間",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "description": "刪除時間",
+                    "type": "string"
+                },
+                "dept_id": {
+                    "description": "部門ID",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "表ID",
+                    "type": "string"
+                },
+                "is_supervisor": {
+                    "description": "是否為主管",
+                    "type": "boolean"
+                },
+                "job_title": {
+                    "description": "職稱",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "使用者名稱",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "更新時間",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "使用者ID",
+                    "type": "string"
+                }
+            }
+        },
         "code.ErrorMessage": {
             "type": "object",
             "properties": {
@@ -6457,6 +6765,13 @@ const docTemplate = `{
                     "items": {
                         "type": "object",
                         "properties": {
+                            "affiliations": {
+                                "description": "affiliations data",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/affiliations.Single"
+                                }
+                            },
                             "created_at": {
                                 "description": "創建時間",
                                 "type": "string"
@@ -6479,10 +6794,6 @@ const docTemplate = `{
                             },
                             "name": {
                                 "description": "名稱",
-                                "type": "string"
-                            },
-                            "supervisor_id": {
-                                "description": "部門主管ID(user_id)",
                                 "type": "string"
                             },
                             "tel": {
@@ -6521,6 +6832,13 @@ const docTemplate = `{
         "departments.Single": {
             "type": "object",
             "properties": {
+                "affiliations": {
+                    "description": "affiliations data",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/affiliations.Single"
+                    }
+                },
                 "created_at": {
                     "description": "創建時間",
                     "type": "string"
@@ -6543,10 +6861,6 @@ const docTemplate = `{
                 },
                 "name": {
                     "description": "名稱",
-                    "type": "string"
-                },
-                "supervisor_id": {
-                    "description": "部門主管ID(user_id)",
                     "type": "string"
                 },
                 "tel": {
@@ -6848,14 +7162,6 @@ const docTemplate = `{
                 },
                 "refresh_token": {
                     "description": "刷新令牌",
-                    "type": "string"
-                },
-                "role": {
-                    "description": "角色",
-                    "type": "string"
-                },
-                "user_id": {
-                    "description": "使用者ID",
                     "type": "string"
                 }
             }
@@ -8528,6 +8834,31 @@ const docTemplate = `{
                 }
             }
         },
+        "users.Enable": {
+            "type": "object",
+            "required": [
+                "is_enabled"
+            ],
+            "properties": {
+                "is_enabled": {
+                    "description": "是否啟用",
+                    "type": "boolean"
+                }
+            }
+        },
+        "users.Filter": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "description": "使用者電子郵件",
+                    "type": "string"
+                },
+                "user_name": {
+                    "description": "使用者名稱",
+                    "type": "string"
+                }
+            }
+        },
         "users.List": {
             "type": "object",
             "required": [
@@ -8569,12 +8900,28 @@ const docTemplate = `{
                                 "description": "刪除時間",
                                 "type": "string"
                             },
+                            "dept": {
+                                "description": "部門",
+                                "type": "string"
+                            },
+                            "dept_id": {
+                                "description": "部門ID",
+                                "type": "string"
+                            },
                             "email": {
                                 "description": "使用者電子郵件",
                                 "type": "string"
                             },
                             "id": {
                                 "description": "表ID",
+                                "type": "string"
+                            },
+                            "is_enabled": {
+                                "description": "是否啟用",
+                                "type": "boolean"
+                            },
+                            "job_title": {
+                                "description": "職稱",
                                 "type": "string"
                             },
                             "name": {
@@ -8659,12 +9006,24 @@ const docTemplate = `{
                     "description": "刪除時間",
                     "type": "string"
                 },
+                "dept": {
+                    "description": "部門",
+                    "type": "string"
+                },
+                "dept_id": {
+                    "description": "部門ID",
+                    "type": "string"
+                },
                 "email": {
                     "description": "使用者電子郵件",
                     "type": "string"
                 },
                 "id": {
                     "description": "表ID",
+                    "type": "string"
+                },
+                "job_title": {
+                    "description": "職稱",
                     "type": "string"
                 },
                 "name": {
