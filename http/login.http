@@ -43,6 +43,8 @@ Content-Type: application/json
 {
   "user_name": "hsxxnil",
   "password": "12345",
-  "email": ""
+  "email": "",
+  "domain": "localhost",
+  "port": "4200"
 }
 

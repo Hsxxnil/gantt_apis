@@ -38,4 +38,8 @@ type Register struct {
 	RoleID string `json:"role_id,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
+	// 網域
+	Domain string `json:"domain,omitempty" binding:"required" validate:"required"`
+	// 連接埠
+	Port string `json:"port,omitempty"`
 }
