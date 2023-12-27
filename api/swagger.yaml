@@ -114,6 +114,9 @@ definitions:
             name:
               description: 名稱
               type: string
+            supervisor:
+              description: 部門主管
+              type: string
             tel:
               description: 電話
               type: string
@@ -165,6 +168,9 @@ definitions:
         type: string
       name:
         description: 名稱
+        type: string
+      supervisor:
+        description: 部門主管
         type: string
       tel:
         description: 電話

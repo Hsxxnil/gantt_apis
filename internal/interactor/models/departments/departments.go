@@ -56,6 +56,8 @@ type List struct {
 		Fax string `json:"fax,omitempty"`
 		// 電話
 		Tel string `json:"tel,omitempty"`
+		// 部門主管
+		Supervisor string `json:"supervisor,omitempty"`
 		// 創建者
 		CreatedBy string `json:"created_by,omitempty"`
 		// 更新者
@@ -79,6 +81,8 @@ type Single struct {
 	Fax string `json:"fax,omitempty"`
 	// 電話
 	Tel string `json:"tel,omitempty"`
+	// 部門主管
+	Supervisor string `json:"supervisor,omitempty"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty"`
 	// 更新者
