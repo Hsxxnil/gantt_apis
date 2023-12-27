@@ -299,12 +299,6 @@ func (s *storage) Update(input *model.Base) (err error) {
 		data["cost"] = input.Cost
 	}
 
-	if input.Coordinator != nil {
-		data["coordinator"] = input.Coordinator
-	} else {
-		data["coordinator"] = nil
-	}
-
 	if input.Segment != nil {
 		data["segment"] = input.Segment
 	} else {

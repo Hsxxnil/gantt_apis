@@ -69,22 +69,17 @@ func (m *manager) GetByList(input *projectTypeModel.Fields) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	for i, proType := range output.ProjectTypes {
-		proType.CreatedBy = *projectTypeBase[i].CreatedByUsers.Name
-		proType.UpdatedBy = *projectTypeBase[i].UpdatedByUsers.Name
-	}
-
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
 
 func (m *manager) GetByListNoPagination(input *projectTypeModel.Field) (int, any) {
 	output := &projectTypeModel.List{}
-	quantity, projectTypeBase, err := m.ProjectTypeService.GetByListNoPagination(input)
+	projectTypeBase, err := m.ProjectTypeService.GetByListNoPagination(input)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
-	output.Total.Total = quantity
+
 	projectTypeByte, err := sonic.Marshal(projectTypeBase)
 	if err != nil {
 		log.Error(err)
@@ -95,11 +90,6 @@ func (m *manager) GetByListNoPagination(input *projectTypeModel.Field) (int, any
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-	}
-
-	for i, proType := range output.ProjectTypes {
-		proType.CreatedBy = *projectTypeBase[i].CreatedByUsers.Name
-		proType.UpdatedBy = *projectTypeBase[i].UpdatedByUsers.Name
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
@@ -123,9 +113,6 @@ func (m *manager) GetBySingle(input *projectTypeModel.Field) (int, any) {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
-
-	output.CreatedBy = *projectTypeBase.CreatedByUsers.Name
-	output.UpdatedBy = *projectTypeBase.UpdatedByUsers.Name
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }

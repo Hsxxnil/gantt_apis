@@ -7554,10 +7554,6 @@ const docTemplate = `{
                     "description": "結束日期",
                     "type": "string"
                 },
-                "manager_id": {
-                    "description": "負責人ID",
-                    "type": "string"
-                },
                 "project_name": {
                     "description": "名稱",
                     "type": "string"
@@ -7819,10 +7815,6 @@ const docTemplate = `{
                 },
                 "end_date": {
                     "description": "結束日期",
-                    "type": "string"
-                },
-                "manager_id": {
-                    "description": "負責人ID",
                     "type": "string"
                 },
                 "project_name": {
@@ -8359,10 +8351,6 @@ const docTemplate = `{
                     "description": "基準線起始日期",
                     "type": "string"
                 },
-                "coordinator": {
-                    "description": "協調員ID(resource_uuid)",
-                    "type": "string"
-                },
                 "cost": {
                     "description": "花費時間",
                     "type": "integer",
@@ -8601,14 +8589,6 @@ const docTemplate = `{
                     "description": "基準線起始日期",
                     "type": "string"
                 },
-                "coordinator": {
-                    "description": "協調員ID(resource_uuid)",
-                    "type": "string"
-                },
-                "coordinator_name": {
-                    "description": "協調員姓名",
-                    "type": "string"
-                },
                 "cost": {
                     "description": "花費時間",
                     "type": "integer"
@@ -8752,10 +8732,6 @@ const docTemplate = `{
                 },
                 "baseline_start_date": {
                     "description": "基準線起始日期",
-                    "type": "string"
-                },
-                "coordinator": {
-                    "description": "協調員ID(resource_uuid)",
                     "type": "string"
                 },
                 "cost": {

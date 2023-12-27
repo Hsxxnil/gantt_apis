@@ -79,7 +79,7 @@ func (m *manager) GetByList(input *userModel.Fields) (int, any) {
 	}
 
 	// get all job titles
-	_, affiliationBase, err := m.AffiliationService.GetByListNoPagination(&affiliationModel.Field{
+	affiliationBase, err := m.AffiliationService.GetByListNoPagination(&affiliationModel.Field{
 		UserIDs: userIds,
 	})
 	if err != nil {
@@ -103,7 +103,7 @@ func (m *manager) GetByList(input *userModel.Fields) (int, any) {
 	}
 
 	// get all departments
-	_, departmentBase, err := m.DepartmentService.GetByListNoPagination(&departmentModel.Field{
+	departmentBase, err := m.DepartmentService.GetByListNoPagination(&departmentModel.Field{
 		DeptIDs: deptIds,
 	})
 	if err != nil {

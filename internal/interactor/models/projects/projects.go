@@ -14,8 +14,6 @@ type Create struct {
 	TypeID string `json:"type_id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
 	// 代號
 	Code string `json:"code,omitempty"`
-	// 負責人ID
-	ManagerID string `json:"manager_id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
 	// 起始日期
 	StartDate *time.Time `json:"start_date,omitempty"`
 	// 結束日期
@@ -34,14 +32,14 @@ type Create struct {
 type Field struct {
 	// 表ID
 	ProjectUUID string `json:"project_uuid,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
+	// 專案UUIDs (後端查詢用）
+	ProjectUUIDs []*string `json:"project_uuids,omitempty" form:"project_uuids" swaggerignore:"true"`
 	// 名稱
 	ProjectName *string `json:"project_name,omitempty" form:"project_name"`
 	// 類別ID
 	TypeID *string `json:"type_id,omitempty" form:"type_id"`
 	// 代號
 	Code *string `json:"code,omitempty" form:"code"`
-	// 負責人ID
-	ManagerID *string `json:"manager_id,omitempty" form:"manager_id"`
 	// 起始日期
 	StartDate *time.Time `json:"start_date,omitempty" form:"start_date"`
 	// 結束日期
@@ -52,8 +50,6 @@ type Field struct {
 	Status *string `json:"status,omitempty" form:"status"`
 	// 創建者
 	CreatedBy *string `json:"created_by,omitempty" form:"created_by"`
-	// 專案UUIDs (後端查詢用）
-	ProjectIDs []*string `json:"project_ids,omitempty" form:"project_ids" swaggerignore:"true"`
 	// 搜尋欄位
 	Filter `json:"filter"`
 }
@@ -71,7 +67,7 @@ type Filter struct {
 	// 類別
 	FilterType []*string `json:"type,omitempty"`
 	// 類別 ids (後端查詢用）
-	FilterTypes []string `json:"types,omitempty" swaggerignore:"true"`
+	FilterTypes []*string `json:"types,omitempty" swaggerignore:"true"`
 	// 客戶
 	FilterClient string `json:"client,omitempty"`
 	// 名稱
@@ -79,7 +75,7 @@ type Filter struct {
 	// 負責人
 	FilterManager string `json:"manager,omitempty"`
 	// manager ids (後端查詢用）
-	FilterManagers []string `json:"managers,omitempty" swaggerignore:"true"`
+	FilterManagers []*string `json:"managers,omitempty" swaggerignore:"true"`
 	// 代號
 	FilterCode string `json:"code,omitempty"`
 	// 起始日期
@@ -169,8 +165,6 @@ type Update struct {
 	TypeID *string `json:"type_id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
 	// 代號
 	Code *string `json:"code,omitempty"`
-	// 負責人ID
-	ManagerID *string `json:"manager_id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
 	// 起始日期
 	StartDate *time.Time `json:"start_date,omitempty"`
 	// 結束日期

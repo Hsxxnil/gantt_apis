@@ -2,7 +2,6 @@ package tasks
 
 import (
 	"hta/internal/entity/postgresql/db/projects"
-	"hta/internal/entity/postgresql/db/resources"
 	"hta/internal/entity/postgresql/db/task_resources"
 	"hta/internal/entity/postgresql/db/users"
 	"hta/internal/interactor/models/special"
@@ -36,10 +35,6 @@ type Table struct {
 	Progress int64 `gorm:"column:progress;type:int;" json:"progress"`
 	// 花費時間
 	Cost int64 `gorm:"column:cost;type:int;" json:"cost"`
-	// 協調員ID(resource_uuid)
-	Coordinator *string `gorm:"column:coordinator;type:uuid;" json:"coordinator"`
-	// coordinators data
-	Coordinators resources.Table `gorm:"foreignKey:Coordinator;references:ResourceUUID" json:"coordinators,omitempty"`
 	// 前任
 	Predecessor string `gorm:"column:predecessor;type:varchar;" json:"predecessor"`
 	// 1.1.2、1.2、1.2.1
@@ -98,10 +93,6 @@ type Base struct {
 	Progress *int64 `json:"progress,omitempty"`
 	// 花費時間
 	Cost *int64 `json:"cost,omitempty"`
-	// 協調員ID(resource_uuid)
-	Coordinator *string `json:"coordinator,omitempty"`
-	// coordinators data
-	Coordinators resources.Base `json:"coordinators,omitempty"`
 	// 前任
 	Predecessor *string `json:"predecessor,omitempty"`
 	// 1.1.2、1.2、1.2.1
