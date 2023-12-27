@@ -33,8 +33,6 @@ type Create struct {
 	Progress int64 `json:"progress,omitempty" binding:"omitempty,gte=0" validate:"omitempty,gte=0"`
 	// 花費時間
 	Cost int64 `json:"cost,omitempty" binding:"omitempty,gte=0" validate:"omitempty,gte=0"`
-	// 協調員ID(resource_uuid)
-	Coordinator string `json:"coordinator,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
 	// 人力資源
 	Resources []*resources.TaskSingle `json:"resources,omitempty"`
 	// 前任
@@ -93,8 +91,6 @@ type Field struct {
 	Progress *int64 `json:"progress,omitempty" form:"progress"`
 	// 花費時間
 	Cost *int64 `json:"cost,omitempty" form:"cost"`
-	// 協調員ID(resource_uuid)
-	Coordinator *string `json:"coordinator,omitempty" form:"coordinator"`
 	// 前任
 	Predecessor *string `json:"predecessor,omitempty" form:"predecessor"`
 	// 1.1.2、1.2、1.2.1
@@ -167,10 +163,6 @@ type Single struct {
 	Progress int64 `json:"progress,omitempty"`
 	// 花費時間
 	Cost int64 `json:"cost,omitempty"`
-	// 協調員ID(resource_uuid)
-	Coordinator string `json:"coordinator,omitempty"`
-	// 協調員姓名
-	CoordinatorName string `json:"coordinator_name,omitempty"`
 	// 前任
 	Predecessor string `json:"predecessor,omitempty"`
 	// 1.1.2、1.2、1.2.1
@@ -231,8 +223,6 @@ type Update struct {
 	Progress *int64 `json:"progress,omitempty" binding:"omitempty,gte=0" validate:"omitempty,gte=0"`
 	// 花費時間
 	Cost *int64 `json:"cost,omitempty" binding:"omitempty,gte=0" validate:"omitempty,gte=0"`
-	// 協調員ID(resource_uuid)
-	Coordinator *string `json:"coordinator,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
 	// 人力資源
 	Resources []*resources.TaskSingle `json:"resources,omitempty"`
 	// 前任
