@@ -57,8 +57,10 @@ func (m *manager) Login(input *loginModel.Login) (int, any) {
 		Password: util.PointerString(input.Password),
 	})
 	if err != nil {
-		log.Error(err)
-		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
 	}
 
 	if !acknowledge {
