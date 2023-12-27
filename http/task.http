@@ -4,8 +4,7 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "password": "12345",
-  "domain": "localhost"
+  "password": "12345"
 }
 
 ### verify
@@ -14,8 +13,7 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "passcode": "960478",
-  "domain": "localhost"
+  "passcode": "904175"
 }
 
 > {% client.global.set("accessToken", response.body.body.access_token); %}

@@ -8351,10 +8351,6 @@ const docTemplate = `{
                     "description": "基準線起始日期",
                     "type": "string"
                 },
-                "coordinator": {
-                    "description": "協調員ID(resource_uuid)",
-                    "type": "string"
-                },
                 "cost": {
                     "description": "花費時間",
                     "type": "integer",
@@ -8593,14 +8589,6 @@ const docTemplate = `{
                     "description": "基準線起始日期",
                     "type": "string"
                 },
-                "coordinator": {
-                    "description": "協調員ID(resource_uuid)",
-                    "type": "string"
-                },
-                "coordinator_name": {
-                    "description": "協調員姓名",
-                    "type": "string"
-                },
                 "cost": {
                     "description": "花費時間",
                     "type": "integer"
@@ -8744,10 +8732,6 @@ const docTemplate = `{
                 },
                 "baseline_start_date": {
                     "description": "基準線起始日期",
-                    "type": "string"
-                },
-                "coordinator": {
-                    "description": "協調員ID(resource_uuid)",
                     "type": "string"
                 },
                 "cost": {
