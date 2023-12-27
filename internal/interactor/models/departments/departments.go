@@ -98,7 +98,7 @@ type Update struct {
 	// 表ID
 	ID string `json:"id,omitempty"  binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
 	// 部門主管ID(user_id)
-	SupervisorID *string `json:"supervisor_id,omitempty" binding:"omitempty,url" validate:"omitempty,url"`
+	SupervisorID *string `json:"supervisor_id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
 	// 名稱
 	Name *string `json:"name,omitempty"`
 	// 傳真
