@@ -24,7 +24,7 @@ type Manager interface {
 	GetByList(input *userModel.Fields) (int, any)
 	GetByListNoPagination(input *userModel.Field) (int, any)
 	GetBySingle(input *userModel.Field) (int, any)
-	Delete(input *userModel.Update) (int, any)
+	Delete(trx *gorm.DB, input *userModel.Update) (int, any)
 	Update(trx *gorm.DB, input *userModel.Update) (int, any)
 	Enable(input *userModel.Enable) (int, any)
 	ResetPassword(input *userModel.ResetPassword) (int, any)
@@ -214,7 +214,9 @@ func (m *manager) GetBySingle(input *userModel.Field) (int, any) {
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
 
-func (m *manager) Delete(input *userModel.Update) (int, any) {
+func (m *manager) Delete(trx *gorm.DB, input *userModel.Update) (int, any) {
+	defer trx.Rollback()
+
 	_, err := m.UserService.GetBySingle(&userModel.Field{
 		ID: input.ID,
 	})
@@ -227,12 +229,22 @@ func (m *manager) Delete(input *userModel.Update) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = m.UserService.Delete(input)
+	err = m.UserService.WithTrx(trx).Delete(input)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
+	// sync delete affiliation
+	err = m.AffiliationService.WithTrx(trx).Delete(&affiliationModel.Field{
+		UserID: util.PointerString(input.ID),
+	})
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	trx.Commit()
 	return code.Successful, code.GetCodeMessage(code.Successful, "Delete ok!")
 }
 
