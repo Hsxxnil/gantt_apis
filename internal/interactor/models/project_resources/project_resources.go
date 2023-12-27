@@ -23,10 +23,14 @@ type Field struct {
 	ID string `json:"id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
 	// 專案UUID
 	ProjectUUID *string `json:"project_uuid,omitempty" form:"project_uuid"`
+	// 專案UUIDs (後端查詢用）
+	ProjectUUIDs []*string `json:"project_uuids,omitempty" form:"project_uuids" swaggerignore:"true"`
 	// 資源UUID
 	ResourceUUID *string `json:"resource_uuid,omitempty" form:"resource_uuid"`
-	// 專案UUIDs (後端查詢用）
-	ProjectIDs []string `json:"project_ids,omitempty" form:"project_ids" swaggerignore:"true"`
+	// 資源UUIDs (後端查詢用）
+	ResourceUUIDs []*string `json:"resource_uuids,omitempty" form:"resource_uuids" swaggerignore:"true"`
+	// 專案角色
+	Role *string `json:"role,omitempty" form:"role"`
 	// 搜尋欄位
 	Filter `json:"filter"`
 }
@@ -106,7 +110,7 @@ type Update struct {
 // ProjectIDs struct is used to get multiple project data
 type ProjectIDs struct {
 	// 多筆
-	Projects []string `json:"projects"`
+	Projects []*string `json:"projects"`
 	// 搜尋欄位
 	Filter `json:"filter"`
 }

@@ -139,8 +139,20 @@ func (s *storage) GetByListNoPagination(input *model.Base) (quantity int64, outp
 		query.Where("project_uuid = ?", input.ProjectUUID)
 	}
 
-	if input.ProjectIDs != nil {
-		query.Where("project_uuid in (?)", input.ProjectIDs)
+	if input.ProjectUUIDs != nil {
+		query.Where("project_uuid in (?)", input.ProjectUUIDs)
+	}
+
+	if input.Role != nil {
+		query.Where("role = ?", input.Role)
+	}
+
+	if input.ResourceUUID != nil {
+		query.Where("resource_uuid = ?", input.ResourceUUID)
+	}
+
+	if input.ResourceUUIDs != nil {
+		query.Where("resource_uuid in (?)", input.ResourceUUIDs)
 	}
 
 	err = query.Count(&quantity).Order("created_at desc").Find(&output).Error
@@ -156,6 +168,10 @@ func (s *storage) GetBySingle(input *model.Base) (output *model.Table, err error
 	query := s.db.Model(&model.Table{}).Preload(clause.Associations)
 	if input.ID != nil {
 		query.Where("id = ?", input.ID)
+	}
+
+	if input.Role != nil {
+		query.Where("role = ?", input.Role)
 	}
 
 	err = query.First(&output).Error

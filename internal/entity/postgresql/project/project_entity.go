@@ -78,6 +78,10 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 		query.Where("type_id in (?)", input.FilterTypes)
 	}
 
+	if input.ProjectUUIDs != nil {
+		query.Where("project_uuid in (?)", input.ProjectUUIDs)
+	}
+
 	// filter
 	isFiltered := false
 	filter := s.db.Model(&model.Table{})
@@ -91,14 +95,6 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 			filter.Or("project_name like ?", "%"+input.FilterName+"%")
 		} else {
 			filter.Where("project_name like ?", "%"+input.FilterName+"%")
-		}
-	}
-
-	if input.FilterManagers != nil {
-		if isFiltered {
-			filter.Or("manager_id in (?)", input.FilterManagers)
-		} else {
-			filter.Where("manager_id in (?)", input.FilterManagers)
 		}
 	}
 
@@ -157,8 +153,8 @@ func (s *storage) GetByListNoPagination(input *model.Base) (output []*model.Tabl
 		query.Where("created_by = ?", input.CreatedBy)
 	}
 
-	if input.ProjectIDs != nil {
-		query.Where("project_uuid in (?)", input.ProjectIDs)
+	if input.ProjectUUIDs != nil {
+		query.Where("project_uuid in (?)", input.ProjectUUIDs)
 	}
 
 	err = query.Order("created_at desc").Find(&output).Error
@@ -226,10 +222,6 @@ func (s *storage) Update(input *model.Base) (err error) {
 
 	if input.Code != nil {
 		data["code"] = input.Code
-	}
-
-	if input.ManagerID != nil {
-		data["manager_id"] = input.ManagerID
 	}
 
 	if input.StartDate != nil {

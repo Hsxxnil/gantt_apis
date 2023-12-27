@@ -663,7 +663,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 
 	// get projects
 	projectBase, err := m.ProjectService.GetByListNoPagination(&projectModel.Field{
-		ProjectIDs: input.Projects,
+		ProjectUUIDs: input.Projects,
 	})
 	if err != nil {
 		log.Error(err)
