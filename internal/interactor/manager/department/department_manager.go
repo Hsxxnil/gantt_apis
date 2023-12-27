@@ -87,9 +87,27 @@ func (m *manager) GetByList(input *departmentModel.Fields) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
+	// get department's supervisor
+	userBase, err := m.AffiliationService.GetByListNoPagination(&affiliationModel.Field{
+		IsSupervisor: util.PointerBool(true),
+	})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
+	// create department's supervisor map
+	userMap := make(map[string]string)
+	for _, user := range userBase {
+		userMap[*user.DeptID] = *user.Users.Name
+	}
+
 	for i, department := range output.Departments {
 		department.CreatedBy = *departmentBase[i].CreatedByUsers.Name
 		department.UpdatedBy = *departmentBase[i].UpdatedByUsers.Name
+		department.Supervisor = userMap[department.ID]
 		for j, affiliation := range department.Affiliations {
 			affiliation.Name = *departmentBase[i].Affiliations[j].Users.Name
 		}
@@ -117,9 +135,27 @@ func (m *manager) GetByListNoPagination(input *departmentModel.Field) (int, any)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
+	// get department's supervisor
+	userBase, err := m.AffiliationService.GetByListNoPagination(&affiliationModel.Field{
+		IsSupervisor: util.PointerBool(true),
+	})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
+	// create department's supervisor map
+	userMap := make(map[string]string)
+	for _, user := range userBase {
+		userMap[*user.DeptID] = *user.Users.Name
+	}
+
 	for i, department := range output.Departments {
 		department.CreatedBy = *departmentBase[i].CreatedByUsers.Name
 		department.UpdatedBy = *departmentBase[i].UpdatedByUsers.Name
+		department.Supervisor = userMap[department.ID]
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
@@ -144,6 +180,21 @@ func (m *manager) GetBySingle(input *departmentModel.Field) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
+	// get department's supervisor
+	userBase, err := m.AffiliationService.GetBySingle(&affiliationModel.Field{
+		DeptID:       util.PointerString(input.ID),
+		IsSupervisor: util.PointerBool(true),
+	})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
+	if userBase != nil {
+		output.Supervisor = *userBase.Users.Name
+	}
 	output.CreatedBy = *departmentBase.CreatedByUsers.Name
 	output.UpdatedBy = *departmentBase.UpdatedByUsers.Name
 	for i, affiliation := range output.Affiliations {
