@@ -7554,10 +7554,6 @@ const docTemplate = `{
                     "description": "結束日期",
                     "type": "string"
                 },
-                "manager_id": {
-                    "description": "負責人ID",
-                    "type": "string"
-                },
                 "project_name": {
                     "description": "名稱",
                     "type": "string"
@@ -7819,10 +7815,6 @@ const docTemplate = `{
                 },
                 "end_date": {
                     "description": "結束日期",
-                    "type": "string"
-                },
-                "manager_id": {
-                    "description": "負責人ID",
                     "type": "string"
                 },
                 "project_name": {

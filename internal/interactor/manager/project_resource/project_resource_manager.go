@@ -76,7 +76,7 @@ func (m *manager) GetByProjectList(input *projectResourceModel.ProjectIDs) (int,
 		output         projectResourceModel.List
 	)
 	_, projectResourceBase, err := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
-		ProjectIDs: input.Projects,
+		ProjectUUIDs: input.Projects,
 	})
 	if err != nil {
 		log.Error(err)

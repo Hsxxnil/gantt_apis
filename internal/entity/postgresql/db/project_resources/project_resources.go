@@ -33,8 +33,12 @@ type Base struct {
 	ID *string `json:"id,omitempty"`
 	// 專案UUID
 	ProjectUUID *string `json:"project_uuid,omitempty"`
+	// 專案UUIDs (後端查詢用）
+	ProjectUUIDs []*string `json:"project_uuids,omitempty"`
 	// 資源UUID
 	ResourceUUID *string `json:"resource_uuid,omitempty"`
+	// 資源UUIDs (後端查詢用）
+	ResourceUUIDs []*string `json:"resource_uuids,omitempty"`
 	// 專案角色
 	Role *string `json:"role,omitempty"`
 	// resources data
@@ -47,8 +51,6 @@ type Base struct {
 	special.Base
 	// 搜尋欄位
 	model.Filter `json:"filter"`
-	// 專案UUIDs (後端查詢用）
-	ProjectIDs []string `json:"project_ids,omitempty"`
 }
 
 func (t *Table) TableName() string {

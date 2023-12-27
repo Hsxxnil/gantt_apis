@@ -2,7 +2,6 @@ package projects
 
 import (
 	"hta/internal/entity/postgresql/db/project_types"
-	"hta/internal/entity/postgresql/db/resources"
 	"hta/internal/entity/postgresql/db/users"
 	model "hta/internal/interactor/models/projects"
 	"hta/internal/interactor/models/special"
@@ -23,10 +22,6 @@ type Table struct {
 	ProjectTypes project_types.Table `gorm:"foreignKey:ID;references:TypeID" json:"project_types,omitempty"`
 	// 代號
 	Code string `gorm:"column:code;type:varchar;" json:"code"`
-	// 負責人ID
-	ManagerID string `gorm:"column:manager_id;type:uuid;" json:"manager_id"`
-	// resources data
-	Resources resources.Table `gorm:"foreignKey:ResourceUUID;references:ManagerID" json:"resources,omitempty"`
 	// 起始日期
 	StartDate *time.Time `gorm:"column:start_date;type:timestamp;" json:"start_date"`
 	// 結束日期
@@ -47,6 +42,8 @@ type Table struct {
 type Base struct {
 	// 表ID
 	ProjectUUID *string `json:"project_uuid,omitempty"`
+	// 專案UUIDs (後端查詢用）
+	ProjectUUIDs []string `json:"project_uuids,omitempty"`
 	// 前端編號 (非表ID)
 	ProjectID *string `json:"project_id,omitempty"`
 	// 名稱
@@ -57,10 +54,6 @@ type Base struct {
 	ProjectTypes project_types.Base `json:"project_types,omitempty"`
 	// 代號
 	Code *string `json:"code,omitempty"`
-	// 負責人ID
-	ManagerID *string `json:"manager_id,omitempty"`
-	// resources data
-	Resources resources.Base `json:"resources,omitempty"`
 	// 起始日期
 	StartDate *time.Time `json:"start_date,omitempty"`
 	// 結束日期
@@ -77,8 +70,6 @@ type Base struct {
 	special.Base
 	// 搜尋欄位
 	model.Filter `json:"filter"`
-	// 專案UUIDs (後端查詢用）
-	ProjectIDs []string `json:"project_ids,omitempty"`
 }
 
 func (t *Table) TableName() string {

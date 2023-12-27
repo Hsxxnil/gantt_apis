@@ -69,11 +69,6 @@ func (m *manager) GetByList(input *projectTypeModel.Fields) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	for i, proType := range output.ProjectTypes {
-		proType.CreatedBy = *projectTypeBase[i].CreatedByUsers.Name
-		proType.UpdatedBy = *projectTypeBase[i].UpdatedByUsers.Name
-	}
-
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
 
@@ -97,11 +92,6 @@ func (m *manager) GetByListNoPagination(input *projectTypeModel.Field) (int, any
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	for i, proType := range output.ProjectTypes {
-		proType.CreatedBy = *projectTypeBase[i].CreatedByUsers.Name
-		proType.UpdatedBy = *projectTypeBase[i].UpdatedByUsers.Name
-	}
-
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
 
@@ -123,9 +113,6 @@ func (m *manager) GetBySingle(input *projectTypeModel.Field) (int, any) {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
-
-	output.CreatedBy = *projectTypeBase.CreatedByUsers.Name
-	output.UpdatedBy = *projectTypeBase.UpdatedByUsers.Name
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
