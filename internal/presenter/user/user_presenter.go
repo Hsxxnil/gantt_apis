@@ -164,6 +164,7 @@ func (c *control) GetByCurrent(ctx *gin.Context) {
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
 // @Router /users/{id} [delete]
 func (c *control) Delete(ctx *gin.Context) {
+	trx := ctx.MustGet("db_trx").(*gorm.DB)
 	id := ctx.Param("id")
 	input := &userModel.Update{}
 	input.ID = id
@@ -175,7 +176,7 @@ func (c *control) Delete(ctx *gin.Context) {
 		return
 	}
 
-	httpCode, codeMessage := c.Manager.Delete(input)
+	httpCode, codeMessage := c.Manager.Delete(trx, input)
 	ctx.JSON(httpCode, codeMessage)
 }
 

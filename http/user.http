@@ -13,7 +13,7 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "passcode": "639740"
+  "passcode": "458215"
 }
 
 > {%
@@ -87,7 +87,7 @@ Authorization: Bearer REMOVEDREMOVED
 }
 
 ### Delete
-DELETE {{host}}/hta-gantt/v1.0/users/fef3c69f-7375-45ed-986f-2b07eabca892
+DELETE {{host}}/hta-gantt/v1.0/users/c5fa10ae-c1f9-4840-bb53-254a64068d66
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 

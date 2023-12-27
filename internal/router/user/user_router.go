@@ -16,7 +16,7 @@ func GetRouter(router *gin.Engine, db *gorm.DB) *gin.Engine {
 		v10.GET("", middleware.Verify(), middleware.CheckPermission(), control.GetByListNoPagination)
 		v10.GET("current-user", middleware.Verify(), middleware.CheckPermission(), control.GetByCurrent)
 		v10.GET(":id", middleware.Verify(), middleware.CheckPermission(), control.GetBySingle)
-		v10.DELETE(":id", middleware.Verify(), middleware.CheckPermission(), control.Delete)
+		v10.DELETE(":id", middleware.Verify(), middleware.CheckPermission(), middleware.Transaction(db), control.Delete)
 		v10.PATCH("current-user", middleware.Verify(), middleware.CheckPermission(), middleware.Transaction(db), control.Update)
 		v10.PATCH("enable/:id", middleware.Verify(), middleware.CheckPermission(), control.Enable)
 		v10.PATCH("enable/current-user", middleware.Verify(), control.EnableByCurrent)
