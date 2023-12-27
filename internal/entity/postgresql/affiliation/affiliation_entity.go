@@ -99,6 +99,10 @@ func (s *storage) GetByListNoPagination(input *model.Base) (output []*model.Tabl
 		query.Where("user_id in (?)", input.UserIDs)
 	}
 
+	if input.IsSupervisor != nil {
+		query.Where("is_supervisor = ?", input.IsSupervisor)
+	}
+
 	err = query.Order("created_at desc").Find(&output).Error
 	if err != nil {
 		log.Error(err)

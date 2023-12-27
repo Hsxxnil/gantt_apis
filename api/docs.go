@@ -6807,6 +6807,10 @@ const docTemplate = `{
                                 "description": "名稱",
                                 "type": "string"
                             },
+                            "supervisor": {
+                                "description": "部門主管",
+                                "type": "string"
+                            },
                             "tel": {
                                 "description": "電話",
                                 "type": "string"
@@ -6872,6 +6876,10 @@ const docTemplate = `{
                 },
                 "name": {
                     "description": "名稱",
+                    "type": "string"
+                },
+                "supervisor": {
+                    "description": "部門主管",
                     "type": "string"
                 },
                 "tel": {
