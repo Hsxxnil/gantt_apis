@@ -113,12 +113,12 @@ func (m *manager) GetByList(input *workDayModel.Fields) (int, any) {
 
 func (m *manager) GetByListNoPagination(input *workDayModel.Field) (int, any) {
 	output := &workDayModel.List{}
-	quantity, workDayBase, err := m.WorkDayService.GetByListNoPagination(input)
+	workDayBase, err := m.WorkDayService.GetByListNoPagination(input)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
-	output.Total.Total = quantity
+
 	workDayByte, err := sonic.Marshal(workDayBase)
 	if err != nil {
 		log.Error(err)

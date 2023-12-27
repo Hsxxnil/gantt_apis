@@ -663,7 +663,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 
 	// get projects
 	projectBase, err := m.ProjectService.GetByListNoPagination(&projectModel.Field{
-		ProjectIDs: input.Projects,
+		ProjectUUIDs: input.Projects,
 	})
 	if err != nil {
 		log.Error(err)
@@ -764,7 +764,6 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 					task.IndicatorsToolTip = indicators[0].ToolTip
 				}
 
-				task.CoordinatorName = *taskBase[i].Coordinators.ResourceName
 				for j, res := range taskBase[i].TaskResources {
 					task.Resources[j].ResourceUUID = *res.Resources.ResourceUUID
 					task.Resources[j].ResourceID = *res.Resources.Resources.ResourceID
@@ -941,7 +940,6 @@ func (m *manager) GetByListNoPaginationNoSub(input *taskModel.Field) (int, any) 
 			task.IndicatorsToolTip = indicators[0].ToolTip
 		}
 
-		task.CoordinatorName = *taskBase[i].Coordinators.ResourceName
 		for j, res := range taskBase[i].TaskResources {
 			task.Resources[j].ResourceUUID = *res.Resources.ResourceUUID
 			task.Resources[j].ResourceID = *res.Resources.Resources.ResourceID
@@ -1005,7 +1003,6 @@ func (m *manager) GetBySingle(input *taskModel.Field) (int, any) {
 		output.IndicatorsToolTip = indicators[0].ToolTip
 	}
 
-	output.CoordinatorName = *taskBase.Coordinators.ResourceName
 	for i, res := range taskBase.TaskResources {
 		output.Resources[i].ResourceUUID = *res.Resources.ResourceUUID
 		output.Resources[i].ResourceID = *res.Resources.Resources.ResourceID
@@ -1302,7 +1299,7 @@ func (m *manager) Import(trx *gorm.DB, input *taskModel.Import) (int, any) {
 	defer trx.Rollback()
 
 	// get project_resources
-	_, proRes, err := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
+	proResBase, err := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
 		ProjectUUID: util.PointerString(input.ProjectUUID),
 	})
 	if err != nil {
@@ -1313,7 +1310,7 @@ func (m *manager) Import(trx *gorm.DB, input *taskModel.Import) (int, any) {
 
 	// create a map of resource_name and project_resource_id
 	nameToProResIDMap := make(map[string]string)
-	for _, res := range proRes {
+	for _, res := range proResBase {
 		nameToProResIDMap[*res.Resources.ResourceName] = *res.ResourceUUID
 	}
 
@@ -1355,8 +1352,8 @@ func (m *manager) Import(trx *gorm.DB, input *taskModel.Import) (int, any) {
 						taskIdx[5] = index
 					case "Cost":
 						taskIdx[6] = index
-					case "Coordinator", "協調者":
-						taskIdx[7] = index
+					//case "Coordinator", "協調者":
+					//	taskIdx[7] = index
 					case "Predecessors", "父階":
 						taskIdx[8] = index
 					case "Outline number", "大綱編號":
@@ -1492,12 +1489,6 @@ func (m *manager) Import(trx *gorm.DB, input *taskModel.Import) (int, any) {
 				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 			}
 			createTask.Cost = int64(cost)
-		}
-
-		if record[taskIdx[7]] != "" {
-			if nameToProResIDMap[record[taskIdx[7]]] != "" {
-				createTask.Coordinator = nameToProResIDMap[record[taskIdx[7]]]
-			}
 		}
 
 		createTask.Predecessor = record[taskIdx[8]]

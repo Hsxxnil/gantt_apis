@@ -91,12 +91,12 @@ func (m *manager) GetByList(input *resourceModel.Fields) (int, any) {
 
 func (m *manager) GetByListNoPagination(input *resourceModel.Field) (int, any) {
 	output := &resourceModel.List{}
-	quantity, resourceBase, err := m.ResourceService.GetByListNoPagination(input)
+	resourceBase, err := m.ResourceService.GetByListNoPagination(input)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
-	output.Total.Total = quantity
+
 	resourceByte, err := sonic.Marshal(resourceBase)
 	if err != nil {
 		log.Error(err)

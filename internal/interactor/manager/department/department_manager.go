@@ -100,12 +100,11 @@ func (m *manager) GetByList(input *departmentModel.Fields) (int, any) {
 
 func (m *manager) GetByListNoPagination(input *departmentModel.Field) (int, any) {
 	output := &departmentModel.List{}
-	quantity, departmentBase, err := m.DepartmentService.GetByListNoPagination(input)
+	departmentBase, err := m.DepartmentService.GetByListNoPagination(input)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
-	output.Total.Total = quantity
 	departmentByte, err := sonic.Marshal(departmentBase)
 	if err != nil {
 		log.Error(err)

@@ -74,13 +74,13 @@ func (m *manager) Create(trx *gorm.DB, input *projectModel.Create) (int, any) {
 	var resourceList []*projectResourceModel.Create
 	if len(input.Resource) > 0 {
 		for _, resource := range input.Resource {
-			projectResource := &projectResourceModel.Create{
+			proRes := &projectResourceModel.Create{
 				ProjectUUID:  *projectBase.ProjectUUID,
 				ResourceUUID: resource.ResourceUUID,
 				Role:         resource.Role,
 				CreatedBy:    input.CreatedBy,
 			}
-			resourceList = append(resourceList, projectResource)
+			resourceList = append(resourceList, proRes)
 		}
 
 		_, err := m.ProjectResourceService.WithTrx(trx).CreateAll(resourceList)
@@ -100,12 +100,12 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 	output.Page = input.Page
 	// search project type
 	if input.FilterType != nil {
-		_, projectTypeBase, _ := m.ProjectTypeService.GetByListNoPagination(&projectTypeModel.Field{
+		projectTypeBase, _ := m.ProjectTypeService.GetByListNoPagination(&projectTypeModel.Field{
 			Names: input.FilterType,
 		})
 		if len(projectTypeBase) > 0 {
 			for _, projectType := range projectTypeBase {
-				input.FilterTypes = append(input.FilterTypes, *projectType.ID)
+				input.FilterTypes = append(input.FilterTypes, projectType.ID)
 			}
 		} else {
 			input.FilterTypes = nil
@@ -114,15 +114,24 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 
 	// search manager
 	if input.FilterManager != "" {
-		_, resourceBase, _ := m.ResourceService.GetByListNoPagination(&resourceModel.Field{
+		resourceBase, _ := m.ResourceService.GetByListNoPagination(&resourceModel.Field{
 			ResourceName: util.PointerString(input.FilterManager),
 		})
 		if len(resourceBase) > 0 {
 			for _, resource := range resourceBase {
-				input.FilterManagers = append(input.FilterManagers, *resource.ResourceUUID)
+				input.FilterManagers = append(input.FilterManagers, resource.ResourceUUID)
 			}
-		} else {
-			input.FilterManagers = nil
+		}
+
+		// search project_resource
+		proResBase, _ := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
+			ResourceUUIDs: input.FilterManagers,
+			Role:          util.PointerString("PM"),
+		})
+		if len(proResBase) > 0 {
+			for _, proRes := range proResBase {
+				input.ProjectUUIDs = append(input.ProjectUUIDs, proRes.ProjectUUID)
+			}
 		}
 	}
 
@@ -145,12 +154,30 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
+	// get projects' manager
+	proResBase, err := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
+		Role: util.PointerString("PM"),
+	})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
+	// create project's manager map
+	projectMap := make(map[string]string)
+	for _, proRes := range proResBase {
+		projectMap[*proRes.ProjectUUID] = *proRes.Resources.ResourceName
+	}
+
 	today := time.Now().UTC()
 	for i, project := range output.Projects {
 		project.Type = *projectBase[i].ProjectTypes.Name
-		project.Manager = *projectBase[i].Resources.ResourceName
+		project.Manager = projectMap[*projectBase[i].ProjectUUID]
 		project.CreatedBy = *projectBase[i].CreatedByUsers.Name
 		project.UpdatedBy = *projectBase[i].UpdatedByUsers.Name
+		// calculate project progress
 		if projectBase[i].StartDate != nil && projectBase[i].EndDate != nil {
 			progress := int64((today.Sub(*projectBase[i].StartDate).Hours() / projectBase[i].EndDate.Sub(*projectBase[i].StartDate).Hours()) * 100)
 			if progress <= 0 {
@@ -187,10 +214,28 @@ func (m *manager) GetByListNoPagination(input *projectModel.Field) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
+	// get projects' manager
+	proResBase, err := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
+		ProjectUUID: util.PointerString(input.ProjectUUID),
+		Role:        util.PointerString("PM"),
+	})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
+	// create project's manager map
+	projectMap := make(map[string]string)
+	for _, proRes := range proResBase {
+		projectMap[*proRes.ProjectUUID] = *proRes.Resources.ResourceName
+	}
+
 	today := time.Now().UTC()
 	for i, project := range output.Projects {
 		project.Type = *projectBase[i].ProjectTypes.Name
-		project.Manager = *projectBase[i].Resources.ResourceName
+		project.Manager = projectMap[*projectBase[i].ProjectUUID]
 		project.CreatedBy = *projectBase[i].CreatedByUsers.Name
 		project.UpdatedBy = *projectBase[i].UpdatedByUsers.Name
 		if projectBase[i].StartDate != nil && projectBase[i].EndDate != nil {
@@ -229,8 +274,22 @@ func (m *manager) GetBySingle(input *projectModel.Field) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
+	// get projects' manager
+	proResBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
+		ProjectUUID: util.PointerString(input.ProjectUUID),
+		Role:        util.PointerString("PM"),
+	})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
+	if proResBase != nil {
+		output.Manager = *proResBase.Resources.ResourceName
+	}
 	output.Type = *projectBase.ProjectTypes.Name
-	output.Manager = *projectBase.Resources.ResourceName
 	output.CreatedBy = *projectBase.CreatedByUsers.Name
 	output.UpdatedBy = *projectBase.UpdatedByUsers.Name
 	today := time.Now().UTC()
@@ -342,13 +401,13 @@ func (m *manager) Update(trx *gorm.DB, input *projectModel.Update) (int, any) {
 	if len(input.Resource) > 0 {
 		// sync create project_resource
 		for _, resource := range input.Resource {
-			projectResource := &projectResourceModel.Create{
+			proRes := &projectResourceModel.Create{
 				ProjectUUID:  *projectBase.ProjectUUID,
 				ResourceUUID: resource.ResourceUUID,
 				Role:         resource.Role,
 				CreatedBy:    *input.UpdatedBy,
 			}
-			resourceList = append(resourceList, projectResource)
+			resourceList = append(resourceList, proRes)
 			resourceUUIDs = append(resourceUUIDs, util.PointerString(resource.ResourceUUID))
 		}
 
