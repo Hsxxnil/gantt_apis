@@ -1302,7 +1302,7 @@ func (m *manager) Import(trx *gorm.DB, input *taskModel.Import) (int, any) {
 	defer trx.Rollback()
 
 	// get project_resources
-	_, proRes, err := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
+	proResBase, err := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
 		ProjectUUID: util.PointerString(input.ProjectUUID),
 	})
 	if err != nil {
@@ -1313,7 +1313,7 @@ func (m *manager) Import(trx *gorm.DB, input *taskModel.Import) (int, any) {
 
 	// create a map of resource_name and project_resource_id
 	nameToProResIDMap := make(map[string]string)
-	for _, res := range proRes {
+	for _, res := range proResBase {
 		nameToProResIDMap[*res.Resources.ResourceName] = *res.ResourceUUID
 	}
 

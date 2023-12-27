@@ -74,12 +74,12 @@ func (m *manager) GetByList(input *projectTypeModel.Fields) (int, any) {
 
 func (m *manager) GetByListNoPagination(input *projectTypeModel.Field) (int, any) {
 	output := &projectTypeModel.List{}
-	quantity, projectTypeBase, err := m.ProjectTypeService.GetByListNoPagination(input)
+	projectTypeBase, err := m.ProjectTypeService.GetByListNoPagination(input)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
-	output.Total.Total = quantity
+
 	projectTypeByte, err := sonic.Marshal(projectTypeBase)
 	if err != nil {
 		log.Error(err)
