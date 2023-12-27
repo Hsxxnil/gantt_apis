@@ -52,6 +52,6 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### Delete
-DELETE {{host}}/hta-gantt/v1.0/departments/f01fabb7-bce5-44ab-a20f-aa78589b5409
+DELETE {{host}}/hta-gantt/v1.0/departments/787ec21e-8298-471b-a271-8ed4aa18139d
 Accept: application/json
 Authorization: Bearer {{accessToken}}
