@@ -79,12 +79,11 @@ func (m *manager) GetByList(input *holidayModel.Fields) (int, any) {
 
 func (m *manager) GetByListNoPagination(input *holidayModel.Field) (int, any) {
 	output := &holidayModel.List{}
-	quantity, holidayBase, err := m.HolidayService.GetByListNoPagination(input)
+	holidayBase, err := m.HolidayService.GetByListNoPagination(input)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
-	output.Total.Total = quantity
 	holidayByte, err := sonic.Marshal(holidayBase)
 	if err != nil {
 		log.Error(err)
