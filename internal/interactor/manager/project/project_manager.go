@@ -216,8 +216,7 @@ func (m *manager) GetByListNoPagination(input *projectModel.Field) (int, any) {
 
 	// get projects' manager
 	proResBase, err := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
-		ProjectUUID: util.PointerString(input.ProjectUUID),
-		Role:        util.PointerString("PM"),
+		Role: util.PointerString("PM"),
 	})
 	if err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
