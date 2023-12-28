@@ -135,7 +135,7 @@ func (m *manager) GetByList(input *userModel.Fields) (int, any) {
 				deptName := dept.Name
 				user.Affiliations = append(user.Affiliations, &affiliationModel.SingleUser{
 					JobTitle: jobTitle,
-					Dept:     deptName,
+					DeptName: deptName,
 				})
 			}
 		}
@@ -222,7 +222,7 @@ func (m *manager) GetBySingle(input *userModel.Field) (int, any) {
 
 		output.Affiliations = append(output.Affiliations, &affiliationModel.SingleUser{
 			JobTitle: jobTitle,
-			Dept:     deptName,
+			DeptName: deptName,
 		})
 	}
 

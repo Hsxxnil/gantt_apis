@@ -118,6 +118,10 @@ func (s *storage) GetByQuantity(input *model.Base) (quantity int64, err error) {
 		query.Where("id = ?", input.ID)
 	}
 
+	if input.Name != nil {
+		query.Where("name = ?", input.Name)
+	}
+
 	err = query.Count(&quantity).Select("*").Error
 	if err != nil {
 		log.Error(err)

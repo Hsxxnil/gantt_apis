@@ -43,9 +43,6 @@ definitions:
     type: object
   affiliations.SingleUser:
     properties:
-      dept:
-        description: 部門
-        type: string
       dept_id:
         description: 部門ID
         type: string
@@ -54,6 +51,9 @@ definitions:
         type: boolean
       job_title:
         description: 職稱
+        type: string
+      name:
+        description: 部門
         type: string
     type: object
   code.ErrorMessage:
