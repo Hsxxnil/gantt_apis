@@ -6701,6 +6701,27 @@ const docTemplate = `{
                 }
             }
         },
+        "affiliations.SingleUser": {
+            "type": "object",
+            "properties": {
+                "dept": {
+                    "description": "部門",
+                    "type": "string"
+                },
+                "dept_id": {
+                    "description": "部門ID",
+                    "type": "string"
+                },
+                "is_supervisor": {
+                    "description": "是否為主管",
+                    "type": "boolean"
+                },
+                "job_title": {
+                    "description": "職稱",
+                    "type": "string"
+                }
+            }
+        },
         "code.ErrorMessage": {
             "type": "object",
             "properties": {
@@ -8878,6 +8899,13 @@ const docTemplate = `{
                     "items": {
                         "type": "object",
                         "properties": {
+                            "affiliations": {
+                                "description": "affiliations",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/affiliations.SingleUser"
+                                }
+                            },
                             "created_at": {
                                 "description": "創建時間",
                                 "type": "string"
@@ -8888,14 +8916,6 @@ const docTemplate = `{
                             },
                             "deleted_at": {
                                 "description": "刪除時間",
-                                "type": "string"
-                            },
-                            "dept": {
-                                "description": "部門",
-                                "type": "string"
-                            },
-                            "dept_id": {
-                                "description": "部門ID",
                                 "type": "string"
                             },
                             "email": {
@@ -8909,10 +8929,6 @@ const docTemplate = `{
                             "is_enabled": {
                                 "description": "是否啟用",
                                 "type": "boolean"
-                            },
-                            "job_title": {
-                                "description": "職稱",
-                                "type": "string"
                             },
                             "name": {
                                 "description": "使用者中文名稱",
@@ -8984,6 +9000,13 @@ const docTemplate = `{
         "users.Single": {
             "type": "object",
             "properties": {
+                "affiliations": {
+                    "description": "affiliations",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/affiliations.SingleUser"
+                    }
+                },
                 "created_at": {
                     "description": "創建時間",
                     "type": "string"
@@ -8994,14 +9017,6 @@ const docTemplate = `{
                 },
                 "deleted_at": {
                     "description": "刪除時間",
-                    "type": "string"
-                },
-                "dept": {
-                    "description": "部門",
-                    "type": "string"
-                },
-                "dept_id": {
-                    "description": "部門ID",
                     "type": "string"
                 },
                 "email": {
@@ -9015,10 +9030,6 @@ const docTemplate = `{
                 "is_enabled": {
                     "description": "是否啟用",
                     "type": "boolean"
-                },
-                "job_title": {
-                    "description": "職稱",
-                    "type": "string"
                 },
                 "name": {
                     "description": "使用者中文名稱",

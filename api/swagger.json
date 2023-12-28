@@ -6698,6 +6698,27 @@
                 }
             }
         },
+        "affiliations.SingleUser": {
+            "type": "object",
+            "properties": {
+                "dept": {
+                    "description": "部門",
+                    "type": "string"
+                },
+                "dept_id": {
+                    "description": "部門ID",
+                    "type": "string"
+                },
+                "is_supervisor": {
+                    "description": "是否為主管",
+                    "type": "boolean"
+                },
+                "job_title": {
+                    "description": "職稱",
+                    "type": "string"
+                }
+            }
+        },
         "code.ErrorMessage": {
             "type": "object",
             "properties": {
@@ -8875,6 +8896,13 @@
                     "items": {
                         "type": "object",
                         "properties": {
+                            "affiliations": {
+                                "description": "affiliations",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/affiliations.SingleUser"
+                                }
+                            },
                             "created_at": {
                                 "description": "創建時間",
                                 "type": "string"
@@ -8885,14 +8913,6 @@
                             },
                             "deleted_at": {
                                 "description": "刪除時間",
-                                "type": "string"
-                            },
-                            "dept": {
-                                "description": "部門",
-                                "type": "string"
-                            },
-                            "dept_id": {
-                                "description": "部門ID",
                                 "type": "string"
                             },
                             "email": {
@@ -8906,10 +8926,6 @@
                             "is_enabled": {
                                 "description": "是否啟用",
                                 "type": "boolean"
-                            },
-                            "job_title": {
-                                "description": "職稱",
-                                "type": "string"
                             },
                             "name": {
                                 "description": "使用者中文名稱",
@@ -8981,6 +8997,13 @@
         "users.Single": {
             "type": "object",
             "properties": {
+                "affiliations": {
+                    "description": "affiliations",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/affiliations.SingleUser"
+                    }
+                },
                 "created_at": {
                     "description": "創建時間",
                     "type": "string"
@@ -8991,14 +9014,6 @@
                 },
                 "deleted_at": {
                     "description": "刪除時間",
-                    "type": "string"
-                },
-                "dept": {
-                    "description": "部門",
-                    "type": "string"
-                },
-                "dept_id": {
-                    "description": "部門ID",
                     "type": "string"
                 },
                 "email": {
@@ -9012,10 +9027,6 @@
                 "is_enabled": {
                     "description": "是否啟用",
                     "type": "boolean"
-                },
-                "job_title": {
-                    "description": "職稱",
-                    "type": "string"
                 },
                 "name": {
                     "description": "使用者中文名稱",
