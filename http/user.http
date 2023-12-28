@@ -13,7 +13,7 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "passcode": "458215"
+  "passcode": "527052"
 }
 
 > {%
@@ -31,7 +31,7 @@ Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### GetBySingle
-GET {{host}}/hta-gantt/v1.0/users/552daa60-f9a6-4d90-9a31-16fcbf7d62e8
+GET {{host}}/hta-gantt/v1.0/users/6b47e0c6-a4b7-418d-9b52-799449a6c58d
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -59,8 +59,7 @@ Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-  "password": "12345",
-  "old_password": "54321"
+  "name": "林一璇"
 }
 
 ### Enable
