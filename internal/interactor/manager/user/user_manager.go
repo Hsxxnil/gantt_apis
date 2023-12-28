@@ -129,10 +129,14 @@ func (m *manager) GetByList(input *userModel.Fields) (int, any) {
 		user.Role = *userBase[i].Roles.DisplayName
 
 		// get the user's job title and department
-		if affiliation, ok := affiliationMap[*userBase[i].ID]; ok {
-			user.JobTitle = affiliation.JobTitle
-			if dept, ok := deptMap[affiliationMap[*userBase[i].ID].DeptID]; ok {
-				user.Dept = dept.Name
+		if affiliation, ok := affiliationMap[user.ID]; ok {
+			jobTitle := affiliation.JobTitle
+			if dept, ok := deptMap[affiliation.DeptID]; ok {
+				deptName := dept.Name
+				user.Affiliations = append(user.Affiliations, &affiliationModel.SingleUser{
+					JobTitle: jobTitle,
+					Dept:     deptName,
+				})
 			}
 		}
 	}
@@ -194,8 +198,14 @@ func (m *manager) GetBySingle(input *userModel.Field) (int, any) {
 	}
 
 	if affiliationBase != nil {
+		var (
+			jobTitle string
+			deptName string
+		)
+
+		// set the user's job title
 		if affiliationBase.JobTitle != nil {
-			output.JobTitle = *affiliationBase.JobTitle
+			jobTitle = *affiliationBase.JobTitle
 		}
 
 		// get the user's department
@@ -208,7 +218,12 @@ func (m *manager) GetBySingle(input *userModel.Field) (int, any) {
 				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 			}
 		}
-		output.Dept = *departmentBase.Name
+		deptName = *departmentBase.Name
+
+		output.Affiliations = append(output.Affiliations, &affiliationModel.SingleUser{
+			JobTitle: jobTitle,
+			Dept:     deptName,
+		})
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)

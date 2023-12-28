@@ -76,3 +76,15 @@ type Update struct {
 	// 更新者
 	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }
+
+// SingleUser is single return structure file to get user info
+type SingleUser struct {
+	// 部門ID
+	DeptID string `json:"dept_id,omitempty"`
+	// 部門
+	Dept string `json:"dept,omitempty"`
+	// 職稱
+	JobTitle string `json:"job_title,omitempty"`
+	// 是否為主管
+	IsSupervisor bool `json:"is_supervisor"`
+}

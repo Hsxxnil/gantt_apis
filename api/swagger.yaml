@@ -41,6 +41,21 @@ definitions:
         description: 使用者ID
         type: string
     type: object
+  affiliations.SingleUser:
+    properties:
+      dept:
+        description: 部門
+        type: string
+      dept_id:
+        description: 部門ID
+        type: string
+      is_supervisor:
+        description: 是否為主管
+        type: boolean
+      job_title:
+        description: 職稱
+        type: string
+    type: object
   code.ErrorMessage:
     properties:
       code:
@@ -1611,6 +1626,11 @@ definitions:
         description: 多筆
         items:
           properties:
+            affiliations:
+              description: affiliations
+              items:
+                $ref: '#/definitions/affiliations.SingleUser'
+              type: array
             created_at:
               description: 創建時間
               type: string
@@ -1619,12 +1639,6 @@ definitions:
               type: string
             deleted_at:
               description: 刪除時間
-              type: string
-            dept:
-              description: 部門
-              type: string
-            dept_id:
-              description: 部門ID
               type: string
             email:
               description: 使用者電子郵件
@@ -1635,9 +1649,6 @@ definitions:
             is_enabled:
               description: 是否啟用
               type: boolean
-            job_title:
-              description: 職稱
-              type: string
             name:
               description: 使用者中文名稱
               type: string
@@ -1690,6 +1701,11 @@ definitions:
     type: object
   users.Single:
     properties:
+      affiliations:
+        description: affiliations
+        items:
+          $ref: '#/definitions/affiliations.SingleUser'
+        type: array
       created_at:
         description: 創建時間
         type: string
@@ -1698,12 +1714,6 @@ definitions:
         type: string
       deleted_at:
         description: 刪除時間
-        type: string
-      dept:
-        description: 部門
-        type: string
-      dept_id:
-        description: 部門ID
         type: string
       email:
         description: 使用者電子郵件
@@ -1714,9 +1724,6 @@ definitions:
       is_enabled:
         description: 是否啟用
         type: boolean
-      job_title:
-        description: 職稱
-        type: string
       name:
         description: 使用者中文名稱
         type: string

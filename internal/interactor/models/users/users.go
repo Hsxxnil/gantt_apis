@@ -82,12 +82,8 @@ type List struct {
 		RoleID string `json:"role_id,omitempty"`
 		// 角色
 		Role string `json:"role,omitempty"`
-		// 部門ID
-		DeptID string `json:"dept_id,omitempty"`
-		// 部門
-		Dept string `json:"dept,omitempty"`
-		// 職稱
-		JobTitle string `json:"job_title,omitempty"`
+		// affiliations
+		Affiliations []*affiliations.SingleUser `json:"affiliations,omitempty"`
 		// 是否啟用
 		IsEnabled bool `json:"is_enabled"`
 		// 創建者
@@ -130,12 +126,8 @@ type Single struct {
 	Role string `json:"role,omitempty"`
 	// otp auth url
 	OtpAuthUrl string `json:"otp_auth_url,omitempty"`
-	// 部門ID
-	DeptID string `json:"dept_id,omitempty"`
-	// 部門
-	Dept string `json:"dept,omitempty"`
-	// 職稱
-	JobTitle string `json:"job_title,omitempty"`
+	// affiliations
+	Affiliations []*affiliations.SingleUser `json:"affiliations,omitempty"`
 	// 是否啟用
 	IsEnabled bool `json:"is_enabled"`
 	// 創建者
