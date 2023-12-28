@@ -195,6 +195,10 @@ func (s *storage) Update(input *model.Base) (err error) {
 		data["user_name"] = input.UserName
 	}
 
+	if input.ResourceUUID != nil {
+		data["resource_uuid"] = input.ResourceUUID
+	}
+
 	if input.Name != nil {
 		data["name"] = input.Name
 	}
