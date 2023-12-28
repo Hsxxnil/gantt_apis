@@ -13,7 +13,7 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "passcode": "583436"
+  "passcode": "394874"
 }
 
 > {% client.global.set("accessToken", response.body.body.access_token); %}
@@ -39,7 +39,7 @@ Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-  "name": "業務部"
+  "name": "總經理室"
 }
 
 ### Update
