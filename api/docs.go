@@ -6704,10 +6704,6 @@ const docTemplate = `{
         "affiliations.SingleUser": {
             "type": "object",
             "properties": {
-                "dept": {
-                    "description": "部門",
-                    "type": "string"
-                },
                 "dept_id": {
                     "description": "部門ID",
                     "type": "string"
@@ -6718,6 +6714,10 @@ const docTemplate = `{
                 },
                 "job_title": {
                     "description": "職稱",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "部門",
                     "type": "string"
                 }
             }
