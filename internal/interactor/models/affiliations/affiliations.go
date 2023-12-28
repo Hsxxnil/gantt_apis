@@ -82,7 +82,7 @@ type SingleUser struct {
 	// 部門ID
 	DeptID string `json:"dept_id,omitempty"`
 	// 部門
-	Dept string `json:"dept,omitempty"`
+	DeptName string `json:"name,omitempty"`
 	// 職稱
 	JobTitle string `json:"job_title,omitempty"`
 	// 是否為主管

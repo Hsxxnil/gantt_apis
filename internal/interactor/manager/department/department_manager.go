@@ -40,6 +40,21 @@ func Init(db *gorm.DB) Manager {
 func (m *manager) Create(trx *gorm.DB, input *departmentModel.Create) (int, any) {
 	defer trx.Rollback()
 
+	// check the department exist
+	quantity, err := m.DepartmentService.GetByQuantity(&departmentModel.Field{
+		Name: util.PointerString(input.Name),
+	})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
+	if quantity > 0 {
+		return code.BadRequest, code.GetCodeMessage(code.BadRequest, "Department already exists!")
+	}
+
 	departmentBase, err := m.DepartmentService.WithTrx(trx).Create(input)
 	if err != nil {
 		log.Error(err)
