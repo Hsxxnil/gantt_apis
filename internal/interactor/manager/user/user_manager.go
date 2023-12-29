@@ -97,10 +97,10 @@ func (m *manager) GetByList(input *userModel.Fields) (int, any) {
 	err = sonic.Unmarshal(affiliationByte, &affiliations)
 
 	// build maps for efficient lookups and collect department IDs
-	affiliationMap := make(map[string]*affiliationModel.Single)
+	affiliationMap := make(map[string][]*affiliationModel.Single)
 	var deptIds []*string
 	for _, affiliation := range affiliations {
-		affiliationMap[affiliation.UserID] = affiliation
+		affiliationMap[affiliation.UserID] = append(affiliationMap[affiliation.UserID], affiliation)
 		deptIds = append(deptIds, util.PointerString(affiliation.DeptID))
 	}
 
@@ -131,14 +131,16 @@ func (m *manager) GetByList(input *userModel.Fields) (int, any) {
 		user.Role = *userBase[i].Roles.DisplayName
 
 		// get the user's job title and department
-		if affiliation, ok := affiliationMap[user.ID]; ok {
-			jobTitle := affiliation.JobTitle
-			if dept, ok := deptMap[affiliation.DeptID]; ok {
-				deptName := dept.Name
-				user.Affiliations = append(user.Affiliations, &affiliationModel.SingleUser{
-					JobTitle: jobTitle,
-					DeptName: deptName,
-				})
+		if affiliationForUser, ok := affiliationMap[user.ID]; ok {
+			for _, affiliation := range affiliationForUser {
+				jobTitle := affiliation.JobTitle
+				if dept, ok := deptMap[affiliation.DeptID]; ok {
+					deptName := dept.Name
+					user.Affiliations = append(user.Affiliations, &affiliationModel.SingleUser{
+						JobTitle: jobTitle,
+						DeptName: deptName,
+					})
+				}
 			}
 		}
 	}
@@ -189,7 +191,7 @@ func (m *manager) GetBySingle(input *userModel.Field) (int, any) {
 	output.Role = *userBase.Roles.DisplayName
 
 	// get the user's job title
-	affiliationBase, err := m.AffiliationService.GetBySingle(&affiliationModel.Field{
+	affiliationBase, err := m.AffiliationService.GetByListNoPagination(&affiliationModel.Field{
 		UserID: util.PointerString(input.ID),
 	})
 	if err != nil {
@@ -199,33 +201,56 @@ func (m *manager) GetBySingle(input *userModel.Field) (int, any) {
 		}
 	}
 
-	if affiliationBase != nil {
-		var (
-			jobTitle string
-			deptName string
-		)
+	// transform affiliationBase to affiliations.Single
+	affiliations := make([]*affiliationModel.Single, len(affiliationBase))
+	affiliationByte, _ := sonic.Marshal(affiliationBase)
+	err = sonic.Unmarshal(affiliationByte, &affiliations)
 
-		// set the user's job title
-		if affiliationBase.JobTitle != nil {
-			jobTitle = *affiliationBase.JobTitle
+	// build maps for efficient lookups and collect department IDs
+	affiliationMap := make(map[string][]*affiliationModel.Single)
+	var deptIds []*string
+	for _, affiliation := range affiliations {
+		affiliationMap[affiliation.UserID] = append(affiliationMap[affiliation.UserID], affiliation)
+		deptIds = append(deptIds, util.PointerString(affiliation.DeptID))
+	}
+
+	// get all departments
+	departmentBase, err := m.DepartmentService.GetByListNoPagination(&departmentModel.Field{
+		DeptIDs: deptIds,
+	})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 		}
+	}
 
-		// get the user's department
-		departmentBase, err := m.DepartmentService.GetBySingle(&departmentModel.Field{
-			ID: *affiliationBase.DeptID,
-		})
-		if err != nil {
-			if !errors.Is(err, gorm.ErrRecordNotFound) {
-				log.Error(err)
-				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	// transform departmentBase to departments.Single
+	departments := make([]*departmentModel.Single, len(departmentBase))
+	departmentByte, _ := sonic.Marshal(departmentBase)
+	err = sonic.Unmarshal(departmentByte, &departments)
+
+	// build maps for efficient lookups
+	deptMap := make(map[string]*departmentModel.Single)
+	for _, dept := range departments {
+		deptMap[dept.ID] = dept
+	}
+
+	// assign job title and department to the user
+	output.Role = *userBase.Roles.DisplayName
+
+	// get the user's job title and department
+	if affiliationForUser, ok := affiliationMap[output.ID]; ok {
+		for _, affiliation := range affiliationForUser {
+			jobTitle := affiliation.JobTitle
+			if dept, ok := deptMap[affiliation.DeptID]; ok {
+				deptName := dept.Name
+				output.Affiliations = append(output.Affiliations, &affiliationModel.SingleUser{
+					JobTitle: jobTitle,
+					DeptName: deptName,
+				})
 			}
 		}
-		deptName = *departmentBase.Name
-
-		output.Affiliations = append(output.Affiliations, &affiliationModel.SingleUser{
-			JobTitle: jobTitle,
-			DeptName: deptName,
-		})
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
