@@ -4978,6 +4978,95 @@ const docTemplate = `{
                 }
             }
         },
+        "/users/authenticator/current-user": {
+            "post": {
+                "description": "啟用驗證器",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "啟用驗證器",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "JWE Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "啟用驗證器",
+                        "name": "*",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/users.EnableAuthenticator"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功後返回的值",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.SuccessfulMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "body": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "415": {
+                        "description": "必要欄位帶入錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "伺服器非預期錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/users/check-duplicate": {
             "post": {
                 "description": "檢查使用者是否重複",
@@ -5140,7 +5229,7 @@ const docTemplate = `{
                 }
             },
             "patch": {
-                "description": "更新單一使用者",
+                "description": "更新當前使用者",
                 "consumes": [
                     "application/json"
                 ],
@@ -5150,7 +5239,7 @@ const docTemplate = `{
                 "tags": [
                     "user"
                 ],
-                "summary": "更新單一使用者",
+                "summary": "更新當前使用者",
                 "parameters": [
                     {
                         "type": "string",
@@ -5249,7 +5338,7 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "啟用或停用使用者",
+                        "description": "啟用當前使用者",
                         "name": "*",
                         "in": "body",
                         "required": true,
@@ -8857,6 +8946,18 @@ const docTemplate = `{
                 }
             }
         },
+        "users.EnableAuthenticator": {
+            "type": "object",
+            "required": [
+                "passcode"
+            ],
+            "properties": {
+                "passcode": {
+                    "description": "驗證碼",
+                    "type": "string"
+                }
+            }
+        },
         "users.Filter": {
             "type": "object",
             "properties": {
@@ -9078,6 +9179,10 @@ const docTemplate = `{
                 "email": {
                     "description": "使用者電子郵件",
                     "type": "string"
+                },
+                "is_authenticator": {
+                    "description": "是否使用驗證器",
+                    "type": "boolean"
                 },
                 "is_enabled": {
                     "description": "是否啟用",
