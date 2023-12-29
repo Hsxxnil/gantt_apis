@@ -107,3 +107,12 @@ Content-Type: application/json
     "email": "lhsuan1225@gmail.com"
   }
 }
+
+### EnableAuthenticator
+POST {{host}}/hta-gantt/v1.0/users/authenticator/current-user
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwidHlwZSI6IkpXRSIsInppcCI6IkRFRiJ9.R7sM65KxoE1tm5wKjs2r3st6OIZlYVJ9eCuA0Dez80vUmiG6lInER8tWBXpSYC6QsH46h3R9Iz_1Bqpp5OGscFKrm9QVvMQXEvAlym6bRd1RRsz-OyE0i-uSQvJEYvQZX6FA_aQvA51EFAg-dhBTNMZYY4BhlvQIPeVFbWr80KSQmnolbJAiA2dMYNb1F9Swc1Tb6Qjpr-IohLvArO_ogdhdokU5QuQI4BYMt7r-Uo2m5i0LXibuC5VHG0UZW1xNDWd2tp1OnntqDL-EaaunZP__KQ4mmPQ8P6OgATaHiQ2Gzk94hElQFtt7zN9b9Ei7MSCuHzwmbQwmi-mb8shgkg.W0c50itwJ9PxqOI4XA9uBg.ShRc4US4iF11vaCxL6ub1cqzxIA9-1W-jt7RekXNh8OyivIt2oI-uQxC4ySJ6qbgCuwehB6CDkp9CNc8ZERVdcDeg02f57j1yoCYy7vduZqVK28OMMmvrRybfqagMpixf3_3UlnhqtY0958-rIDqmiNaw8lafWkiShnLOPccMx9hsTfBE_P5mbHzPifR25omEXOFaVUlp2zKOgBaDpd02uMja7LwBjetU8sTvjwGnU4.r_ewUHPkOq-B1o3OtuWbrnU9XLtEflM7ryG9jiEVoAc
+
+{
+  "passcode": "12345"
+}

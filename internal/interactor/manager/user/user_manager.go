@@ -6,6 +6,7 @@ import (
 	affiliationModel "hta/internal/interactor/models/affiliations"
 	departmentModel "hta/internal/interactor/models/departments"
 	resourceModel "hta/internal/interactor/models/resources"
+	"hta/internal/interactor/pkg/otp"
 	"hta/internal/interactor/pkg/util"
 	affiliationService "hta/internal/interactor/service/affiliation"
 	departmentService "hta/internal/interactor/service/department"
@@ -29,6 +30,7 @@ type Manager interface {
 	Enable(input *userModel.Enable) (int, any)
 	ResetPassword(input *userModel.ResetPassword) (int, any)
 	Duplicate(input *userModel.Field) (int, any)
+	EnableAuthenticator(input *userModel.EnableAuthenticator) (int, any)
 }
 
 type manager struct {
@@ -466,4 +468,34 @@ func (m *manager) Duplicate(input *userModel.Field) (int, any) {
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
+}
+
+func (m *manager) EnableAuthenticator(input *userModel.EnableAuthenticator) (int, any) {
+	userBase, err := m.UserService.GetBySingle(&userModel.Field{
+		ID: input.ID,
+	})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
+	// validate otp
+	_, err = otp.ValidateOTP(input.Passcode, *userBase.OtpSecret)
+	if err != nil {
+		log.Error(err)
+		return code.PermissionDenied, code.GetCodeMessage(code.PermissionDenied, "Incorrect passcode.")
+	}
+
+	err = m.UserService.Update(&userModel.Update{
+		ID:              input.ID,
+		IsAuthenticator: util.PointerBool(true),
+	})
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	return code.Successful, code.GetCodeMessage(code.Successful, userBase.ID)
 }
