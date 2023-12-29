@@ -107,3 +107,12 @@ Content-Type: application/json
     "email": "REMOVED"
   }
 }
+
+### EnableAuthenticator
+POST {{host}}/hta-gantt/v1.0/users/authenticator/current-user
+Content-Type: application/json
+Authorization: Bearer REMOVEDREMOVED
+
+{
+  "passcode": "12345"
+}
