@@ -7323,6 +7323,10 @@ const docTemplate = `{
                 "user_name"
             ],
             "properties": {
+                "change_to": {
+                    "description": "更換驗證方式 1: email, 2: authenticator",
+                    "type": "integer"
+                },
                 "password": {
                     "description": "密碼",
                     "type": "string"
