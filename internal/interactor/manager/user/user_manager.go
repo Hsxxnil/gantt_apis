@@ -134,11 +134,13 @@ func (m *manager) GetByList(input *userModel.Fields) (int, any) {
 		if affiliationForUser, ok := affiliationMap[user.ID]; ok {
 			for _, affiliation := range affiliationForUser {
 				jobTitle := affiliation.JobTitle
+				DeptID := affiliation.DeptID
 				if dept, ok := deptMap[affiliation.DeptID]; ok {
 					deptName := dept.Name
 					user.Affiliations = append(user.Affiliations, &affiliationModel.SingleUser{
 						JobTitle: jobTitle,
 						DeptName: deptName,
+						DeptID:   DeptID,
 					})
 				}
 			}
@@ -243,11 +245,13 @@ func (m *manager) GetBySingle(input *userModel.Field) (int, any) {
 	if affiliationForUser, ok := affiliationMap[output.ID]; ok {
 		for _, affiliation := range affiliationForUser {
 			jobTitle := affiliation.JobTitle
+			DrptID := affiliation.DeptID
 			if dept, ok := deptMap[affiliation.DeptID]; ok {
 				deptName := dept.Name
 				output.Affiliations = append(output.Affiliations, &affiliationModel.SingleUser{
 					JobTitle: jobTitle,
 					DeptName: deptName,
+					DeptID:   DrptID,
 				})
 			}
 		}
