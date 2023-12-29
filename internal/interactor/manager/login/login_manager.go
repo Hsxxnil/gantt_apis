@@ -51,6 +51,7 @@ func Init(db *gorm.DB) Manager {
 }
 
 func (m *manager) Login(input *loginModel.Login) (int, any) {
+	var output any
 	// verify username & password
 	acknowledge, userBase, err := m.UserService.AcknowledgeUser(&userModel.Field{
 		UserName: util.PointerString(input.UserName),
@@ -67,37 +68,81 @@ func (m *manager) Login(input *loginModel.Login) (int, any) {
 		return code.PermissionDenied, code.GetCodeMessage(code.PermissionDenied, "Incorrect username or password.")
 	}
 
-	// generate passcode
-	passcode, err := otp.GeneratePasscode(*userBase.OtpSecret)
-	if err != nil {
-		log.Error(err)
-		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	// select authentication method
+	switch input.ChangeTo {
+	case 1:
+		// generate passcode
+		passcode, err := otp.GeneratePasscode(*userBase.OtpSecret)
+		if err != nil {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+
+		// send passcode to email
+		to := *userBase.Email
+		fromAddress := "calla.nkust@gmail.com"
+		fromName := "PMIS平台"
+		mailPwd := "pfyj mkee hpgy sqlj"
+		subject := "【PMIS平台】系統驗證碼(請勿回覆此郵件)"
+		message := fmt.Sprintf(
+			"親愛的用戶：\n"+
+				"感謝您使用PMIS專案管理平台，請於30秒內輸入以下驗證碼。\n\n"+
+				"驗證碼：%s\n"+
+				"祝您使用愉快！\n\n"+
+				"<注意>\n"+
+				"*此郵件由系統自動發出，請勿直接回覆。", passcode)
+
+		err = email.SendEmailWithText(to, fromAddress, fromName, mailPwd, subject, message)
+		if err != nil {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+
+		// mask email
+		obscuredEmail := masker.Email(*userBase.Email)
+		output = obscuredEmail
+
+	case 2:
+		output = "Please use authenticator to login."
+
+	default:
+		if !*userBase.IsAuthenticator {
+			// generate passcode
+			passcode, err := otp.GeneratePasscode(*userBase.OtpSecret)
+			if err != nil {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+
+			// send passcode to email
+			to := *userBase.Email
+			fromAddress := "calla.nkust@gmail.com"
+			fromName := "PMIS平台"
+			mailPwd := "pfyj mkee hpgy sqlj"
+			subject := "【PMIS平台】系統驗證碼(請勿回覆此郵件)"
+			message := fmt.Sprintf(
+				"親愛的用戶：\n"+
+					"感謝您使用PMIS專案管理平台，請於30秒內輸入以下驗證碼。\n\n"+
+					"驗證碼：%s\n"+
+					"祝您使用愉快！\n\n"+
+					"<注意>\n"+
+					"*此郵件由系統自動發出，請勿直接回覆。", passcode)
+
+			err = email.SendEmailWithText(to, fromAddress, fromName, mailPwd, subject, message)
+			if err != nil {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+
+			// mask email
+			obscuredEmail := masker.Email(*userBase.Email)
+			output = obscuredEmail
+		} else {
+			output = "Please use authenticator to login."
+		}
 	}
 
-	// send passcode to email
-	to := *userBase.Email
-	fromAddress := "calla.nkust@gmail.com"
-	fromName := "PMIS平台"
-	mailPwd := "pfyj mkee hpgy sqlj"
-	subject := "【PMIS平台】系統驗證碼(請勿回覆此郵件)"
-	message := fmt.Sprintf(
-		"親愛的用戶：\n"+
-			"感謝您使用PMIS專案管理平台，請於30秒內輸入以下驗證碼。\n\n"+
-			"驗證碼：%s\n"+
-			"祝您使用愉快！\n\n"+
-			"<注意>\n"+
-			"*此郵件由系統自動發出，請勿直接回覆。", passcode)
-
-	err = email.SendEmailWithText(to, fromAddress, fromName, mailPwd, subject, message)
-	if err != nil {
-		log.Error(err)
-		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-	}
-
-	// mask email
-	obscuredEmail := masker.Email(*userBase.Email)
-
-	return code.Successful, code.GetCodeMessage(code.Successful, obscuredEmail)
+	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
 
 func (m *manager) Verify(input *loginModel.Verify) (int, any) {
