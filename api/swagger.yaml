@@ -1599,6 +1599,14 @@ definitions:
         description: 是否啟用
         type: boolean
     type: object
+  users.EnableAuthenticator:
+    properties:
+      passcode:
+        description: 驗證碼
+        type: string
+    required:
+    - passcode
+    type: object
   users.Filter:
     properties:
       email:
@@ -1759,6 +1767,9 @@ definitions:
       email:
         description: 使用者電子郵件
         type: string
+      is_authenticator:
+        description: 是否使用驗證器
+        type: boolean
       is_enabled:
         description: 是否啟用
         type: boolean
@@ -4818,6 +4829,56 @@ paths:
       summary: 取得單一使用者
       tags:
       - user
+  /users/authenticator/current-user:
+    post:
+      consumes:
+      - application/json
+      description: 啟用驗證器
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 啟用驗證器
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/users.EnableAuthenticator'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 啟用驗證器
+      tags:
+      - user
   /users/check-duplicate:
     post:
       consumes:
@@ -4910,7 +4971,7 @@ paths:
     patch:
       consumes:
       - application/json
-      description: 更新單一使用者
+      description: 更新當前使用者
       parameters:
       - description: JWE Token
         in: header
@@ -4953,7 +5014,7 @@ paths:
                 detailed:
                   type: string
               type: object
-      summary: 更新單一使用者
+      summary: 更新當前使用者
       tags:
       - user
   /users/enable/{id}:
@@ -5022,7 +5083,7 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: 啟用或停用使用者
+      - description: 啟用當前使用者
         in: body
         name: '*'
         required: true

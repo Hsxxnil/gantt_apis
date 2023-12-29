@@ -13,7 +13,7 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "passcode": "815563"
+  "passcode": "617265"
 }
 
 > {%
@@ -65,6 +65,11 @@ Authorization: Bearer {{accessToken}}
       "dept_id": "39a2d69c-452b-410f-8753-f8a92802c3a2",
       "job_title": "工程師",
       "is_supervisor": false
+    },
+    {
+      "dept_id": "57714348-a870-446d-83d4-0ab5b24309cd",
+      "job_title": "工程師",
+      "is_supervisor": false
     }
   ]
 }
@@ -106,4 +111,13 @@ Content-Type: application/json
     "user_name": "",
     "email": "REMOVED"
   }
+}
+
+### EnableAuthenticator
+POST {{host}}/hta-gantt/v1.0/users/authenticator/current-user
+Content-Type: application/json
+Authorization: Bearer REMOVEDREMOVED
+
+{
+  "passcode": "12345"
 }

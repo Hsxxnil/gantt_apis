@@ -162,6 +162,8 @@ type Update struct {
 	OtpAuthUrl *string `json:"otp_auth_url,omitempty"`
 	// 是否啟用
 	IsEnabled *bool `json:"is_enabled"`
+	// 是否使用驗證器
+	IsAuthenticator *bool `json:"is_authenticator"`
 	// affiliations
 	Affiliations []*affiliations.Create `json:"affiliations,omitempty"`
 	// 更新者
@@ -192,4 +194,12 @@ type Enable struct {
 type IsDuplicate struct {
 	// 是否重複
 	IsDuplicate bool `json:"is_duplicate"`
+}
+
+// EnableAuthenticator struct is used to enable authenticator
+type EnableAuthenticator struct {
+	// 表ID
+	ID string `json:"id,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
+	// 驗證碼
+	Passcode string `json:"passcode,omitempty" binding:"required" validate:"required"`
 }

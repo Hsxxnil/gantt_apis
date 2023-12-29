@@ -27,6 +27,7 @@ type Control interface {
 	EnableByCurrent(ctx *gin.Context)
 	ResetPassword(ctx *gin.Context)
 	Duplicate(ctx *gin.Context)
+	EnableAuthenticator(ctx *gin.Context)
 }
 
 type control struct {
@@ -181,8 +182,8 @@ func (c *control) Delete(ctx *gin.Context) {
 }
 
 // Update
-// @Summary 更新單一使用者
-// @description 更新單一使用者
+// @Summary 更新當前使用者
+// @description 更新當前使用者
 // @Tags user
 // @version 1.0
 // @Accept json
@@ -245,7 +246,7 @@ func (c *control) Enable(ctx *gin.Context) {
 // @Accept json
 // @produce json
 // @param Authorization header string  true "JWE Token"
-// @param * body users.Enable true "啟用或停用使用者"
+// @param * body users.Enable true "啟用當前使用者"
 // @success 200 object code.SuccessfulMessage{body=string} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
@@ -312,5 +313,31 @@ func (c *control) Duplicate(ctx *gin.Context) {
 	}
 
 	httpCode, codeMessage := c.Manager.Duplicate(input)
+	ctx.JSON(httpCode, codeMessage)
+}
+
+// EnableAuthenticator
+// @Summary 啟用驗證器
+// @description 啟用驗證器
+// @Tags user
+// @version 1.0
+// @Accept json
+// @produce json
+// @param Authorization header string  true "JWE Token"
+// @param * body users.EnableAuthenticator true "啟用驗證器"
+// @success 200 object code.SuccessfulMessage{body=string} "成功後返回的值"
+// @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
+// @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
+// @Router /users/authenticator/current-user [post]
+func (c *control) EnableAuthenticator(ctx *gin.Context) {
+	input := &userModel.EnableAuthenticator{}
+	input.ID = ctx.MustGet("user_id").(string)
+	if err := ctx.ShouldBindJSON(input); err != nil {
+		log.Error(err)
+		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
+		return
+	}
+
+	httpCode, codeMessage := c.Manager.EnableAuthenticator(input)
 	ctx.JSON(httpCode, codeMessage)
 }
