@@ -227,6 +227,10 @@ func (s *storage) Update(input *model.Base) (err error) {
 		data["is_enabled"] = input.IsEnabled
 	}
 
+	if input.IsAuthenticator != nil {
+		data["is_authenticator"] = input.IsAuthenticator
+	}
+
 	if input.UpdatedBy != nil {
 		data["updated_by"] = input.UpdatedBy
 	}

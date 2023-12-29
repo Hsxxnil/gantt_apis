@@ -13,7 +13,7 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "passcode": "617265"
+  "passcode": "251127"
 }
 
 > {%
@@ -116,8 +116,8 @@ Content-Type: application/json
 ### EnableAuthenticator
 POST {{host}}/hta-gantt/v1.0/users/authenticator/current-user
 Content-Type: application/json
-Authorization: Bearer REMOVEDREMOVED
+Authorization: Bearer {{accessToken}}
 
 {
-  "passcode": "12345"
+  "passcode": "060197"
 }
