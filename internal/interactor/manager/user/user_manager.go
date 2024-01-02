@@ -371,26 +371,28 @@ func (m *manager) Update(trx *gorm.DB, input *userModel.Update) (int, any) {
 		input.ResourceUUID = resourceID
 	}
 
-	// sync delete affiliation
-	err = m.AffiliationService.WithTrx(trx).Delete(&affiliationModel.Field{
-		UserID: userBase.ID,
-	})
-	if err != nil {
-		log.Error(err)
-		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-	}
-
-	// sync create affiliation
-	for _, affiliation := range input.Affiliations {
-		_, err = m.AffiliationService.WithTrx(trx).Create(&affiliationModel.Create{
-			UserID:    *userBase.ID,
-			DeptID:    affiliation.DeptID,
-			JobTitle:  affiliation.JobTitle,
-			CreatedBy: *input.UpdatedBy,
+	if len(input.Affiliations) > 0 {
+		// sync delete affiliation
+		err = m.AffiliationService.WithTrx(trx).Delete(&affiliationModel.Field{
+			UserID: userBase.ID,
 		})
 		if err != nil {
 			log.Error(err)
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+
+		// sync create affiliation
+		for _, affiliation := range input.Affiliations {
+			_, err = m.AffiliationService.WithTrx(trx).Create(&affiliationModel.Create{
+				UserID:    *userBase.ID,
+				DeptID:    affiliation.DeptID,
+				JobTitle:  affiliation.JobTitle,
+				CreatedBy: *input.UpdatedBy,
+			})
+			if err != nil {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
 		}
 	}
 
