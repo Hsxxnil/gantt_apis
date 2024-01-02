@@ -146,7 +146,7 @@ func (c *control) Register(ctx *gin.Context) {
 	input := &loginModel.Register{}
 	// set default value (created by admin & role id is user)
 	input.CreatedBy = "7c0595cf-2d9a-4e77-858c-a33f9d1e8452"
-	input.RoleID = "d56fc184-9441-4396-be6c-d48580650171"
+	input.RoleID = "bcf2a32f-e801-4ae8-bc03-07c593ce626f"
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
