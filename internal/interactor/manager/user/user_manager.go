@@ -2,14 +2,19 @@ package user
 
 import (
 	"errors"
+	"fmt"
 	"github.com/bytedance/sonic"
+	"github.com/ggwhite/go-masker"
 	affiliationModel "hta/internal/interactor/models/affiliations"
 	departmentModel "hta/internal/interactor/models/departments"
+	jwxModel "hta/internal/interactor/models/jwx"
 	resourceModel "hta/internal/interactor/models/resources"
+	"hta/internal/interactor/pkg/email"
 	"hta/internal/interactor/pkg/otp"
 	"hta/internal/interactor/pkg/util"
 	affiliationService "hta/internal/interactor/service/affiliation"
 	departmentService "hta/internal/interactor/service/department"
+	jwxService "hta/internal/interactor/service/jwx"
 	resourceService "hta/internal/interactor/service/resource"
 
 	userModel "hta/internal/interactor/models/users"
@@ -31,6 +36,8 @@ type Manager interface {
 	ResetPassword(input *userModel.ResetPassword) (int, any)
 	Duplicate(input *userModel.Field) (int, any)
 	EnableAuthenticator(input *userModel.EnableAuthenticator) (int, any)
+	ChangeEmail(input *userModel.ChangeEmail) (int, any)
+	VerifyEmail(input *userModel.VerifyEmail) (int, any)
 }
 
 type manager struct {
@@ -38,6 +45,7 @@ type manager struct {
 	AffiliationService affiliationService.Service
 	DepartmentService  departmentService.Service
 	ResourceService    resourceService.Service
+	JwxService         jwxService.Service
 }
 
 func Init(db *gorm.DB) Manager {
@@ -46,6 +54,7 @@ func Init(db *gorm.DB) Manager {
 		AffiliationService: affiliationService.Init(db),
 		DepartmentService:  departmentService.Init(db),
 		ResourceService:    resourceService.Init(db),
+		JwxService:         jwxService.Init(),
 	}
 }
 
@@ -529,4 +538,142 @@ func (m *manager) EnableAuthenticator(input *userModel.EnableAuthenticator) (int
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, userBase.ID)
+}
+
+func (m *manager) ChangeEmail(input *userModel.ChangeEmail) (int, any) {
+	userBase, err := m.UserService.GetBySingle(&userModel.Field{
+		ID: input.ID,
+	})
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, err.Error())
+		}
+
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// determine if the email is duplicate
+	quantity, _ := m.UserService.GetByQuantity(&userModel.Field{
+		UserName: util.PointerString(input.Email),
+	})
+
+	if quantity > 0 {
+		log.Info("UserName already exists. Email: ", input.Email)
+		return code.BadRequest, code.GetCodeMessage(code.BadRequest, "User already exists.")
+	}
+
+	// generate access token
+	accessToken, err := m.JwxService.CreateAccessToken(&jwxModel.JWX{
+		UserID:     userBase.ID,
+		Email:      util.PointerString(input.Email),
+		Expiration: util.PointerInt64(30),
+	})
+
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// send link to email
+	to := input.Email
+	fromAddress := "calla.nkust@gmail.com"
+	fromName := "PMIS平台"
+	mailPwd := "pfyj mkee hpgy sqlj"
+	subject := "【PMIS平台】請驗證信箱(請勿回覆此郵件)"
+	domain := input.Domain
+	httpMod := "https"
+	// modify localhost port and httpMod for testing
+	if input.Domain == "localhost" {
+		if input.Port == "" {
+			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "Invalid port.")
+		}
+		domain = fmt.Sprintf("%s:%s", input.Domain, input.Port)
+		httpMod = "http"
+	}
+	resetPasswordLink := fmt.Sprintf("%s://%s/email_verify/%s", httpMod, domain, accessToken.AccessToken)
+	message := fmt.Sprintf(`
+    <html>
+        <head>
+            <style>
+                body {
+                    font-family: 'Arial', sans-serif;
+                    text-align: center;
+                    margin: 20px;
+                }
+
+                p {
+                    margin-bottom: 10px;
+                }
+
+                a {
+                    text-decoration: none;
+                }
+
+                button {
+                    padding: 10px;
+                    background-color: #4CAF50;
+                    color: white;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    text-decoration: none;
+                }
+
+                button:hover {
+                    background-color: #45a049;
+                }
+            </style>
+        </head>
+        <body>
+            <p>親愛的用戶：</p>
+            <p>感謝您使用本平台，請點擊以下連結驗證信箱：</p>
+            <a href="%s">
+                <button>
+                    驗證信箱
+                </button>
+            </a>
+            <br>
+            <p>祝您使用愉快！</p>
+            <p><注意></p>
+            <p>*此郵件由系統自動發出，請勿直接回覆。</p>
+            <p>*此連結有效期限為30分鐘。</p>
+        </body>
+    </html>
+`, resetPasswordLink)
+
+	err = email.SendEmailWithHtml(to, fromAddress, fromName, mailPwd, subject, message)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// mask email
+	obscuredEmail := masker.Email(input.Email)
+
+	return code.Successful, code.GetCodeMessage(code.Successful, obscuredEmail)
+}
+
+func (m *manager) VerifyEmail(input *userModel.VerifyEmail) (int, any) {
+	// transform input to Update struct
+	update := &userModel.Update{}
+	inputByte, err := sonic.Marshal(input)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	err = sonic.Unmarshal(inputByte, &update)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	err = m.UserService.Update(update)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	return code.Successful, code.GetCodeMessage(code.Successful, "change email ok!")
 }

@@ -3,7 +3,7 @@ POST {{host}}/hta-gantt/v1.0/login
 Content-Type: application/json
 
 {
-  "user_name": "hsxxnil",
+  "user_name": "admin",
   "password": "12345"
 }
 
@@ -12,8 +12,8 @@ POST {{host}}/hta-gantt/v1.0/verify
 Content-Type: application/json
 
 {
-  "user_name": "hsxxnil",
-  "passcode": "251127"
+  "user_name": "admin",
+  "passcode": "118857"
 }
 
 > {%
@@ -84,12 +84,12 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### EnableByCurrent
-PATCH {{host}}/hta-gantt/v1.0/users/enable/current-user
+POST {{host}}/hta-gantt/v1.0/users/enable/current-user
 Accept: application/json
 Authorization: Bearer eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwidHlwZSI6IkpXRSIsInppcCI6IkRFRiJ9.gUvQB_iQfDN7UO6y8PXK3wGgsiOUWccipCMPTGcXNwlLyPloBc5WoYx2wRW0wuetLMjuPaBIPTYOLrvcVXG8uh6PjVwKiBZBrSXVbMm2gwnfKvy7oekxQurf-DjKNKjv8cBpnMikdyd4RDK-WhT3B4FLxIU1iH1k_o36q-yY3uzxo-KogOHEMIzqwcL54clbmWSl3a6pWKuyD8dFXIhe_xJOlro_7LPgryHUnezgC8MYR-TbrpEeOgcY8WxbqpudW2t3cf4YWTG8TkDOEwP_tKtD5JNvO9YjcEc4OuJgNkU4gvfmWziZ-pK3sfldNI46q_vA0JvPvOsXizgTCnqUhw.YzivYjQPqQ4yI688yyNShg.8B-HeQkUkMAn_ukld6tnll9FNkwCHf9k3CwBiy1jKVfuIwXXtq29MTi-ebcO1yHThHOB26rU87KJZdSVxNR-JQNLZFvc85AOrEso7baImqJMfupa9EnoAAK-MGmo0XGl02LRWph6NgX4a7ndF8FExUsuslfDutvd4POEdbSrP75ZTCqHdG4hpQdE-61ETxUr.Hb4W9qJSqrW1ajFVh-xGUhtWpUD0OFIDP3r1PKK-1iI
 
 ### ResetPassword
-PATCH {{host}}/hta-gantt/v1.0/users/reset-password/current-user
+POST {{host}}/hta-gantt/v1.0/users/reset-password/current-user
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwidHlwZSI6IkpXRSIsInppcCI6IkRFRiJ9.R7sM65KxoE1tm5wKjs2r3st6OIZlYVJ9eCuA0Dez80vUmiG6lInER8tWBXpSYC6QsH46h3R9Iz_1Bqpp5OGscFKrm9QVvMQXEvAlym6bRd1RRsz-OyE0i-uSQvJEYvQZX6FA_aQvA51EFAg-dhBTNMZYY4BhlvQIPeVFbWr80KSQmnolbJAiA2dMYNb1F9Swc1Tb6Qjpr-IohLvArO_ogdhdokU5QuQI4BYMt7r-Uo2m5i0LXibuC5VHG0UZW1xNDWd2tp1OnntqDL-EaaunZP__KQ4mmPQ8P6OgATaHiQ2Gzk94hElQFtt7zN9b9Ei7MSCuHzwmbQwmi-mb8shgkg.W0c50itwJ9PxqOI4XA9uBg.ShRc4US4iF11vaCxL6ub1cqzxIA9-1W-jt7RekXNh8OyivIt2oI-uQxC4ySJ6qbgCuwehB6CDkp9CNc8ZERVdcDeg02f57j1yoCYy7vduZqVK28OMMmvrRybfqagMpixf3_3UlnhqtY0958-rIDqmiNaw8lafWkiShnLOPccMx9hsTfBE_P5mbHzPifR25omEXOFaVUlp2zKOgBaDpd02uMja7LwBjetU8sTvjwGnU4.r_ewUHPkOq-B1o3OtuWbrnU9XLtEflM7ryG9jiEVoAc
 
@@ -121,3 +121,19 @@ Authorization: Bearer {{accessToken}}
 {
   "passcode": "060197"
 }
+
+### ChangeEmail
+POST {{host}}/hta-gantt/v1.0/users/change-email/current-user
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "email": "sherry90122554@gmail.com",
+  "domain": "localhost",
+  "port": "4200"
+}
+
+### VerifyEmail
+POST {{host}}/hta-gantt/v1.0/users/verify-email/current-user
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMjU2Q0JDLUhTNTEyIiwidHlwZSI6IkpXRSIsInppcCI6IkRFRiJ9.kq3EPHmt78jw_PaUGYJXGU_NzjetMku-hjfjIhc6wNIEc1M8jymagcNCASkgFU3da84KM22DiJcatR6LxBUYqQn-2sEA5gdANqoYcPmQmJukKWZK6t_8XudJ6x3iFnO-L_qM2TCHDjA5-d44o9EGSURiYTpMhog40DrrWXYHBXlErfO1pIu25my-5z7LeLBPjJYC9QYIHMsYpPczJmm6oQvQYThdQkJwxIltGkRYqYbsA-eMa4mtImYJhST8jr_xvjFrRof0iBZiBPADmQoQZ8SeZ7sVa3d37KotC4PniI2--eRtYeE2ilnhXX1YiKzC7rjHGKWGoTUB3qzwpzEKwA.2dkiViazosBafM8jk8SBTA.wZMOq1qblVJrBCfNmfFLUibkccjbcIY7DveQFNPkuHBsyolzc1yj8Zw7VWVMxopY-lGk6-GVbmTIxknIL8KpFIhjZYvzo533phQVyOY59ZXLc40rlTRcDcSbQi2xxKkckxUtcsm8bRVzNotQlvXgJigScUcUxI0WEJmvRZQY0RohUhIL13VQjmduRSExQXqZ.vHMiO7d6JX98cseiYoMthE8JZpCA2NW4KNe0Ja8I0GE

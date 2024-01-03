@@ -28,6 +28,8 @@ type Control interface {
 	ResetPassword(ctx *gin.Context)
 	Duplicate(ctx *gin.Context)
 	EnableAuthenticator(ctx *gin.Context)
+	ChangeEmail(ctx *gin.Context)
+	VerifyEmail(ctx *gin.Context)
 }
 
 type control struct {
@@ -250,7 +252,7 @@ func (c *control) Enable(ctx *gin.Context) {
 // @success 200 object code.SuccessfulMessage{body=string} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
-// @Router /users/enable/current-user [patch]
+// @Router /users/enable/current-user [post]
 func (c *control) EnableByCurrent(ctx *gin.Context) {
 	input := &userModel.Enable{}
 	input.ID = ctx.MustGet("user_id").(string)
@@ -277,7 +279,7 @@ func (c *control) EnableByCurrent(ctx *gin.Context) {
 // @success 200 object code.SuccessfulMessage{body=string} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
-// @Router /users/reset-password/current-user [patch]
+// @Router /users/reset-password/current-user [post]
 func (c *control) ResetPassword(ctx *gin.Context) {
 	input := &userModel.ResetPassword{}
 	input.ID = ctx.MustGet("user_id").(string)
@@ -339,5 +341,58 @@ func (c *control) EnableAuthenticator(ctx *gin.Context) {
 	}
 
 	httpCode, codeMessage := c.Manager.EnableAuthenticator(input)
+	ctx.JSON(httpCode, codeMessage)
+}
+
+// ChangeEmail
+// @Summary 更換電子郵件
+// @description 更換電子郵件
+// @Tags user
+// @version 1.0
+// @Accept json
+// @produce json
+// @param Authorization header string  true "JWE Token"
+// @param * body users.ChangeEmail true "更換電子郵件"
+// @success 200 object code.SuccessfulMessage{body=string} "成功後返回的值"
+// @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
+// @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
+// @Router /users/change-email/current-user [post]
+func (c *control) ChangeEmail(ctx *gin.Context) {
+	input := &userModel.ChangeEmail{}
+	input.ID = ctx.MustGet("user_id").(string)
+	if err := ctx.ShouldBindJSON(input); err != nil {
+		log.Error(err)
+		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
+		return
+	}
+
+	httpCode, codeMessage := c.Manager.ChangeEmail(input)
+	ctx.JSON(httpCode, codeMessage)
+}
+
+// VerifyEmail
+// @Summary 驗證電子郵件
+// @description 驗證電子郵件
+// @Tags user
+// @version 1.0
+// @Accept json
+// @produce json
+// @param Authorization header string  true "JWE Token"
+// @success 200 object code.SuccessfulMessage{body=string} "成功後返回的值"
+// @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
+// @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
+// @Router /users/verify-email/current-user [post]
+func (c *control) VerifyEmail(ctx *gin.Context) {
+	input := &userModel.VerifyEmail{}
+	input.ID = ctx.MustGet("user_id").(string)
+	input.Email = util.PointerString(ctx.MustGet("email").(string))
+	input.UpdatedBy = util.PointerString(ctx.MustGet("user_id").(string))
+	if err := ctx.ShouldBindQuery(input); err != nil {
+		log.Error(err)
+		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
+		return
+	}
+
+	httpCode, codeMessage := c.Manager.VerifyEmail(input)
 	ctx.JSON(httpCode, codeMessage)
 }

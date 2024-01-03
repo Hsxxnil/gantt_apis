@@ -153,7 +153,7 @@ type Update struct {
 	// 使用者舊密碼
 	OldPassword *string `json:"old_password,omitempty"`
 	// 使用者電子郵件
-	Email *string `json:"email,omitempty"`
+	Email *string `json:"email,omitempty" swaggerignore:"true"`
 	// 角色ID
 	RoleID *string `json:"role_id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
 	// otp secret
@@ -202,4 +202,26 @@ type EnableAuthenticator struct {
 	ID string `json:"id,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 	// 驗證碼
 	Passcode string `json:"passcode,omitempty" binding:"required" validate:"required"`
+}
+
+// ChangeEmail struct is used to change email
+type ChangeEmail struct {
+	// 表ID
+	ID string `json:"id,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
+	// 使用者電子郵件
+	Email string `json:"email,omitempty" binding:"required" validate:"required"`
+	// 網域
+	Domain string `json:"domain,omitempty" binding:"required" validate:"required"`
+	// 連接埠
+	Port string `json:"port,omitempty"`
+}
+
+// VerifyEmail struct is used to verify email
+type VerifyEmail struct {
+	// 表ID
+	ID string `json:"id,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
+	// 使用者電子郵件
+	Email *string `json:"email,omitempty" binding:"required" validate:"required"`
+	// 更新者
+	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }

@@ -10,6 +10,8 @@ type JWX struct {
 	UserID *string `json:"user_id,omitempty"`
 	// 角色
 	Role *string `json:"role,omitempty"`
+	// 電子郵件
+	Email *string `json:"email,omitempty"`
 	// 時效
 	Expiration *int64 `json:"expiration,omitempty" swaggerignore:"true"`
 }
