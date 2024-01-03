@@ -153,7 +153,7 @@ type Update struct {
 	// 使用者舊密碼
 	OldPassword *string `json:"old_password,omitempty"`
 	// 使用者電子郵件
-	Email *string `json:"email,omitempty"`
+	Email *string `json:"email,omitempty" swaggerignore:"true"`
 	// 角色ID
 	RoleID *string `json:"role_id,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
 	// otp secret

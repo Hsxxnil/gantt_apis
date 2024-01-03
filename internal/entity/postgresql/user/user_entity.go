@@ -160,6 +160,10 @@ func (s *storage) GetByQuantity(input *model.Base) (quantity int64, err error) {
 		query.Where("resource_uuid = ?", input.ResourceUUID)
 	}
 
+	if input.Email != nil {
+		query.Where("email = ?", input.Email)
+	}
+
 	// filter
 	isFiltered := false
 	filter := s.db.Model(&model.Table{})
