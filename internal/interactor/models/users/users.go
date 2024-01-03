@@ -203,3 +203,15 @@ type EnableAuthenticator struct {
 	// 驗證碼
 	Passcode string `json:"passcode,omitempty" binding:"required" validate:"required"`
 }
+
+// ChangeEmail struct is used to change email
+type ChangeEmail struct {
+	// 表ID
+	ID string `json:"id,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
+	// 使用者電子郵件
+	Email *string `json:"email,omitempty" binding:"required" validate:"required"`
+	// 網域
+	Domain string `json:"domain,omitempty" binding:"required" validate:"required"`
+	// 連接埠
+	Port string `json:"port,omitempty"`
+}
