@@ -3,7 +3,7 @@ POST {{host}}/hta-gantt/v1.0/login
 Content-Type: application/json
 
 {
-  "user_name": "hsxxnil",
+  "user_name": "admin",
   "password": "12345"
 }
 
@@ -12,8 +12,8 @@ POST {{host}}/hta-gantt/v1.0/verify
 Content-Type: application/json
 
 {
-  "user_name": "hsxxnil",
-  "passcode": "251127"
+  "user_name": "admin",
+  "passcode": "118857"
 }
 
 > {%
@@ -84,12 +84,12 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### EnableByCurrent
-PATCH {{host}}/hta-gantt/v1.0/users/enable/current-user
+POST {{host}}/hta-gantt/v1.0/users/enable/current-user
 Accept: application/json
 Authorization: Bearer REMOVED
 
 ### ResetPassword
-PATCH {{host}}/hta-gantt/v1.0/users/reset-password/current-user
+POST {{host}}/hta-gantt/v1.0/users/reset-password/current-user
 Content-Type: application/json
 Authorization: Bearer REMOVEDREMOVED
 
@@ -121,3 +121,19 @@ Authorization: Bearer {{accessToken}}
 {
   "passcode": "060197"
 }
+
+### ChangeEmail
+POST {{host}}/hta-gantt/v1.0/users/change-email/current-user
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "email": "REMOVED",
+  "domain": "localhost",
+  "port": "4200"
+}
+
+### VerifyEmail
+POST {{host}}/hta-gantt/v1.0/users/verify-email/current-user
+Accept: application/json
+Authorization: Bearer REMOVED

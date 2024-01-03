@@ -209,9 +209,19 @@ type ChangeEmail struct {
 	// 表ID
 	ID string `json:"id,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 	// 使用者電子郵件
-	Email *string `json:"email,omitempty" binding:"required" validate:"required"`
+	Email string `json:"email,omitempty" binding:"required" validate:"required"`
 	// 網域
 	Domain string `json:"domain,omitempty" binding:"required" validate:"required"`
 	// 連接埠
 	Port string `json:"port,omitempty"`
+}
+
+// VerifyEmail struct is used to verify email
+type VerifyEmail struct {
+	// 表ID
+	ID string `json:"id,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
+	// 使用者電子郵件
+	Email *string `json:"email,omitempty" binding:"required" validate:"required"`
+	// 更新者
+	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }
