@@ -37,6 +37,7 @@ type Manager interface {
 	Duplicate(input *userModel.Field) (int, any)
 	EnableAuthenticator(input *userModel.EnableAuthenticator) (int, any)
 	ChangeEmail(input *userModel.ChangeEmail) (int, any)
+	VerifyEmail(input *userModel.VerifyEmail) (int, any)
 }
 
 type manager struct {
@@ -540,21 +541,32 @@ func (m *manager) EnableAuthenticator(input *userModel.EnableAuthenticator) (int
 }
 
 func (m *manager) ChangeEmail(input *userModel.ChangeEmail) (int, any) {
-	// determine if the email is duplicate
-	if input.Email != nil {
-		quantity, _ := m.UserService.GetByQuantity(&userModel.Field{
-			UserName: input.Email,
-		})
-
-		if quantity > 0 {
-			log.Info("UserName already exists. Email: ", input.Email)
-			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "User already exists.")
+	userBase, err := m.UserService.GetBySingle(&userModel.Field{
+		ID: input.ID,
+	})
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, err.Error())
 		}
+
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// determine if the email is duplicate
+	quantity, _ := m.UserService.GetByQuantity(&userModel.Field{
+		UserName: util.PointerString(input.Email),
+	})
+
+	if quantity > 0 {
+		log.Info("UserName already exists. Email: ", input.Email)
+		return code.BadRequest, code.GetCodeMessage(code.BadRequest, "User already exists.")
 	}
 
 	// generate access token
 	accessToken, err := m.JwxService.CreateAccessToken(&jwxModel.JWX{
-		Email:      input.Email,
+		UserID:     userBase.ID,
+		Email:      util.PointerString(input.Email),
 		Expiration: util.PointerInt64(30),
 	})
 
@@ -630,14 +642,38 @@ func (m *manager) ChangeEmail(input *userModel.ChangeEmail) (int, any) {
     </html>
 `, resetPasswordLink)
 
-	err = email.SendEmailWithHtml(*to, fromAddress, fromName, mailPwd, subject, message)
+	err = email.SendEmailWithHtml(to, fromAddress, fromName, mailPwd, subject, message)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
 	// mask email
-	obscuredEmail := masker.Email(*input.Email)
+	obscuredEmail := masker.Email(input.Email)
 
 	return code.Successful, code.GetCodeMessage(code.Successful, obscuredEmail)
+}
+
+func (m *manager) VerifyEmail(input *userModel.VerifyEmail) (int, any) {
+	// transform input to Update struct
+	update := &userModel.Update{}
+	inputByte, err := sonic.Marshal(input)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	err = sonic.Unmarshal(inputByte, &update)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	err = m.UserService.Update(update)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	return code.Successful, code.GetCodeMessage(code.Successful, "change email ok!")
 }
