@@ -15,6 +15,7 @@ func GenerateOTP(organization, username string) (otpSecret, optAuthUrl string, e
 		AccountName: username,
 		SecretSize:  15,
 		Period:      60,
+		Algorithm:   otp.AlgorithmSHA256,
 	})
 
 	if err != nil {
@@ -31,7 +32,7 @@ func GeneratePasscode(secret string) (passcode string, err error) {
 		Period:    60,
 		Skew:      1,
 		Digits:    otp.DigitsSix,
-		Algorithm: otp.AlgorithmSHA1,
+		Algorithm: otp.AlgorithmSHA256,
 	})
 	if err != nil {
 		log.Error(err)
@@ -47,7 +48,7 @@ func ValidateOTP(passcode, otpSecret string) (otpValid bool, err error) {
 		Period:    60,
 		Skew:      1,
 		Digits:    otp.DigitsSix,
-		Algorithm: otp.AlgorithmSHA1,
+		Algorithm: otp.AlgorithmSHA256,
 	})
 	if err != nil {
 		log.Error(err)
