@@ -540,6 +540,18 @@ func (m *manager) EnableAuthenticator(input *userModel.EnableAuthenticator) (int
 }
 
 func (m *manager) ChangeEmail(input *userModel.ChangeEmail) (int, any) {
+	// determine if the email is duplicate
+	if input.Email != nil {
+		quantity, _ := m.UserService.GetByQuantity(&userModel.Field{
+			UserName: input.Email,
+		})
+
+		if quantity > 0 {
+			log.Info("UserName already exists. Email: ", input.Email)
+			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "User already exists.")
+		}
+	}
+
 	// generate access token
 	accessToken, err := m.JwxService.CreateAccessToken(&jwxModel.JWX{
 		Email:      input.Email,
