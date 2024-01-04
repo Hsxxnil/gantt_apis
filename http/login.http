@@ -42,9 +42,9 @@ POST {{host}}/hta-gantt/v1.0/register
 Content-Type: application/json
 
 {
-  "user_name": "hsxxnil",
-  "password": "12345",
-  "email": "",
+  "user_name": "test",
+  "password": "a12312312",
+  "email": "abc@gmail.com",
   "domain": "localhost",
   "port": "4200"
 }
