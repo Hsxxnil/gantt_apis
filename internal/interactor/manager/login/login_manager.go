@@ -562,24 +562,55 @@ func (m *manager) Forget(input *loginModel.Forget) (int, any) {
 
 func (m *manager) Register(input *loginModel.Register) (int, any) {
 	// determine if the username is duplicate
-	quantity, _ := m.UserService.GetByQuantity(&userModel.Field{
-		UserName: util.PointerString(input.UserName),
-		Email:    util.PointerString(input.Email),
+	quantity, err := m.UserService.GetByQuantity(&userModel.Field{
+		UserName:  util.PointerString(input.UserName),
+		Email:     util.PointerString(input.Email),
+		IsEnabled: util.PointerBool(true),
 	})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
 
 	if quantity > 0 {
 		log.Info("User already exists. UserName: ", input.UserName, "email: ", input.Email)
 		return code.BadRequest, code.GetCodeMessage(code.BadRequest, "User already exists.")
 	}
 
+	// if the user is existed, but not enabled, then delete it
+	userBase, err := m.UserService.GetBySingle(&userModel.Field{
+		UserName:  util.PointerString(input.UserName),
+		Email:     util.PointerString(input.Email),
+		IsEnabled: util.PointerBool(false),
+	})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
+	// delete user
+	if userBase != nil {
+		err = m.UserService.Delete(&userModel.Update{
+			ID: *userBase.ID,
+		})
+		if err != nil {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
 	// generate otp secret & otp auth url
-	otpSecret, optAuthURL, err := otp.GenerateOTP("hta", input.UserName)
+	otpSecret, optAuthURL, err := otp.GenerateOTP("pmis", input.UserName)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	userBase, err := m.UserService.Create(&userModel.Create{
+	userBase, err = m.UserService.Create(&userModel.Create{
 		UserName:   input.UserName,
 		Password:   input.Password,
 		Email:      input.Email,
