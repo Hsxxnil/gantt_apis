@@ -84,15 +84,78 @@ func (m *manager) Login(input *loginModel.Login) (int, any) {
 		fromName := "PMIS平台"
 		mailPwd := "REMOVED"
 		subject := "【PMIS平台】系統驗證碼(請勿回覆此郵件)"
-		message := fmt.Sprintf(
-			"親愛的用戶：\n"+
-				"感謝您使用PMIS專案管理平台，請於30秒內輸入以下驗證碼。\n\n"+
-				"驗證碼：%s\n"+
-				"祝您使用愉快！\n\n"+
-				"<注意>\n"+
-				"*此郵件由系統自動發出，請勿直接回覆。", passcode)
+		message := fmt.Sprintf(`
+		<html lang="zh-TW">
+		<head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+			<style>
+				body {
+					font-family: 'Arial', sans-serif;
+					background-color: #fff;
+					color: #000;
+				}
+		
+				.container {
+					max-width: 450px;
+					margin: 0 auto;
+					padding: 20px;
+					border-radius: 5px;
+					border: 1px solid #cccccc;
+					position: relative;
+					color: #000;
+				}
+		
+				.header {
+					text-align: center;
+					color: #000;
+				}
+		
+		
+				.footerMsg{
+					font-size: small;
+					color: #737171;
+				}
+		
+				#passcodeContainer {
+					text-align: center;
+					background-color: #f1eeec;
+					padding: 20px;
+				}
+		
+				.passcode {
+					font-size: 50px;
+					color: #032942;
+					letter-spacing: 10px;
+					display: block;
+					margin-bottom: 10px;
+				}
+		
+				.expire {
+					font-size: 15px;
+					color: #737171;
+					display: block;
+				}
+			</style>
+		</head>
+		<body>
+		<div class="header">
+			<h2>系統驗證碼</h2>
+		</div>
+		<div class="container">
+			<p>親愛的用戶：</p>
+			<p>感謝您使用PMIS專案管理平台，請輸入以下驗證碼。</p>
+			<div id="passcodeContainer">
+				<label class="passcode">%s</label>
+				<label class="expire">時效為60秒</label>
+			</div>
+			<p>祝您使用愉快！</p>
+			<p class="footerMsg">注意：此郵件由系統自動發出，請勿直接回覆。</p>
+		</div>
+		</body>
+		</html>
+		`, passcode)
 
-		err = email.SendEmailWithText(to, fromAddress, fromName, mailPwd, subject, message)
+		err = email.SendEmailWithHtml(to, fromAddress, fromName, mailPwd, subject, message)
 		if err != nil {
 			log.Error(err)
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -120,15 +183,77 @@ func (m *manager) Login(input *loginModel.Login) (int, any) {
 			fromName := "PMIS平台"
 			mailPwd := "REMOVED"
 			subject := "【PMIS平台】系統驗證碼(請勿回覆此郵件)"
-			message := fmt.Sprintf(
-				"親愛的用戶：\n"+
-					"感謝您使用PMIS專案管理平台，請於30秒內輸入以下驗證碼。\n\n"+
-					"驗證碼：%s\n"+
-					"祝您使用愉快！\n\n"+
-					"<注意>\n"+
-					"*此郵件由系統自動發出，請勿直接回覆。", passcode)
+			message := fmt.Sprintf(`
+			<html lang="zh-TW">
+			<head>
+				<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+				<style>
+					body {
+						font-family: 'Arial', sans-serif;
+						background-color: #fff;
+						color: #000;
+					}
+			
+					.container {
+						max-width: 450px;
+						margin: 0 auto;
+						padding: 20px;
+						border-radius: 5px;
+						border: 1px solid #cccccc;
+						position: relative;
+						color: #000;
+					}
+			
+					.header {
+						text-align: center;
+						color: #000;
+					}
 
-			err = email.SendEmailWithText(to, fromAddress, fromName, mailPwd, subject, message)
+					.footerMsg{
+						font-size: small;
+						color: #737171;
+					}
+			
+					#passcodeContainer {
+						text-align: center;
+						background-color: #f1eeec;
+						padding: 20px;
+					}
+			
+					.passcode {
+						font-size: 50px;
+						color: #032942;
+						letter-spacing: 10px;
+						display: block;
+						margin-bottom: 10px;
+					}
+			
+					.expire {
+						font-size: 15px;
+						color: #737171;
+						display: block;
+					}
+				</style>
+			</head>
+			<body>
+			<div class="header">
+				<h2>系統驗證碼</h2>
+			</div>
+			<div class="container">
+				<p>親愛的用戶：</p>
+				<p>感謝您使用PMIS專案管理平台，請輸入以下驗證碼。</p>
+				<div id="passcodeContainer">
+					<label class="passcode">%s</label>
+					<label class="expire">時效為60秒</label>
+				</div>
+				<p>祝您使用愉快！</p>
+				<p class="footerMsg">注意：此郵件由系統自動發出，請勿直接回覆。</p>
+			</div>
+			</body>
+			</html>
+			`, passcode)
+
+			err = email.SendEmailWithHtml(to, fromAddress, fromName, mailPwd, subject, message)
 			if err != nil {
 				log.Error(err)
 				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -345,54 +470,82 @@ func (m *manager) Forget(input *loginModel.Forget) (int, any) {
 	}
 	resetPasswordLink := fmt.Sprintf("%s://%s/password_reset/%s", httpMod, domain, accessToken.AccessToken)
 	message := fmt.Sprintf(`
-    <html>
-        <head>
-            <style>
-                body {
-                    font-family: 'Arial', sans-serif;
-                    text-align: center;
-                    margin: 20px;
-                }
-
-                p {
-                    margin-bottom: 10px;
-                }
-
-                a {
-                    text-decoration: none;
-                }
-
-                button {
-                    padding: 10px;
-                    background-color: #4CAF50;
-                    color: white;
-                    border: none;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    text-decoration: none;
-                }
-
-                button:hover {
-                    background-color: #45a049;
-                }
-            </style>
-        </head>
-        <body>
-            <p>親愛的用戶：</p>
-            <p>請點擊以下連結重設密碼：</p>
-            <a href="%s">
-                <button>
-                    重設密碼
-                </button>
-            </a>
-            <br>
-            <p>祝您使用愉快！</p>
-            <p><注意></p>
-            <p>*此郵件由系統自動發出，請勿直接回覆。</p>
-            <p>*此連結有效期限為30分鐘。</p>
-        </body>
-    </html>
-`, resetPasswordLink)
+    <html lang="zh-TW">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<style>
+			body {
+				font-family: 'Arial', sans-serif;
+				background-color: #fff;
+				color: #000;
+			}
+	
+			.container {
+				max-width: 450px;
+				margin: 0 auto;
+				padding: 20px;
+				border-radius: 5px;
+				border: 1px solid #cccccc;
+				position: relative;
+				color: #000;
+			}
+	
+			.header {
+				text-align: center;
+				color: #000;
+			}
+	
+			.footer {
+				text-align: center;
+			}
+	
+			.footerMsg {
+				font-size: small;
+				color: #737171;
+				display: block;
+			}
+	
+			#btnContainer {
+				text-align: center;
+				margin: 25px;
+			}
+	
+			button {
+				background-color: #1f883d;
+				border: none;
+				border-radius: 5px;
+				color: #ffffff;
+				padding: 10px 20px;
+				text-align: center;
+				text-decoration: none;
+				display: inline-block;
+				font-size: 16px;
+				width: 130px;
+			}
+	
+		</style>
+	</head>
+	<body>
+	<div class="header">
+		<h2>重設您的密碼</h2>
+	</div>
+	<div class="container">
+		<p>親愛的用戶：</p>
+		<p>感謝您使用PMIS專案管理平台，請點擊以下按鈕重設密碼 ：</p>
+		<div id="btnContainer">
+			<a href="%s">
+				<button>
+					重設密碼
+				</button>
+			</a>
+		</div>
+		<p>祝您使用愉快！</p>
+		<p>此連結時效為30分鐘，若超過時效請重新申請。</p>
+		<p class="footerMsg">注意：此郵件由系統自動發出，請勿直接回覆。</p>
+	</div>
+	</body>
+	</html>
+	`, resetPasswordLink)
 
 	err = email.SendEmailWithHtml(to, fromAddress, fromName, mailPwd, subject, message)
 	if err != nil {
@@ -482,56 +635,84 @@ func (m *manager) Register(input *loginModel.Register) (int, any) {
 		domain = fmt.Sprintf("%s:%s", input.Domain, input.Port)
 		httpMod = "http"
 	}
-	resetPasswordLink := fmt.Sprintf("%s://%s/activate/%s", httpMod, domain, accessToken.AccessToken)
+	verifyLink := fmt.Sprintf("%s://%s/activate/%s", httpMod, domain, accessToken.AccessToken)
 	message := fmt.Sprintf(`
-    <html>
-        <head>
-            <style>
-                body {
-                    font-family: 'Arial', sans-serif;
-                    text-align: center;
-                    margin: 20px;
-                }
-
-                p {
-                    margin-bottom: 10px;
-                }
-
-                a {
-                    text-decoration: none;
-                }
-
-                button {
-                    padding: 10px;
-                    background-color: #4CAF50;
-                    color: white;
-                    border: none;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    text-decoration: none;
-                }
-
-                button:hover {
-                    background-color: #45a049;
-                }
-            </style>
-        </head>
-        <body>
-            <p>親愛的用戶：</p>
-            <p>感謝您註冊本平台，請點擊以下連結驗證信箱：</p>
-            <a href="%s">
-                <button>
-                    驗證信箱
-                </button>
-            </a>
-            <br>
-            <p>祝您使用愉快！</p>
-            <p><注意></p>
-            <p>*此郵件由系統自動發出，請勿直接回覆。</p>
-            <p>*此連結有效期限為30分鐘。</p>
-        </body>
-    </html>
-`, resetPasswordLink)
+    <html lang="zh-TW">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<style>
+			body {
+				font-family: 'Arial', sans-serif;
+				background-color: #fff;
+				color: #000;
+			}
+	
+			.container {
+				max-width: 450px;
+				margin: 0 auto;
+				padding: 20px;
+				border-radius: 5px;
+				border: 1px solid #cccccc;
+				position: relative;
+				color: #000;
+			}
+	
+			.header {
+				text-align: center;
+				color: #000;
+			}
+	
+			.footer {
+				text-align: center;
+			}
+	
+			.footerMsg {
+				font-size: small;
+				color: #737171;
+				display: block;
+			}
+	
+			#btnContainer {
+				text-align: center;
+				margin: 25px;
+			}
+	
+			button {
+				background-color: #1f883d;
+				border: none;
+				border-radius: 5px;
+				color: #ffffff;
+				padding: 10px 20px;
+				text-align: center;
+				text-decoration: none;
+				display: inline-block;
+				font-size: 16px;
+				width: 130px;
+			}
+	
+		</style>
+	</head>
+	<body>
+	<div class="header">
+		<h2>驗證信箱</h2>
+	</div>
+	<div class="container">
+		<p>親愛的用戶：</p>
+		<p>感謝您註冊PMIS專案管理平台，請點擊以下按鈕驗證信箱 ：</p>
+		<div id="btnContainer">
+			<a href="%s">
+				<button>
+					驗證信箱
+				</button>
+			</a>
+		</div>
+		<p>祝您使用愉快！</p>
+		<p>此連結時效為30分鐘，若超過時效請重新申請。</p>
+		<p class="footerMsg">注意：此郵件由系統自動發出，請勿直接回覆。</p>
+	</div>
+	</body>
+	</html>
+	`, verifyLink)
 
 	err = email.SendEmailWithHtml(to, fromAddress, fromName, mailPwd, subject, message)
 	if err != nil {
