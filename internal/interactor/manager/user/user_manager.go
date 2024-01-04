@@ -494,6 +494,7 @@ func (m *manager) ResetPassword(input *userModel.ResetPassword) (int, any) {
 
 func (m *manager) Duplicate(input *userModel.Field) (int, any) {
 	output := &userModel.IsDuplicate{}
+	input.IsEnabled = util.PointerBool(true)
 	quantity, err := m.UserService.GetByQuantity(input)
 	if err != nil {
 		log.Error(err)
