@@ -137,6 +137,10 @@ func (s *storage) GetBySingle(input *model.Base) (output *model.Table, err error
 		query.Where("email = ?", input.Email)
 	}
 
+	if input.IsEnabled != nil {
+		query.Where("is_enabled = ?", input.IsEnabled)
+	}
+
 	err = query.First(&output).Error
 	if err != nil {
 		log.Error(err)

@@ -54,8 +54,9 @@ func (m *manager) Login(input *loginModel.Login) (int, any) {
 	var output any
 	// verify username & password
 	acknowledge, userBase, err := m.UserService.AcknowledgeUser(&userModel.Field{
-		UserName: util.PointerString(input.UserName),
-		Password: util.PointerString(input.Password),
+		UserName:  util.PointerString(input.UserName),
+		Password:  util.PointerString(input.Password),
+		IsEnabled: util.PointerBool(true),
 	})
 	if err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
