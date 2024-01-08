@@ -1166,6 +1166,7 @@ func (m *manager) Update(trx *gorm.DB, input *taskModel.Update) (int, any) {
 func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) {
 	defer trx.Rollback()
 
+	log.Info("UpdateAll Start !!")
 	var (
 		updateList                       []*taskModel.Update
 		taskResMapList                   []map[string][]*resourceModel.TaskSingle
