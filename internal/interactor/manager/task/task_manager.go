@@ -1166,6 +1166,7 @@ func (m *manager) Update(trx *gorm.DB, input *taskModel.Update) (int, any) {
 func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) {
 	defer trx.Rollback()
 
+	log.Info("UpdateAll Start !!")
 	var (
 		updateList                       []*taskModel.Update
 		taskResMapList                   []map[string][]*resourceModel.TaskSingle
@@ -1265,6 +1266,7 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 	// check if goroutine has error
 	err := <-goroutineErr
 	if err != nil {
+		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
