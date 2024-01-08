@@ -1265,6 +1265,7 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 	// check if goroutine has error
 	err := <-goroutineErr
 	if err != nil {
+		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
