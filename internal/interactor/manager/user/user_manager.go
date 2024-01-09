@@ -37,7 +37,7 @@ type Manager interface {
 	Duplicate(input *userModel.Field) (int, any)
 	EnableAuthenticator(input *userModel.EnableAuthenticator) (int, any)
 	ChangeEmail(input *userModel.ChangeEmail) (int, any)
-	VerifyEmail(input *userModel.VerifyEmail) (int, any)
+	VerifyEmail(trx *gorm.DB, input *userModel.VerifyEmail) (int, any)
 }
 
 type manager struct {
@@ -437,6 +437,7 @@ func (m *manager) Update(trx *gorm.DB, input *userModel.Update) (int, any) {
 
 	// sync update resource_group
 	err = m.ResourceService.WithTrx(trx).Update(&resourceModel.Update{
+		ResourceName:  input.Name,
 		ResourceUUID:  *resourceID,
 		ResourceGroup: util.PointerString(dept),
 		UpdatedBy:     input.UpdatedBy,
@@ -724,7 +725,21 @@ func (m *manager) ChangeEmail(input *userModel.ChangeEmail) (int, any) {
 	return code.Successful, code.GetCodeMessage(code.Successful, obscuredEmail)
 }
 
-func (m *manager) VerifyEmail(input *userModel.VerifyEmail) (int, any) {
+func (m *manager) VerifyEmail(trx *gorm.DB, input *userModel.VerifyEmail) (int, any) {
+	defer trx.Rollback()
+
+	userBase, err := m.UserService.GetBySingle(&userModel.Field{
+		ID: input.ID,
+	})
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, err.Error())
+		}
+
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
 	// transform input to Update struct
 	update := &userModel.Update{}
 	inputByte, err := sonic.Marshal(input)
@@ -739,11 +754,23 @@ func (m *manager) VerifyEmail(input *userModel.VerifyEmail) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	err = m.UserService.Update(update)
+	// sync update the resource's email
+	err = m.ResourceService.WithTrx(trx).Update(&resourceModel.Update{
+		ResourceUUID: *userBase.ResourceUUID,
+		Email:        input.Email,
+		UpdatedBy:    input.UpdatedBy,
+	})
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
+	err = m.UserService.WithTrx(trx).Update(update)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	trx.Commit()
 	return code.Successful, code.GetCodeMessage(code.Successful, "change email ok!")
 }

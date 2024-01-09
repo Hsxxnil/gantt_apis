@@ -13,7 +13,7 @@ Content-Type: application/json
 
 {
   "user_name": "admin",
-  "passcode": "085953"
+  "passcode": "353575"
 }
 
 > {%
@@ -127,9 +127,8 @@ Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-  "email": "sherry90122554@gmail.com",
-  "domain": "localhost",
-  "port": "4200"
+  "email": "C109118250@nkust.edu.tw",
+  "domain": "d.pmip.likbox.com"
 }
 
 ### VerifyEmail
