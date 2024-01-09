@@ -36,13 +36,13 @@ func Init(db *gorm.DB) Manager {
 func (m *manager) Create(trx *gorm.DB, input *workDayModel.Create) (int, any) {
 	defer trx.Rollback()
 
-	// transform workWeek to JSON
+	// transform workWeek from struct array to string
 	if len(input.WorkWeeks) > 0 {
 		weekJson, _ := sonic.Marshal(input.WorkWeeks)
 		input.WorkWeek = string(weekJson)
 	}
 
-	// transform workingTime to JSON
+	// transform workingTime from struct array to string
 	if len(input.WorkingTimes) > 0 {
 		timeJson, _ := sonic.Marshal(input.WorkingTimes)
 		input.WorkingTime = string(timeJson)
@@ -243,13 +243,13 @@ func (m *manager) Update(input *workDayModel.Update) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// transform workWeek to JSON
+	// transform workWeek from struct array to string
 	if len(input.WorkWeeks) > 0 {
 		weekJson, _ := sonic.Marshal(input.WorkWeeks)
 		input.WorkWeek = util.PointerString(string(weekJson))
 	}
 
-	// transform workingTime to JSON
+	// transform workingTime from struct array to string
 	if len(input.WorkingTimes) > 0 {
 		timeJson, _ := sonic.Marshal(input.WorkingTimes)
 		input.WorkingTime = util.PointerString(string(timeJson))
