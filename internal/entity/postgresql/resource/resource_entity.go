@@ -2,7 +2,7 @@ package resource
 
 import (
 	"github.com/bytedance/sonic"
-
+	"github.com/lib/pq"
 	model "hta/internal/entity/postgresql/db/resources"
 	"hta/internal/interactor/pkg/util/log"
 
@@ -67,8 +67,8 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 		query.Where("resource_uuid = ?", input.ResourceUUID)
 	}
 
-	if input.FilterResourceGroup != nil {
-		query.Where("resource_group in (?)", input.FilterResourceGroup)
+	if input.FilterResourceGroups != nil {
+		query.Where("exists (select 1 from unnest(?::varchar[]) as filter where resource_group like '%' || filter || '%')", pq.Array(input.FilterResourceGroups))
 	}
 
 	if input.Sort.Field != "" && input.Sort.Direction != "" {

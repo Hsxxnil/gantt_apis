@@ -154,14 +154,6 @@ func (s *storage) Update(input *model.Base) (err error) {
 	query := s.db.Model(&model.Table{}).Omit(clause.Associations)
 	data := map[string]any{}
 
-	if input.UserID != nil {
-		data["user_id"] = input.UserID
-	}
-
-	if input.DeptID != nil {
-		data["dept_id"] = input.DeptID
-	}
-
 	if input.JobTitle != nil {
 		data["job_title"] = input.JobTitle
 	}
@@ -176,6 +168,14 @@ func (s *storage) Update(input *model.Base) (err error) {
 
 	if input.ID != nil {
 		query.Where("id = ?", input.ID)
+	}
+
+	if input.UserID != nil {
+		query.Where("user_id = ?", input.UserID)
+	}
+
+	if input.DeptID != nil {
+		query.Where("dept_id = ?", input.DeptID)
 	}
 
 	err = query.Select("*").Updates(data).Error
