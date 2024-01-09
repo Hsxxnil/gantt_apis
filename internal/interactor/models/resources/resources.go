@@ -27,8 +27,6 @@ type Create struct {
 	ResourceGroups []string `json:"resource_groups,omitempty"`
 	//
 	IsExpand bool `json:"is_expand,omitempty"`
-	// 標籤
-	Tags []string `json:"tags,omitempty"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }
@@ -55,8 +53,6 @@ type Field struct {
 	ResourceGroup *string `json:"resource_group,omitempty" form:"resource_group"`
 	//
 	IsExpand *bool `json:"is_expand,omitempty" form:"is_expand"`
-	// 標籤
-	Tags *[]string `json:"tags,omitempty" form:"tag"`
 	// 搜尋欄位
 	Filter `json:"filter"`
 	// 排序欄位
@@ -107,8 +103,8 @@ type List struct {
 		ResourceGroups []string `json:"resource_groups,omitempty"`
 		//
 		IsExpand bool `json:"is_expand,omitempty"`
-		// 標籤
-		Tags []string `json:"tags,omitempty"`
+		// 是否綁定
+		IsBind bool `json:"is_bind"`
 		// 創建者
 		CreatedBy string `json:"created_by,omitempty"`
 		// 更新者
@@ -142,8 +138,8 @@ type Single struct {
 	ResourceGroups []string `json:"resource_groups,omitempty"`
 	//
 	IsExpand bool `json:"is_expand,omitempty"`
-	// 標籤
-	Tags []string `json:"tags,omitempty"`
+	// 是否綁定
+	IsBind bool `json:"is_bind"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty"`
 	// 更新者
@@ -168,12 +164,12 @@ type Update struct {
 	TotalCost *float64 `json:"total_cost,omitempty" binding:"omitempty,gte=0" validate:"omitempty,gte=0"`
 	// 總負載
 	TotalLoad *float64 `json:"total_load,omitempty" binding:"omitempty,gte=0" validate:"omitempty,gte=0"`
-	// 群組
+	// 群組(後端寫入)
 	ResourceGroup *string `json:"resource_group,omitempty" swaggerignore:"true"`
+	// 群組
+	ResourceGroups []*string `json:"resource_groups,omitempty"`
 	//
 	IsExpand *bool `json:"is_expand,omitempty"`
-	// 標籤
-	Tags *[]string `json:"tags,omitempty"`
 	// 更新者
 	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }
