@@ -378,6 +378,8 @@ func (m *manager) Update(trx *gorm.DB, input *userModel.Update) (int, any) {
 			resourceID = newResourceBase.ResourceUUID
 		}
 		input.ResourceUUID = resourceID
+	} else {
+		resourceID = userBase.ResourceUUID
 	}
 
 	if len(input.Affiliations) > 0 {
@@ -397,6 +399,43 @@ func (m *manager) Update(trx *gorm.DB, input *userModel.Update) (int, any) {
 				DeptID:    affiliation.DeptID,
 				JobTitle:  affiliation.JobTitle,
 				CreatedBy: *input.UpdatedBy,
+			})
+			if err != nil {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+
+			// collect department names for efficient batch processing
+			var (
+				deptIDs   []*string
+				deptNames []*string
+			)
+			deptIDs = append(deptIDs, util.PointerString(affiliation.DeptID))
+			deptBase, err := m.DepartmentService.GetByListNoPagination(&departmentModel.Field{
+				DeptIDs: deptIDs,
+			})
+			if err != nil {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+
+			for _, dept := range deptBase {
+				deptNames = append(deptNames, dept.Name)
+			}
+
+			// transform deptNames to string
+			deptByte, err := sonic.Marshal(deptNames)
+			if err != nil {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+			dept := string(deptByte)
+
+			// sync update resource_group
+			err = m.ResourceService.WithTrx(trx).Update(&resourceModel.Update{
+				ResourceUUID:  *resourceID,
+				ResourceGroup: util.PointerString(dept),
+				UpdatedBy:     input.UpdatedBy,
 			})
 			if err != nil {
 				log.Error(err)

@@ -8150,9 +8150,12 @@ const docTemplate = `{
                     "description": "電話",
                     "type": "string"
                 },
-                "resource_group": {
+                "resource_groups": {
                     "description": "群組",
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "resource_name": {
                     "description": "名字",
@@ -8191,7 +8194,7 @@ const docTemplate = `{
                     "description": "電話",
                     "type": "string"
                 },
-                "resource_group": {
+                "resource_groups": {
                     "description": "群組",
                     "type": "array",
                     "items": {
@@ -8261,9 +8264,12 @@ const docTemplate = `{
                                 "description": "電話",
                                 "type": "string"
                             },
-                            "resource_group": {
-                                "description": "v",
-                                "type": "string"
+                            "resource_groups": {
+                                "description": "群組",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
                             },
                             "resource_id": {
                                 "description": "舊編號 ＆ 頁面ID",
@@ -8337,9 +8343,12 @@ const docTemplate = `{
                     "description": "電話",
                     "type": "string"
                 },
-                "resource_group": {
+                "resource_groups": {
                     "description": "群組",
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "resource_id": {
                     "description": "舊編號 ＆ 頁面ID",
@@ -8394,9 +8403,12 @@ const docTemplate = `{
                     "description": "電話",
                     "type": "string"
                 },
-                "resource_group": {
+                "resource_groups": {
                     "description": "群組",
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "resource_id": {
                     "description": "舊編號 ＆ 頁面ID",
@@ -8442,10 +8454,6 @@ const docTemplate = `{
                 },
                 "phone": {
                     "description": "電話",
-                    "type": "string"
-                },
-                "resource_group": {
-                    "description": "群組",
                     "type": "string"
                 },
                 "resource_name": {
