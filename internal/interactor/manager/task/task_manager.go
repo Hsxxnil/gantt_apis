@@ -111,7 +111,7 @@ func (m *manager) createSubtasks(trx *gorm.DB, parentTask *taskModel.Create, sub
 		subBody.IsSubTask = true
 		subBody.CreatedBy = parentTask.CreatedBy
 		subBody.ProjectUUID = parentTask.ProjectUUID
-		// transform segments to JSON
+		// transform segments from struct array to string
 		if len(subBody.Segments) > 0 {
 			// check if it is the most sub-task
 			if len(subBody.Subtask) > 0 {
@@ -125,7 +125,7 @@ func (m *manager) createSubtasks(trx *gorm.DB, parentTask *taskModel.Create, sub
 			subBody.Segment = string(segJson)
 		}
 
-		// transform indicators to JSON
+		// transform indicators from struct array to string
 		if len(subBody.Indicators) > 0 {
 			indJson, err := sonic.Marshal(subBody.Indicators)
 			if err != nil {
@@ -185,7 +185,7 @@ func (m *manager) updateSubtasks(trx *gorm.DB, parentTask *taskModel.Update, sub
 		newOutlineNumber := fmt.Sprintf("%s.%d", *parentTask.OutlineNumber, j+1)
 		subBody.OutlineNumber = util.PointerString(newOutlineNumber)
 
-		// transform segments to JSON
+		// transform segments from struct array to string
 		if len(subBody.Segments) > 0 {
 			// check if it is the most sub-task
 			if len(subBody.Subtask) > 0 {
@@ -201,7 +201,7 @@ func (m *manager) updateSubtasks(trx *gorm.DB, parentTask *taskModel.Update, sub
 			subBody.Segment = nil
 		}
 
-		// transform indicators to JSON
+		// transform indicators from struct array to string
 		if len(subBody.Indicators) > 0 {
 			indJson, err := sonic.Marshal(subBody.Indicators)
 			if err != nil {
@@ -464,13 +464,13 @@ func (m *manager) Create(trx *gorm.DB, input *taskModel.Create) (int, any) {
 			}
 		}
 
-		// transform segments to JSON
+		// transform segments from struct array to string
 		if len(input.Segments) > 0 {
 			segJson, _ := sonic.Marshal(input.Segments)
 			input.Segment = string(segJson)
 		}
 
-		// transform indicators to JSON
+		// transform indicators from struct array to string
 		if len(input.Indicators) > 0 {
 			indJson, _ := sonic.Marshal(input.Indicators)
 			input.Indicator = string(indJson)
@@ -484,12 +484,12 @@ func (m *manager) Create(trx *gorm.DB, input *taskModel.Create) (int, any) {
 				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The parent task cannot be segmented.")
 			}
 
-			// transform segments to JSON
+			// transform segments from struct array to string
 			segJson, _ := sonic.Marshal(input.Segments)
 			input.Segment = string(segJson)
 		}
 
-		// transform indicators to JSON
+		// transform indicators from struct array to string
 		if len(input.Indicators) > 0 {
 			indJson, _ := sonic.Marshal(input.Indicators)
 			input.Indicator = string(indJson)
@@ -588,12 +588,12 @@ func (m *manager) CreateAll(trx *gorm.DB, input []*taskModel.Create) (int, any) 
 				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The parent task cannot be segmented.")
 			}
 
-			// transform segments to JSON
+			// transform segments from struct array to string
 			segJson, _ := sonic.Marshal(inputBody.Segments)
 			inputBody.Segment = string(segJson)
 		}
 
-		// transform indicators to JSON
+		// transform indicators from struct array to string
 		if len(inputBody.Indicators) > 0 {
 			indJson, _ := sonic.Marshal(inputBody.Indicators)
 			inputBody.Indicator = string(indJson)
@@ -1116,12 +1116,12 @@ func (m *manager) Update(trx *gorm.DB, input *taskModel.Update) (int, any) {
 			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The parent task cannot be segmented.")
 		}
 
-		// transform segments to JSON
+		// transform segments from struct array to string
 		segJson, _ := sonic.Marshal(input.Segments)
 		input.Segment = util.PointerString(string(segJson))
 	}
 
-	// transform indicators to JSON
+	// transform indicators from struct array to string
 	if len(input.Indicators) > 0 {
 		indJson, _ := sonic.Marshal(input.Indicators)
 		input.Indicator = util.PointerString(string(indJson))
@@ -1195,12 +1195,12 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The parent task cannot be segmented.")
 			}
 
-			// transform segments to JSON
+			// transform segments from struct array to string
 			segJson, _ := sonic.Marshal(inputBody.Segments)
 			inputBody.Segment = util.PointerString(string(segJson))
 		}
 
-		// transform indicators to JSON
+		// transform indicators from struct array to string
 		if len(inputBody.Indicators) > 0 {
 			indJson, _ := sonic.Marshal(inputBody.Indicators)
 			inputBody.Indicator = util.PointerString(string(indJson))
