@@ -383,6 +383,7 @@ func (c *control) ChangeEmail(ctx *gin.Context) {
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
 // @Router /users/verify-email/current-user [post]
 func (c *control) VerifyEmail(ctx *gin.Context) {
+	trx := ctx.MustGet("db_trx").(*gorm.DB)
 	input := &userModel.VerifyEmail{}
 	input.ID = ctx.MustGet("user_id").(string)
 	input.Email = util.PointerString(ctx.MustGet("email").(string))
@@ -393,6 +394,6 @@ func (c *control) VerifyEmail(ctx *gin.Context) {
 		return
 	}
 
-	httpCode, codeMessage := c.Manager.VerifyEmail(input)
+	httpCode, codeMessage := c.Manager.VerifyEmail(trx, input)
 	ctx.JSON(httpCode, codeMessage)
 }

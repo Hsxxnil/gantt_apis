@@ -17,7 +17,7 @@ func GetRouter(router *gin.Engine, db *gorm.DB) *gin.Engine {
 		v10.POST("reset-password/current-user", middleware.Verify(), control.ResetPassword)
 		v10.POST("enable/current-user", middleware.Verify(), control.EnableByCurrent)
 		v10.POST("change-email/current-user", middleware.Verify(), control.ChangeEmail)
-		v10.POST("verify-email/current-user", middleware.Verify(), control.VerifyEmail)
+		v10.POST("verify-email/current-user", middleware.Verify(), middleware.Transaction(db), control.VerifyEmail)
 		v10.GET("", middleware.Verify(), middleware.CheckPermission(), control.GetByListNoPagination)
 		v10.GET("current-user", middleware.Verify(), middleware.CheckPermission(), control.GetByCurrent)
 		v10.GET(":id", middleware.Verify(), middleware.CheckPermission(), control.GetBySingle)

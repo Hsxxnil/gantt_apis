@@ -13,7 +13,7 @@ Content-Type: application/json
 
 {
   "user_name": "admin",
-  "passcode": "085953"
+  "passcode": "353575"
 }
 
 > {%
@@ -128,8 +128,7 @@ Authorization: Bearer {{accessToken}}
 
 {
   "email": "REMOVED",
-  "domain": "localhost",
-  "port": "4200"
+  "domain": "d.pmip.likbox.com"
 }
 
 ### VerifyEmail
