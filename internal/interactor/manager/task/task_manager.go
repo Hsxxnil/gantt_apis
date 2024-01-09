@@ -773,9 +773,17 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 					task.Resources[j].StandardCost = *res.Resources.Resources.StandardCost
 					task.Resources[j].TotalCost = *res.Resources.Resources.TotalCost
 					task.Resources[j].TotalLoad = *res.Resources.Resources.TotalLoad
-					task.Resources[j].ResourceGroup = *res.Resources.Resources.ResourceGroup
 					task.Resources[j].IsExpand = *res.Resources.Resources.IsExpand
 					task.Resources[j].Role = *res.Resources.Role
+
+					// transform resource_groups to array
+					var resourceGroup []string
+					err = sonic.Unmarshal([]byte(*res.Resources.Resources.ResourceGroup), &resourceGroup)
+					if err != nil {
+						log.Error(err)
+						goroutineErr <- err
+					}
+					task.Resources[j].ResourceGroups = resourceGroup
 				}
 
 				if !input.FilterMilestone {
@@ -949,9 +957,17 @@ func (m *manager) GetByListNoPaginationNoSub(input *taskModel.Field) (int, any) 
 			task.Resources[j].StandardCost = *res.Resources.Resources.StandardCost
 			task.Resources[j].TotalCost = *res.Resources.Resources.TotalCost
 			task.Resources[j].TotalLoad = *res.Resources.Resources.TotalLoad
-			task.Resources[j].ResourceGroup = *res.Resources.Resources.ResourceGroup
 			task.Resources[j].IsExpand = *res.Resources.Resources.IsExpand
 			task.Resources[j].Role = *res.Resources.Role
+
+			// transform resource_groups to array
+			var resourceGroup []string
+			err = sonic.Unmarshal([]byte(*res.Resources.Resources.ResourceGroup), &resourceGroup)
+			if err != nil {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+			task.Resources[j].ResourceGroups = resourceGroup
 		}
 	}
 
@@ -1012,9 +1028,17 @@ func (m *manager) GetBySingle(input *taskModel.Field) (int, any) {
 		output.Resources[i].StandardCost = *res.Resources.Resources.StandardCost
 		output.Resources[i].TotalCost = *res.Resources.Resources.TotalCost
 		output.Resources[i].TotalLoad = *res.Resources.Resources.TotalLoad
-		output.Resources[i].ResourceGroup = *res.Resources.Resources.ResourceGroup
 		output.Resources[i].IsExpand = *res.Resources.Resources.IsExpand
 		output.Resources[i].Role = *res.Resources.Role
+
+		// transform resource_groups to array
+		var resourceGroup []string
+		err = sonic.Unmarshal([]byte(*res.Resources.Resources.ResourceGroup), &resourceGroup)
+		if err != nil {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+		output.Resources[i].ResourceGroups = resourceGroup
 	}
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }

@@ -48,6 +48,14 @@ func (m *manager) Create(trx *gorm.DB, input *resourceModel.Create) (int, any) {
 		return code.BadRequest, code.GetCodeMessage(code.BadRequest, "Email already exists.")
 	}
 
+	// transform resource_groups from string slice to string
+	resourceGroupByte, err := sonic.Marshal(input.ResourceGroups)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+	input.ResourceGroup = string(resourceGroupByte)
+
 	resourceBase, err := m.ResourceService.WithTrx(trx).Create(input)
 	if err != nil {
 		log.Error(err)
@@ -84,6 +92,15 @@ func (m *manager) GetByList(input *resourceModel.Fields) (int, any) {
 	for i, resource := range output.Resources {
 		resource.CreatedBy = *resourceBase[i].CreatedByUsers.Name
 		resource.UpdatedBy = *resourceBase[i].UpdatedByUsers.Name
+
+		// transform resource group from string to string slice
+		var resourceGroup []string
+		err = sonic.Unmarshal([]byte(*resourceBase[i].ResourceGroup), &resourceGroup)
+		if err != nil {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+		resource.ResourceGroups = resourceGroup
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
@@ -112,6 +129,15 @@ func (m *manager) GetByListNoPagination(input *resourceModel.Field) (int, any) {
 	for i, resource := range output.Resources {
 		resource.CreatedBy = *resourceBase[i].CreatedByUsers.Name
 		resource.UpdatedBy = *resourceBase[i].UpdatedByUsers.Name
+
+		// transform resource group from string to string slice
+		var resourceGroup []string
+		err = sonic.Unmarshal([]byte(*resourceBase[i].ResourceGroup), &resourceGroup)
+		if err != nil {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+		resource.ResourceGroups = resourceGroup
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
@@ -138,6 +164,15 @@ func (m *manager) GetBySingle(input *resourceModel.Field) (int, any) {
 
 	output.CreatedBy = *resourceBase.CreatedByUsers.Name
 	output.UpdatedBy = *resourceBase.UpdatedByUsers.Name
+
+	// transform resource group from string to string slice
+	var resourceGroup []string
+	err = sonic.Unmarshal([]byte(*resourceBase.ResourceGroup), &resourceGroup)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+	output.ResourceGroups = resourceGroup
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }

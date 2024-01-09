@@ -21,8 +21,10 @@ type Create struct {
 	TotalCost float64 `json:"total_cost,omitempty" binding:"omitempty,gte=0" validate:"omitempty,gte=0"`
 	// 總負載
 	TotalLoad float64 `json:"total_load,omitempty" binding:"omitempty,gte=0" validate:"omitempty,gte=0"`
+	// 群組(後端寫入)
+	ResourceGroup string `json:"resource_group,omitempty" swaggerignore:"true"`
 	// 群組
-	ResourceGroup string `json:"resource_group,omitempty"`
+	ResourceGroups []string `json:"resource_groups,omitempty"`
 	//
 	IsExpand bool `json:"is_expand,omitempty"`
 	// 標籤
@@ -74,7 +76,7 @@ type Filter struct {
 	// 名字
 	FilterResourceName string `json:"resource_name,omitempty"`
 	// 群組
-	FilterResourceGroup []string `json:"resource_group,omitempty"`
+	FilterResourceGroups []string `json:"resource_groups,omitempty"`
 	// 信箱
 	FilterEmail string `json:"email,omitempty"`
 	// 電話
@@ -101,8 +103,8 @@ type List struct {
 		TotalCost float64 `json:"total_cost,omitempty"`
 		// 總負載
 		TotalLoad float64 `json:"total_load,omitempty"`
-		// v
-		ResourceGroup string `json:"resource_group,omitempty"`
+		// 群組
+		ResourceGroups []string `json:"resource_groups,omitempty"`
 		//
 		IsExpand bool `json:"is_expand,omitempty"`
 		// 標籤
@@ -137,7 +139,7 @@ type Single struct {
 	// 總負載
 	TotalLoad float64 `json:"total_load,omitempty"`
 	// 群組
-	ResourceGroup string `json:"resource_group,omitempty"`
+	ResourceGroups []string `json:"resource_groups,omitempty"`
 	//
 	IsExpand bool `json:"is_expand,omitempty"`
 	// 標籤
@@ -167,7 +169,7 @@ type Update struct {
 	// 總負載
 	TotalLoad *float64 `json:"total_load,omitempty" binding:"omitempty,gte=0" validate:"omitempty,gte=0"`
 	// 群組
-	ResourceGroup *string `json:"resource_group,omitempty"`
+	ResourceGroup *string `json:"resource_group,omitempty" swaggerignore:"true"`
 	//
 	IsExpand *bool `json:"is_expand,omitempty"`
 	// 標籤
@@ -195,7 +197,7 @@ type TaskSingle struct {
 	// 總負載
 	TotalLoad float64 `json:"total_load,omitempty"`
 	// 群組
-	ResourceGroup string `json:"resource_group,omitempty"`
+	ResourceGroups []string `json:"resource_groups,omitempty"`
 	//
 	IsExpand bool `json:"is_expand,omitempty"`
 	// 單位
