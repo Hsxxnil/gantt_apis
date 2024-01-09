@@ -8165,13 +8165,6 @@ const docTemplate = `{
                     "type": "number",
                     "minimum": 0
                 },
-                "tags": {
-                    "description": "標籤",
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
                 "total_cost": {
                     "type": "number",
                     "minimum": 0
@@ -8257,6 +8250,10 @@ const docTemplate = `{
                                 "description": "信箱",
                                 "type": "string"
                             },
+                            "is_bind": {
+                                "description": "是否綁定",
+                                "type": "boolean"
+                            },
                             "is_expand": {
                                 "type": "boolean"
                             },
@@ -8285,13 +8282,6 @@ const docTemplate = `{
                             },
                             "standard_cost": {
                                 "type": "number"
-                            },
-                            "tags": {
-                                "description": "標籤",
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                }
                             },
                             "total_cost": {
                                 "type": "number"
@@ -8336,6 +8326,10 @@ const docTemplate = `{
                     "description": "信箱",
                     "type": "string"
                 },
+                "is_bind": {
+                    "description": "是否綁定",
+                    "type": "boolean"
+                },
                 "is_expand": {
                     "type": "boolean"
                 },
@@ -8364,13 +8358,6 @@ const docTemplate = `{
                 },
                 "standard_cost": {
                     "type": "number"
-                },
-                "tags": {
-                    "description": "標籤",
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
                 },
                 "total_cost": {
                     "type": "number"
@@ -8456,6 +8443,13 @@ const docTemplate = `{
                     "description": "電話",
                     "type": "string"
                 },
+                "resource_groups": {
+                    "description": "群組",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "resource_name": {
                     "description": "名字",
                     "type": "string"
@@ -8463,13 +8457,6 @@ const docTemplate = `{
                 "standard_cost": {
                     "type": "number",
                     "minimum": 0
-                },
-                "tags": {
-                    "description": "標籤",
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
                 },
                 "total_cost": {
                     "type": "number",

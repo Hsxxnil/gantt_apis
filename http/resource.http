@@ -13,7 +13,7 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "passcode": "597703"
+  "passcode": "416854"
 }
 
 > {% client.global.set("accessToken", response.body.body.access_token); %}
@@ -31,6 +31,8 @@ Authorization: Bearer {{accessToken}}
   "filter": {
     "resource_name": "",
     "resource_groups": [
+      "先進技術",
+      "客服部"
     ],
     "email": "",
     "phone": ""
@@ -43,7 +45,7 @@ Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### GetBySingle
-GET {{host}}/hta-gantt/v1.0/resources/c2893909-8e75-4d47-84de-b8417ff17f92
+GET {{host}}/hta-gantt/v1.0/resources/7c2df8a1-df2c-4a8d-947e-5118f4928902
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
