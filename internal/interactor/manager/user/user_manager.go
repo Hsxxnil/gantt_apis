@@ -382,6 +382,10 @@ func (m *manager) Update(trx *gorm.DB, input *userModel.Update) (int, any) {
 		resourceID = userBase.ResourceUUID
 	}
 
+	var (
+		deptIDs   []*string
+		deptNames []*string
+	)
 	if len(input.Affiliations) > 0 {
 		// sync delete affiliation
 		err = m.AffiliationService.WithTrx(trx).Delete(&affiliationModel.Field{
@@ -405,43 +409,41 @@ func (m *manager) Update(trx *gorm.DB, input *userModel.Update) (int, any) {
 				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 			}
 
-			// collect department names for efficient batch processing
-			var (
-				deptIDs   []*string
-				deptNames []*string
-			)
+			// collect department IDs for efficient batch processing
 			deptIDs = append(deptIDs, util.PointerString(affiliation.DeptID))
-			deptBase, err := m.DepartmentService.GetByListNoPagination(&departmentModel.Field{
-				DeptIDs: deptIDs,
-			})
-			if err != nil {
-				log.Error(err)
-				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-			}
-
-			for _, dept := range deptBase {
-				deptNames = append(deptNames, dept.Name)
-			}
-
-			// transform deptNames to string
-			deptByte, err := sonic.Marshal(deptNames)
-			if err != nil {
-				log.Error(err)
-				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-			}
-			dept := string(deptByte)
-
-			// sync update resource_group
-			err = m.ResourceService.WithTrx(trx).Update(&resourceModel.Update{
-				ResourceUUID:  *resourceID,
-				ResourceGroup: util.PointerString(dept),
-				UpdatedBy:     input.UpdatedBy,
-			})
-			if err != nil {
-				log.Error(err)
-				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-			}
 		}
+	}
+
+	// collect department names for efficient batch processing
+	deptBase, err := m.DepartmentService.GetByListNoPagination(&departmentModel.Field{
+		DeptIDs: deptIDs,
+	})
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	for _, dept := range deptBase {
+		deptNames = append(deptNames, dept.Name)
+	}
+
+	// transform deptNames to string
+	deptByte, err := sonic.Marshal(deptNames)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+	dept := string(deptByte)
+
+	// sync update resource_group
+	err = m.ResourceService.WithTrx(trx).Update(&resourceModel.Update{
+		ResourceUUID:  *resourceID,
+		ResourceGroup: util.PointerString(dept),
+		UpdatedBy:     input.UpdatedBy,
+	})
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
 	err = m.UserService.WithTrx(trx).Update(input)
