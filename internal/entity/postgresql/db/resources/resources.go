@@ -1,7 +1,6 @@
 package resources
 
 import (
-	"github.com/lib/pq"
 	"hta/internal/entity/postgresql/db/users"
 	model "hta/internal/interactor/models/resources"
 	"hta/internal/interactor/models/sort"
@@ -30,8 +29,6 @@ type Table struct {
 	ResourceGroup string `gorm:"column:resource_group;type:varchar;" json:"resource_group"`
 	//
 	IsExpand bool `gorm:"column:is_expand;type:boolean;default:false" json:"is_expand"`
-	// 標籤
-	Tags pq.StringArray `gorm:"column:tags;type:text[];" json:"tags"`
 	// create_users data
 	CreatedByUsers users.Table `gorm:"foreignKey:ID;references:CreatedBy" json:"created_by_users,omitempty"`
 	// update_users data
@@ -62,8 +59,6 @@ type Base struct {
 	ResourceGroup *string `json:"resource_group,omitempty"`
 	//
 	IsExpand *bool `json:"is_expand,omitempty"`
-	// 標籤
-	Tags *[]string `json:"tags,omitempty"`
 	// create_users data
 	CreatedByUsers users.Base `json:"created_by_users,omitempty"`
 	// update_users data
