@@ -909,11 +909,6 @@ definitions:
       standard_cost:
         minimum: 0
         type: number
-      tags:
-        description: 標籤
-        items:
-          type: string
-        type: array
       total_cost:
         minimum: 0
         type: number
@@ -974,6 +969,9 @@ definitions:
             email:
               description: 信箱
               type: string
+            is_bind:
+              description: 是否綁定
+              type: boolean
             is_expand:
               type: boolean
             phone:
@@ -995,11 +993,6 @@ definitions:
               type: string
             standard_cost:
               type: number
-            tags:
-              description: 標籤
-              items:
-                type: string
-              type: array
             total_cost:
               type: number
             total_load:
@@ -1034,6 +1027,9 @@ definitions:
       email:
         description: 信箱
         type: string
+      is_bind:
+        description: 是否綁定
+        type: boolean
       is_expand:
         type: boolean
       phone:
@@ -1055,11 +1051,6 @@ definitions:
         type: string
       standard_cost:
         type: number
-      tags:
-        description: 標籤
-        items:
-          type: string
-        type: array
       total_cost:
         type: number
       total_load:
@@ -1120,17 +1111,17 @@ definitions:
       phone:
         description: 電話
         type: string
+      resource_groups:
+        description: 群組
+        items:
+          type: string
+        type: array
       resource_name:
         description: 名字
         type: string
       standard_cost:
         minimum: 0
         type: number
-      tags:
-        description: 標籤
-        items:
-          type: string
-        type: array
       total_cost:
         minimum: 0
         type: number

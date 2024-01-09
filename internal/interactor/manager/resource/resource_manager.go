@@ -3,7 +3,9 @@ package resource
 import (
 	"errors"
 	"github.com/bytedance/sonic"
+	userModel "hta/internal/interactor/models/users"
 	"hta/internal/interactor/pkg/util"
+	userService "hta/internal/interactor/service/user"
 	"strconv"
 
 	"gorm.io/gorm"
@@ -27,11 +29,13 @@ type Manager interface {
 
 type manager struct {
 	ResourceService resourceService.Service
+	UserService     userService.Service
 }
 
 func Init(db *gorm.DB) Manager {
 	return &manager{
 		ResourceService: resourceService.Init(db),
+		UserService:     userService.Init(db),
 	}
 }
 
@@ -89,6 +93,20 @@ func (m *manager) GetByList(input *resourceModel.Fields) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
+	// get all users
+	userBase, err := m.UserService.GetByListNoPagination(&userModel.Field{})
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// create a map to store the user's uuid
+	userMap := make(map[string]bool)
+	for _, user := range userBase {
+		if user.ResourceUUID != nil {
+			userMap[*user.ResourceUUID] = true
+		}
+	}
 	for i, resource := range output.Resources {
 		resource.CreatedBy = *resourceBase[i].CreatedByUsers.Name
 		resource.UpdatedBy = *resourceBase[i].UpdatedByUsers.Name
@@ -101,6 +119,13 @@ func (m *manager) GetByList(input *resourceModel.Fields) (int, any) {
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 		}
 		resource.ResourceGroups = resourceGroup
+
+		// check if the resource is bind to the user
+		if exist := userMap[*resourceBase[i].ResourceUUID]; exist {
+			resource.IsBind = true
+		} else {
+			resource.IsBind = false
+		}
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
@@ -126,6 +151,21 @@ func (m *manager) GetByListNoPagination(input *resourceModel.Field) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
+	// get all users
+	userBase, err := m.UserService.GetByListNoPagination(&userModel.Field{})
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// create a map to store the user's uuid
+	userMap := make(map[string]bool)
+	for _, user := range userBase {
+		if user.ResourceUUID != nil {
+			userMap[*user.ResourceUUID] = true
+		}
+	}
+
 	for i, resource := range output.Resources {
 		resource.CreatedBy = *resourceBase[i].CreatedByUsers.Name
 		resource.UpdatedBy = *resourceBase[i].UpdatedByUsers.Name
@@ -138,6 +178,13 @@ func (m *manager) GetByListNoPagination(input *resourceModel.Field) (int, any) {
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 		}
 		resource.ResourceGroups = resourceGroup
+
+		// check if the resource is bind to the user
+		if exist := userMap[*resourceBase[i].ResourceUUID]; exist {
+			resource.IsBind = true
+		} else {
+			resource.IsBind = false
+		}
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
@@ -160,6 +207,21 @@ func (m *manager) GetBySingle(input *resourceModel.Field) (int, any) {
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// check if the resource is bind to the user
+	quantity, err := m.UserService.GetByQuantity(&userModel.Field{
+		ResourceUUID: util.PointerString(input.ResourceUUID),
+	})
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	if quantity > 0 {
+		output.IsBind = true
+	} else {
+		output.IsBind = false
 	}
 
 	output.CreatedBy = *resourceBase.CreatedByUsers.Name
@@ -211,6 +273,14 @@ func (m *manager) Update(input *resourceModel.Update) (int, any) {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
+
+	// transform resource_groups from string slice to string
+	resourceGroupByte, err := sonic.Marshal(input.ResourceGroups)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+	input.ResourceGroup = util.PointerString(string(resourceGroupByte))
 
 	err = m.ResourceService.Update(input)
 	if err != nil {

@@ -220,10 +220,6 @@ func (s *storage) Update(input *model.Base) (err error) {
 		data["is_expand"] = input.IsExpand
 	}
 
-	if input.Tags != nil {
-		data["tags"] = input.Tags
-	}
-
 	if input.UpdatedBy != nil {
 		data["updated_by"] = input.UpdatedBy
 	}

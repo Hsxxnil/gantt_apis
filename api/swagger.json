@@ -8162,13 +8162,6 @@
                     "type": "number",
                     "minimum": 0
                 },
-                "tags": {
-                    "description": "標籤",
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
                 "total_cost": {
                     "type": "number",
                     "minimum": 0
@@ -8254,6 +8247,10 @@
                                 "description": "信箱",
                                 "type": "string"
                             },
+                            "is_bind": {
+                                "description": "是否綁定",
+                                "type": "boolean"
+                            },
                             "is_expand": {
                                 "type": "boolean"
                             },
@@ -8282,13 +8279,6 @@
                             },
                             "standard_cost": {
                                 "type": "number"
-                            },
-                            "tags": {
-                                "description": "標籤",
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                }
                             },
                             "total_cost": {
                                 "type": "number"
@@ -8333,6 +8323,10 @@
                     "description": "信箱",
                     "type": "string"
                 },
+                "is_bind": {
+                    "description": "是否綁定",
+                    "type": "boolean"
+                },
                 "is_expand": {
                     "type": "boolean"
                 },
@@ -8361,13 +8355,6 @@
                 },
                 "standard_cost": {
                     "type": "number"
-                },
-                "tags": {
-                    "description": "標籤",
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
                 },
                 "total_cost": {
                     "type": "number"
@@ -8453,6 +8440,13 @@
                     "description": "電話",
                     "type": "string"
                 },
+                "resource_groups": {
+                    "description": "群組",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "resource_name": {
                     "description": "名字",
                     "type": "string"
@@ -8460,13 +8454,6 @@
                 "standard_cost": {
                     "type": "number",
                     "minimum": 0
-                },
-                "tags": {
-                    "description": "標籤",
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
                 },
                 "total_cost": {
                     "type": "number",
