@@ -14,7 +14,7 @@ func GenerateOTP(organization, username string) (otpSecret, optAuthUrl string, e
 		Issuer:      organization,
 		AccountName: username,
 		SecretSize:  15,
-		Period:      60,
+		Period:      30,
 		Algorithm:   otp.AlgorithmSHA256,
 	})
 
@@ -29,8 +29,8 @@ func GenerateOTP(organization, username string) (otpSecret, optAuthUrl string, e
 // GeneratePasscode is used to generate the OTP code.
 func GeneratePasscode(secret string) (passcode string, err error) {
 	passcode, err = totp.GenerateCodeCustom(secret, time.Now().UTC(), totp.ValidateOpts{
-		Period:    60,
-		Skew:      480,
+		Period:    30,
+		Skew:      3,
 		Digits:    otp.DigitsSix,
 		Algorithm: otp.AlgorithmSHA256,
 	})
@@ -45,8 +45,8 @@ func GeneratePasscode(secret string) (passcode string, err error) {
 // ValidateOTP is used to validate the OTP code.
 func ValidateOTP(passcode, otpSecret string) (otpValid bool, err error) {
 	valid, err := totp.ValidateCustom(passcode, otpSecret, time.Now().UTC(), totp.ValidateOpts{
-		Period:    60,
-		Skew:      480,
+		Period:    30,
+		Skew:      3,
 		Digits:    otp.DigitsSix,
 		Algorithm: otp.AlgorithmSHA256,
 	})
