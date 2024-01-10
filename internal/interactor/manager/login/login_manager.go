@@ -147,7 +147,7 @@ func (m *manager) Login(input *loginModel.Login) (int, any) {
 			<p>感謝您使用PMIS專案管理平台，請輸入以下驗證碼。</p>
 			<div id="passcodeContainer">
 				<label class="passcode">%s</label>
-				<label class="expire">時效為60秒</label>
+				<label class="expire">時效為30秒</label>
 			</div>
 			<p>祝您使用愉快！</p>
 			<p class="footerMsg">注意：此郵件由系統自動發出，請勿直接回覆。</p>
@@ -245,7 +245,7 @@ func (m *manager) Login(input *loginModel.Login) (int, any) {
 				<p>感謝您使用PMIS專案管理平台，請輸入以下驗證碼。</p>
 				<div id="passcodeContainer">
 					<label class="passcode">%s</label>
-					<label class="expire">時效為60秒</label>
+					<label class="expire">時效為30秒</label>
 				</div>
 				<p>祝您使用愉快！</p>
 				<p class="footerMsg">注意：此郵件由系統自動發出，請勿直接回覆。</p>
