@@ -315,11 +315,13 @@ func (m *manager) syncUpdateProjectStartEndDate(trx *gorm.DB, projectID *string,
 	if len(taskBase) > 0 {
 		// find the minimum baseline_start_date and maximum baseline_end_date in taskBase
 		for _, task := range taskBase {
-			if minBaselineStart == nil || task.BaselineStartDate.Before(*minBaselineStart) {
-				minBaselineStart = task.BaselineStartDate
-			}
-			if maxBaselineEnd == nil || task.BaselineEndDate.After(*maxBaselineEnd) {
-				maxBaselineEnd = task.BaselineEndDate
+			if task.BaselineStartDate != nil && task.BaselineEndDate != nil {
+				if minBaselineStart == nil || task.BaselineStartDate.Before(*minBaselineStart) {
+					minBaselineStart = task.BaselineStartDate
+				}
+				if maxBaselineEnd == nil || task.BaselineEndDate.After(*maxBaselineEnd) {
+					maxBaselineEnd = task.BaselineEndDate
+				}
 			}
 		}
 	}
