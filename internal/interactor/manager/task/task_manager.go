@@ -145,11 +145,13 @@ func (m *manager) createSubtasks(trx *gorm.DB, parentTask *taskModel.Create, sub
 			createList = append(createList, subSubtasks...)
 
 			// compare the minimum baseline_start_date and maximum baseline_end_date of the subtasks
-			if minBaselineStart == nil || subBody.BaselineStartDate.Before(*subMinBaselineStart) {
-				minBaselineStart = subBody.BaselineStartDate
-			}
-			if maxBaselineEnd == nil || subBody.BaselineEndDate.After(*subMaxBaselineEnd) {
-				maxBaselineEnd = subBody.BaselineEndDate
+			if subBody.BaselineStartDate != nil && subBody.BaselineEndDate != nil {
+				if minBaselineStart == nil || subBody.BaselineStartDate.Before(*subMinBaselineStart) {
+					minBaselineStart = subBody.BaselineStartDate
+				}
+				if maxBaselineEnd == nil || subBody.BaselineEndDate.After(*subMaxBaselineEnd) {
+					maxBaselineEnd = subBody.BaselineEndDate
+				}
 			}
 		}
 	}
@@ -616,11 +618,13 @@ func (m *manager) CreateAll(trx *gorm.DB, input []*taskModel.Create) (int, any) 
 			createList = append(createList, subSubtasks...)
 
 			// compare the minimum baseline_start_date and maximum baseline_end_date of the subtasks
-			if minBaselineStart == nil || inputBody.BaselineStartDate.Before(*subMinBaselineStart) {
-				minBaselineStart = inputBody.BaselineStartDate
-			}
-			if maxBaselineEnd == nil || inputBody.BaselineEndDate.After(*subMaxBaselineEnd) {
-				maxBaselineEnd = inputBody.BaselineEndDate
+			if inputBody.BaselineStartDate != nil && inputBody.BaselineEndDate != nil {
+				if minBaselineStart == nil || inputBody.BaselineStartDate.Before(*subMinBaselineStart) {
+					minBaselineStart = inputBody.BaselineStartDate
+				}
+				if maxBaselineEnd == nil || inputBody.BaselineEndDate.After(*subMaxBaselineEnd) {
+					maxBaselineEnd = inputBody.BaselineEndDate
+				}
 			}
 		}
 	}
