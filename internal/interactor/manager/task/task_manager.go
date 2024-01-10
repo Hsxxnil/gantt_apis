@@ -1358,7 +1358,7 @@ func (m *manager) Import(trx *gorm.DB, input *taskModel.Import) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	taskIdx := [17]int{}
+	taskIdx := [18]int{}
 	taskRecordIdx := make(map[string]int)
 	var createAllTask []*taskModel.Create
 	for i, record := range records {
@@ -1435,6 +1435,8 @@ func (m *manager) Import(trx *gorm.DB, input *taskModel.Import) (int, any) {
 						taskIdx[15] = index
 					case "Baseline End date", "基準結束日":
 						taskIdx[16] = index
+					case "Baseline Duration", "基準工作天":
+						taskIdx[17] = index
 					}
 				}
 			}
@@ -1601,6 +1603,15 @@ func (m *manager) Import(trx *gorm.DB, input *taskModel.Import) (int, any) {
 				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 			}
 			createTask.BaselineEndDate = util.PointerTime(endDate)
+		}
+
+		if record[taskIdx[17]] != "" {
+			duration := strings.Replace(record[taskIdx[17]], "天", "", -1)
+			durationNum, err := strconv.ParseFloat(duration, 64)
+			if err != nil {
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+			createTask.BaselineDuration = durationNum
 		}
 
 		// check if there is no data with the same outline_number
