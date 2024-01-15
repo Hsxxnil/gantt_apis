@@ -419,10 +419,10 @@ func (m *manager) Update(trx *gorm.DB, input *projectModel.Update) (int, any) {
 		if *projectBase.CreatedBy != *input.UpdatedBy {
 			if pmBase != nil {
 				if *pmBase.ResourceUUID != *input.UpdateResUUID {
-					return code.PermissionDenied, code.GetCodeMessage(code.PermissionDenied, "You don't have permission to update this project!")
+					return code.BadRequest, code.GetCodeMessage(code.BadRequest, "You don't have permission to update this project!")
 				}
 			} else {
-				return code.PermissionDenied, code.GetCodeMessage(code.PermissionDenied, "You don't have permission to update this project!")
+				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "You don't have permission to update this project!")
 			}
 		}
 	}
