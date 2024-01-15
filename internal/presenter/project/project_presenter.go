@@ -182,8 +182,9 @@ func (c *control) Delete(ctx *gin.Context) {
 	input := &projectModel.Update{}
 	input.ProjectUUID = projectID
 	input.UpdatedBy = util.PointerString(ctx.MustGet("user_id").(string))
-	input.UpdateResUUID = util.PointerString(ctx.MustGet("resource_id").(string))
-	input.UpdateRole = util.PointerString(ctx.MustGet("role").(string))
+	if ctx.MustGet("role").(string) != "admin" {
+		input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
+	}
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
@@ -215,8 +216,9 @@ func (c *control) Update(ctx *gin.Context) {
 	input := &projectModel.Update{}
 	input.ProjectUUID = projectID
 	input.UpdatedBy = util.PointerString(ctx.MustGet("user_id").(string))
-	input.UpdateResUUID = util.PointerString(ctx.MustGet("resource_id").(string))
-	input.UpdateRole = util.PointerString(ctx.MustGet("role").(string))
+	if ctx.MustGet("role").(string) != "admin" {
+		input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
+	}
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
