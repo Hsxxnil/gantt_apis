@@ -174,6 +174,10 @@ func (s *storage) GetBySingle(input *model.Base) (output *model.Table, err error
 		query.Where("role = ?", input.Role)
 	}
 
+	if input.ProjectUUID != nil {
+		query.Where("project_uuid = ?", input.ProjectUUID)
+	}
+
 	err = query.First(&output).Error
 	if err != nil {
 		log.Error(err)

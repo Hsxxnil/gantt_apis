@@ -13,7 +13,7 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "passcode": "632717"
+  "passcode": "287651"
 }
 
 > {% client.global.set("accessToken", response.body.body.access_token); %}
@@ -57,13 +57,18 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### Update
-PATCH {{host}}/hta-gantt/v1.0/projects/f58324b7-99dd-45a0-9036-1954a77138ca
+PATCH {{host}}/hta-gantt/v1.0/projects/7e4291ac-23a7-4e37-aa09-14cbf6f96b96
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
   "project_name": "123",
-  "resource": []
+  "resource": [
+    {
+      "resource_uuid": "7c2df8a1-df2c-4a8d-947e-5118f4928902",
+      "role": "PM"
+    }
+  ]
 }
 
 ### Delete
