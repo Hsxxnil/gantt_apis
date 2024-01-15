@@ -179,8 +179,11 @@ func (c *control) GetBySingle(ctx *gin.Context) {
 func (c *control) Delete(ctx *gin.Context) {
 	trx := ctx.MustGet("db_trx").(*gorm.DB)
 	projectID := ctx.Param("projectID")
-	input := &projectModel.Field{}
+	input := &projectModel.Update{}
 	input.ProjectUUID = projectID
+	input.UpdatedBy = util.PointerString(ctx.MustGet("user_id").(string))
+	input.UpdateResUUID = util.PointerString(ctx.MustGet("resource_id").(string))
+	input.UpdateRole = util.PointerString(ctx.MustGet("role").(string))
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))

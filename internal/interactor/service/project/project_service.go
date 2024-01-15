@@ -20,7 +20,7 @@ type Service interface {
 	GetBySingle(input *model.Field) (output *db.Base, err error)
 	GetByQuantity(input *model.Field) (quantity int64, err error)
 	Update(input *model.Update) (err error)
-	Delete(input *model.Field) (err error)
+	Delete(input *model.Update) (err error)
 }
 
 type service struct {
@@ -185,7 +185,7 @@ func (s *service) GetBySingle(input *model.Field) (output *db.Base, err error) {
 	return output, nil
 }
 
-func (s *service) Delete(input *model.Field) (err error) {
+func (s *service) Delete(input *model.Update) (err error) {
 	field := &db.Base{}
 	marshal, err := sonic.Marshal(input)
 	if err != nil {
