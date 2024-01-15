@@ -50,6 +50,8 @@ type Field struct {
 	Status *string `json:"status,omitempty" form:"status"`
 	// 創建者
 	CreatedBy *string `json:"created_by,omitempty" form:"created_by"`
+	// 資源UUID
+	ResourceUUID *string `json:"resource_uuid,omitempty" form:"resource_uuid"`
 	// 搜尋欄位
 	Filter `json:"filter"`
 }
