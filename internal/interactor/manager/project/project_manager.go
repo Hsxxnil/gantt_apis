@@ -208,12 +208,8 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 		if input.CreatedBy == nil {
 			project.IsEditable = true
 		} else {
-			if *projectBase[i].CreatedBy == *input.CreatedBy {
+			if *projectBase[i].CreatedBy == *input.CreatedBy || project.Manager == *input.ResourceUUID {
 				project.IsEditable = true
-			} else {
-				if project.Manager == *input.ResourceUUID {
-					project.IsEditable = true
-				}
 			}
 		}
 	}

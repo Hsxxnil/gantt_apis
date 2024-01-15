@@ -141,6 +141,10 @@ func (c *control) GetByListNoPaginationNoSub(ctx *gin.Context) {
 // @Router /tasks/get-by-projects [post]
 func (c *control) GetByProjectUUIDList(ctx *gin.Context) {
 	input := &taskModel.ProjectIDs{}
+	if ctx.MustGet("role").(string) != "admin" {
+		input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
+		input.CreatedBy = util.PointerString(ctx.MustGet("user_id").(string))
+	}
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
