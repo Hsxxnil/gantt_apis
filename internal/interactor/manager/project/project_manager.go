@@ -203,13 +203,26 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 		} else {
 			project.Progress = 0
 		}
+
+		// check the user can edit or delete the project
+		if input.CreatedBy == nil {
+			project.IsEditable = true
+		} else {
+			if *projectBase[i].CreatedBy == *input.CreatedBy {
+				project.IsEditable = true
+			} else {
+				if project.Manager == *input.ResourceUUID {
+					project.IsEditable = true
+				}
+			}
+		}
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
 
 func (m *manager) GetByListNoPagination(input *projectModel.Field) (int, any) {
-	output := &projectModel.List{}
+	output := &projectModel.ListNoPagination{}
 
 	// if the user is not admin, search the project which is created by the user or the user is the project's member
 	if input.CreatedBy != nil && input.ResourceUUID != nil {
@@ -239,43 +252,6 @@ func (m *manager) GetByListNoPagination(input *projectModel.Field) (int, any) {
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-	}
-
-	// get projects' manager
-	proResBase, err := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
-		Role: util.PointerString("PM"),
-	})
-	if err != nil {
-		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			log.Error(err)
-			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-		}
-	}
-
-	// create project's manager map
-	projectMap := make(map[string]string)
-	for _, proRes := range proResBase {
-		projectMap[*proRes.ProjectUUID] = *proRes.Resources.ResourceName
-	}
-
-	today := time.Now().UTC()
-	for i, project := range output.Projects {
-		project.Type = *projectBase[i].ProjectTypes.Name
-		project.Manager = projectMap[*projectBase[i].ProjectUUID]
-		project.CreatedBy = *projectBase[i].CreatedByUsers.Name
-		project.UpdatedBy = *projectBase[i].UpdatedByUsers.Name
-		if projectBase[i].StartDate != nil && projectBase[i].EndDate != nil {
-			progress := int64((today.Sub(*projectBase[i].StartDate).Hours() / projectBase[i].EndDate.Sub(*projectBase[i].StartDate).Hours()) * 100)
-			if progress <= 0 {
-				project.Progress = 0
-			} else if progress >= 100 {
-				project.Progress = 100
-			} else {
-				project.Progress = progress
-			}
-		} else {
-			project.Progress = 0
-		}
 	}
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
