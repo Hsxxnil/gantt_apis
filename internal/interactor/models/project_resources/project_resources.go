@@ -13,6 +13,8 @@ type Create struct {
 	ResourceUUID string `json:"resource_uuid,omitempty" binding:"required,uuid4" validate:"required,uuid4"`
 	// 專案角色
 	Role string `json:"role,omitempty"`
+	// 是否可編輯專案任務
+	IsEditable bool `json:"is_editable,omitempty"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }
@@ -31,6 +33,8 @@ type Field struct {
 	ResourceUUIDs []*string `json:"resource_uuids,omitempty" form:"resource_uuids" swaggerignore:"true"`
 	// 專案角色
 	Role *string `json:"role,omitempty" form:"role"`
+	// 是否可編輯專案任務
+	IsEditable *bool `json:"is_editable,omitempty" form:"is_editable"`
 	// 搜尋欄位
 	Filter `json:"filter"`
 }
@@ -89,6 +93,8 @@ type Single struct {
 	IsExpand bool `json:"is_expand,omitempty"`
 	// 專案角色
 	Role string `json:"role,omitempty"`
+	// 是否可編輯專案任務
+	IsEditable bool `json:"is_editable"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty"`
 	// 更新者
@@ -103,6 +109,8 @@ type Update struct {
 	ID string `json:"id,omitempty"  binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
 	// 專案角色
 	Role *string `json:"role,omitempty"`
+	// 是否可編輯專案任務
+	IsEditable *bool `json:"is_editable,omitempty"`
 	// 更新者
 	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }

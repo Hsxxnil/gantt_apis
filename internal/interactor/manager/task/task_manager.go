@@ -1106,6 +1106,29 @@ func (m *manager) Update(trx *gorm.DB, input *taskModel.Update) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
+	// check the update_by has the permission to update the project's tasks
+	if input.ResourceUUID != nil {
+		// search project_resource
+		proResBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
+			ProjectUUID:  projectBase.ProjectUUID,
+			ResourceUUID: input.ResourceUUID,
+		})
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, err.Error())
+			}
+
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+
+		if proResBase != nil {
+			if !*proResBase.IsEditable {
+				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "You don't have permission to update the project's tasks.")
+			}
+		}
+	}
+
 	// determine the project status
 	if *projectBase.Status != "建檔中" {
 		if *projectBase.Status == "執行中" || *projectBase.Status == "暫停中" {
@@ -1203,6 +1226,29 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 		TaskUUIDs                        []*string
 		minBaselineStart, maxBaselineEnd *time.Time
 	)
+
+	// check the update_by has the permission to update the project's tasks
+	if input[0].ResourceUUID != nil {
+		// search project_resource
+		proResBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
+			ProjectUUID:  input[0].ProjectUUID,
+			ResourceUUID: input[0].ResourceUUID,
+		})
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, err.Error())
+			}
+
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+
+		if proResBase != nil {
+			if !*proResBase.IsEditable {
+				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "You don't have permission to update the project's tasks.")
+			}
+		}
+	}
 
 	// update the main task
 	for i, inputBody := range input {

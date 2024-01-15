@@ -252,7 +252,9 @@ type Update struct {
 	// 任務標示(陣列的字串型態)
 	Indicator *string `json:"indicator,omitempty" swaggerignore:"true"`
 	// 更新者
-	UpdatedBy *string `json:"updated_by,omitempty" swaggerignore:"true"`
+	UpdatedBy *string `json:"updated_by,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
+	// 更新者ResourceUUID
+	ResourceUUID *string `json:"resource_uuid,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
 }
 
 // Segments struct is used to segment the task
