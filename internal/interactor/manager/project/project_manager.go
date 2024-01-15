@@ -135,6 +135,19 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 		}
 	}
 
+	// if the user is not admin, search the project which is created by the user or the user is the project's member
+	if input.CreatedBy != nil && input.ResourceUUID != nil {
+		// search project_resource
+		proResBase, _ := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
+			ResourceUUID: input.ResourceUUID,
+		})
+		if len(proResBase) > 0 {
+			for _, proRes := range proResBase {
+				input.ProjectUUIDs = append(input.ProjectUUIDs, proRes.ProjectUUID)
+			}
+		}
+	}
+
 	quantity, projectBase, err := m.ProjectService.GetByList(input)
 	if err != nil {
 		log.Error(err)
@@ -197,6 +210,20 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 
 func (m *manager) GetByListNoPagination(input *projectModel.Field) (int, any) {
 	output := &projectModel.List{}
+
+	// if the user is not admin, search the project which is created by the user or the user is the project's member
+	if input.CreatedBy != nil && input.ResourceUUID != nil {
+		// search project_resource
+		proResBase, _ := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
+			ResourceUUID: input.ResourceUUID,
+		})
+		if len(proResBase) > 0 {
+			for _, proRes := range proResBase {
+				input.ProjectUUIDs = append(input.ProjectUUIDs, proRes.ProjectUUID)
+			}
+		}
+	}
+
 	projectBase, err := m.ProjectService.GetByListNoPagination(input)
 	if err != nil {
 		log.Error(err)
