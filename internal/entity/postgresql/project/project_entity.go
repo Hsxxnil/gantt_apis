@@ -66,10 +66,6 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 		query.Where("project_uuid = ?", input.ProjectUUID)
 	}
 
-	if input.CreatedBy != nil {
-		query.Where("created_by = ?", input.CreatedBy)
-	}
-
 	if input.FilterStatus != nil {
 		query.Where("status in (?)", input.FilterStatus)
 	}
@@ -78,8 +74,12 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 		query.Where("type_id in (?)", input.FilterTypes)
 	}
 
-	if input.ProjectUUIDs != nil {
+	if input.ProjectUUIDs != nil && input.CreatedBy != nil {
+		query.Where("(project_uuid in (?) or created_by = ?)", input.ProjectUUIDs, input.CreatedBy)
+	} else if input.ProjectUUIDs != nil {
 		query.Where("project_uuid in (?)", input.ProjectUUIDs)
+	} else if input.CreatedBy != nil {
+		query.Or("created_by = ?", input.CreatedBy)
 	}
 
 	// filter
@@ -149,12 +149,12 @@ func (s *storage) GetByListNoPagination(input *model.Base) (output []*model.Tabl
 		query.Where("project_uuid = ?", input.ProjectUUID)
 	}
 
-	if input.CreatedBy != nil {
-		query.Where("created_by = ?", input.CreatedBy)
-	}
-
 	if input.ProjectUUIDs != nil {
 		query.Where("project_uuid in (?)", input.ProjectUUIDs)
+	}
+
+	if input.CreatedBy != nil {
+		query.Or("created_by = ?", input.CreatedBy)
 	}
 
 	err = query.Order("created_at desc").Find(&output).Error
