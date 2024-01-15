@@ -7960,6 +7960,10 @@ const docTemplate = `{
                                 "description": "結束日期",
                                 "type": "string"
                             },
+                            "is_editable": {
+                                "description": "是否可編輯或刪除專案",
+                                "type": "boolean"
+                            },
                             "manager": {
                                 "description": "負責人",
                                 "type": "string"
