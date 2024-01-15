@@ -8924,6 +8924,10 @@ const docTemplate = `{
                     "description": "任務標示工具提示",
                     "type": "string"
                 },
+                "is_editable": {
+                    "description": "是否可編輯或刪除任務",
+                    "type": "boolean"
+                },
                 "is_subtask": {
                     "description": "是否為任務",
                     "type": "boolean"

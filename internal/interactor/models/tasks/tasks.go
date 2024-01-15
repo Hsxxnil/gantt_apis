@@ -185,6 +185,8 @@ type Single struct {
 	IndicatorsToolTip string `json:"indicatorsTooltip,omitempty"`
 	// 任務標示IconClass
 	IndicatorsIconClass string `json:"indicatorsClass,omitempty"`
+	// 是否可編輯或刪除任務
+	IsEditable bool `json:"is_editable,omitempty"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty"`
 	// 更新者
@@ -295,6 +297,10 @@ type Import struct {
 type ProjectIDs struct {
 	// 多筆
 	Projects []*string `json:"projects"`
+	// 資源UUID
+	ResourceUUID *string `json:"resource_uuid,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
+	// 創建者
+	CreatedBy *string `json:"created_by,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
 	// 搜尋欄位
 	Filter `json:"filter"`
 }

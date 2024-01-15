@@ -695,6 +695,27 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 		projectMap[project.ProjectUUID] = project
 	}
 
+	// check if the user is a project manager
+	isPM := false
+	if len(input.Projects) == 1 {
+		if input.ResourceUUID != nil {
+			pmBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
+				ProjectUUID: input.Projects[0],
+				Role:        util.PointerString("PM"),
+			})
+			if err != nil {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+
+			if pmBase != nil {
+				if *pmBase.ResourceUUID == *input.ResourceUUID {
+					isPM = true
+				}
+			}
+		}
+	}
+
 	// get project tasks
 	projectTaskMap := make(map[*string][]*taskModel.Single)
 	var (
@@ -790,6 +811,22 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 						goroutineErr <- err
 					}
 					task.Resources[j].ResourceGroups = resourceGroup
+				}
+
+				// check the user can edit or delete the task
+				if input.CreatedBy == nil || isPM {
+					task.IsEditable = true
+				} else {
+					if *taskBase[i].CreatedBy == *input.CreatedBy {
+						task.IsEditable = true
+					} else {
+						for _, res := range task.Resources {
+							if res.ResourceUUID == *input.ResourceUUID {
+								task.IsEditable = true
+								break
+							}
+						}
+					}
 				}
 
 				if !input.FilterMilestone {
@@ -1049,7 +1086,8 @@ func (m *manager) GetBySingle(input *taskModel.Field) (int, any) {
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
 
-func (m *manager) Delete(trx *gorm.DB, input *taskModel.DeletedTaskUUIDs) (int, any) {
+func (m *manager) Delete(trx *gorm.DB,
+	input *taskModel.DeletedTaskUUIDs) (int, any) {
 	defer trx.Rollback()
 
 	err := m.TaskService.WithTrx(trx).Delete(&taskModel.Field{
@@ -1078,7 +1116,8 @@ func (m *manager) Delete(trx *gorm.DB, input *taskModel.DeletedTaskUUIDs) (int, 
 	return code.Successful, code.GetCodeMessage(code.Successful, "Delete ok!")
 }
 
-func (m *manager) Update(trx *gorm.DB, input *taskModel.Update) (int, any) {
+func (m *manager) Update(trx *gorm.DB,
+	input *taskModel.Update) (int, any) {
 	defer trx.Rollback()
 
 	taskBase, err := m.TaskService.GetBySingle(&taskModel.Field{
@@ -1216,7 +1255,8 @@ func (m *manager) Update(trx *gorm.DB, input *taskModel.Update) (int, any) {
 	return code.Successful, code.GetCodeMessage(code.Successful, taskBase.TaskUUID)
 }
 
-func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) {
+func (m *manager) UpdateAll(trx *gorm.DB,
+	input []*taskModel.Update) (int, any) {
 	defer trx.Rollback()
 
 	log.Info("UpdateAll Start !!")
@@ -1373,7 +1413,8 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 	return code.Successful, code.GetCodeMessage(code.Successful, "Successful update!")
 }
 
-func (m *manager) Import(trx *gorm.DB, input *taskModel.Import) (int, any) {
+func (m *manager) Import(trx *gorm.DB,
+	input *taskModel.Import) (int, any) {
 	defer trx.Rollback()
 
 	// get project_resources
