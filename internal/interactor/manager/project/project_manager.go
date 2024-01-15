@@ -33,7 +33,7 @@ type Manager interface {
 	GetByList(input *projectModel.Fields) (int, any)
 	GetByListNoPagination(input *projectModel.Field) (int, any)
 	GetBySingle(input *projectModel.Field) (int, any)
-	Delete(trx *gorm.DB, input *projectModel.Field) (int, any)
+	Delete(trx *gorm.DB, input *projectModel.Update) (int, any)
 	Update(trx *gorm.DB, input *projectModel.Update) (int, any)
 }
 
@@ -335,10 +335,23 @@ func (m *manager) GetBySingle(input *projectModel.Field) (int, any) {
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
 
-func (m *manager) Delete(trx *gorm.DB, input *projectModel.Field) (int, any) {
+func (m *manager) Delete(trx *gorm.DB, input *projectModel.Update) (int, any) {
 	defer trx.Rollback()
 
-	_, err := m.ProjectService.GetBySingle(&projectModel.Field{
+	// check the update_by is the project's manager
+	pmBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
+		ProjectUUID: util.PointerString(input.ProjectUUID),
+		Role:        util.PointerString("PM"),
+	})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
+	// check the update_by is the project's creator
+	projectBase, err := m.ProjectService.GetBySingle(&projectModel.Field{
 		ProjectUUID: input.ProjectUUID,
 	})
 	if err != nil {
@@ -348,6 +361,18 @@ func (m *manager) Delete(trx *gorm.DB, input *projectModel.Field) (int, any) {
 
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	if *input.UpdateRole != "admin" {
+		if *projectBase.CreatedBy != *input.UpdatedBy {
+			if pmBase != nil {
+				if *pmBase.ResourceUUID != *input.UpdateResUUID {
+					return code.BadRequest, code.GetCodeMessage(code.BadRequest, "You don't have permission to delete this project!")
+				}
+			} else {
+				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "You don't have permission to delete this project!")
+			}
+		}
 	}
 
 	err = m.ProjectService.WithTrx(trx).Delete(input)
