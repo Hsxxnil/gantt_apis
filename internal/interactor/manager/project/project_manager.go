@@ -363,6 +363,19 @@ func (m *manager) Delete(trx *gorm.DB, input *projectModel.Field) (int, any) {
 func (m *manager) Update(trx *gorm.DB, input *projectModel.Update) (int, any) {
 	defer trx.Rollback()
 
+	// check the update_by is the project's manager
+	pmBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
+		ProjectUUID: util.PointerString(input.ProjectUUID),
+		Role:        util.PointerString("PM"),
+	})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
+	// check the update_by is the project's creator
 	projectBase, err := m.ProjectService.GetBySingle(&projectModel.Field{
 		ProjectUUID: input.ProjectUUID,
 	})
@@ -373,6 +386,18 @@ func (m *manager) Update(trx *gorm.DB, input *projectModel.Update) (int, any) {
 
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	if *input.UpdateRole != "admin" {
+		if *projectBase.CreatedBy != *input.UpdatedBy {
+			if pmBase != nil {
+				if *pmBase.ResourceUUID != *input.UpdateResUUID {
+					return code.PermissionDenied, code.GetCodeMessage(code.PermissionDenied, "You don't have permission to update this project!")
+				}
+			} else {
+				return code.PermissionDenied, code.GetCodeMessage(code.PermissionDenied, "You don't have permission to update this project!")
+			}
+		}
 	}
 
 	err = m.ProjectService.Update(input)
