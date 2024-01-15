@@ -177,6 +177,10 @@ type Update struct {
 	Resource []*ProjectResource `json:"resource,omitempty"`
 	// 更新者
 	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
+	// 更新者ResourceUUID
+	UpdateResUUID *string `json:"update_res_uuid,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
+	// 更新者Role
+	UpdateRole *string `json:"update_role,omitempty" swaggerignore:"true"`
 }
 
 // ProjectResource is used to sync create or update project_resource.
