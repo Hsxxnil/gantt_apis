@@ -7661,6 +7661,10 @@ const docTemplate = `{
                     "description": "表ID",
                     "type": "string"
                 },
+                "is_editable": {
+                    "description": "是否可編輯專案任務",
+                    "type": "boolean"
+                },
                 "is_expand": {
                     "type": "boolean"
                 },
