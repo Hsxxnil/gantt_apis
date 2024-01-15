@@ -114,6 +114,8 @@ type List struct {
 		Status string `json:"status,omitempty"`
 		// 專案進度
 		Progress int64 `json:"progress"`
+		// 是否可編輯或刪除專案
+		IsEditable bool `json:"is_editable"`
 		// 創建者
 		CreatedBy string `json:"created_by,omitempty"`
 		// 更新者
@@ -123,6 +125,17 @@ type List struct {
 	} `json:"projects"`
 	// 分頁返回結構檔
 	page.Total
+}
+
+// ListNoPagination is multiple return structure files
+type ListNoPagination struct {
+	// 多筆
+	Projects []*struct {
+		// 表ID
+		ProjectUUID string `json:"project_uuid,omitempty"`
+		// 名稱
+		ProjectName string `json:"project_name,omitempty"`
+	} `json:"projects"`
 }
 
 // Single return structure file
