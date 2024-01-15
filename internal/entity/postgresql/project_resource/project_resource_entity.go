@@ -210,6 +210,10 @@ func (s *storage) Update(input *model.Base) (err error) {
 		data["role"] = input.Role
 	}
 
+	if input.IsEditable != nil {
+		data["is_editable"] = input.IsEditable
+	}
+
 	if input.UpdatedBy != nil {
 		data["updated_by"] = input.UpdatedBy
 	}

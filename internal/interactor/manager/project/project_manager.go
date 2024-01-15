@@ -208,12 +208,8 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 		if input.CreatedBy == nil {
 			project.IsEditable = true
 		} else {
-			if *projectBase[i].CreatedBy == *input.CreatedBy {
+			if *projectBase[i].CreatedBy == *input.CreatedBy || project.Manager == *input.ResourceUUID {
 				project.IsEditable = true
-			} else {
-				if project.Manager == *input.ResourceUUID {
-					project.IsEditable = true
-				}
 			}
 		}
 	}
@@ -258,6 +254,23 @@ func (m *manager) GetByListNoPagination(input *projectModel.Field) (int, any) {
 }
 
 func (m *manager) GetBySingle(input *projectModel.Field) (int, any) {
+	// if the user is not admin, search the project which is created by the user or the user is the project's member
+	if input.CreatedBy != nil && input.ResourceUUID != nil {
+		// search project_resource
+		_, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
+			ResourceUUID: input.ResourceUUID,
+			ProjectUUID:  util.PointerString(input.ProjectUUID),
+		})
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, err.Error())
+			}
+
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
 	projectBase, err := m.ProjectService.GetBySingle(input)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -339,14 +352,14 @@ func (m *manager) Delete(trx *gorm.DB, input *projectModel.Update) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	if *input.UpdateRole != "admin" {
+	if input.ResourceUUID != nil {
 		if *projectBase.CreatedBy != *input.UpdatedBy {
 			if pmBase != nil {
-				if *pmBase.ResourceUUID != *input.UpdateResUUID {
-					return code.BadRequest, code.GetCodeMessage(code.BadRequest, "You don't have permission to delete this project!")
+				if *pmBase.ResourceUUID != *input.ResourceUUID {
+					return code.BadRequest, code.GetCodeMessage(code.BadRequest, "You don't have permission to update this project!")
 				}
 			} else {
-				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "You don't have permission to delete this project!")
+				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "You don't have permission to update this project!")
 			}
 		}
 	}
@@ -416,10 +429,10 @@ func (m *manager) Update(trx *gorm.DB, input *projectModel.Update) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	if *input.UpdateRole != "admin" {
+	if input.ResourceUUID != nil {
 		if *projectBase.CreatedBy != *input.UpdatedBy {
 			if pmBase != nil {
-				if *pmBase.ResourceUUID != *input.UpdateResUUID {
+				if *pmBase.ResourceUUID != *input.ResourceUUID {
 					return code.BadRequest, code.GetCodeMessage(code.BadRequest, "You don't have permission to update this project!")
 				}
 			} else {

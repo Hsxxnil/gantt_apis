@@ -185,6 +185,8 @@ type Single struct {
 	IndicatorsToolTip string `json:"indicatorsTooltip,omitempty"`
 	// 任務標示IconClass
 	IndicatorsIconClass string `json:"indicatorsClass,omitempty"`
+	// 是否可編輯或刪除任務
+	IsEditable bool `json:"is_editable,omitempty"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty"`
 	// 更新者
@@ -252,7 +254,9 @@ type Update struct {
 	// 任務標示(陣列的字串型態)
 	Indicator *string `json:"indicator,omitempty" swaggerignore:"true"`
 	// 更新者
-	UpdatedBy *string `json:"updated_by,omitempty" swaggerignore:"true"`
+	UpdatedBy *string `json:"updated_by,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
+	// 更新者ResourceUUID
+	ResourceUUID *string `json:"resource_uuid,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
 }
 
 // Segments struct is used to segment the task
@@ -293,6 +297,10 @@ type Import struct {
 type ProjectIDs struct {
 	// 多筆
 	Projects []*string `json:"projects"`
+	// 資源UUID
+	ResourceUUID *string `json:"resource_uuid,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
+	// 創建者
+	CreatedBy *string `json:"created_by,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
 	// 搜尋欄位
 	Filter `json:"filter"`
 }
