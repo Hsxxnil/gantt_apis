@@ -258,6 +258,23 @@ func (m *manager) GetByListNoPagination(input *projectModel.Field) (int, any) {
 }
 
 func (m *manager) GetBySingle(input *projectModel.Field) (int, any) {
+	// if the user is not admin, search the project which is created by the user or the user is the project's member
+	if input.CreatedBy != nil && input.ResourceUUID != nil {
+		// search project_resource
+		_, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
+			ResourceUUID: input.ResourceUUID,
+			ProjectUUID:  util.PointerString(input.ProjectUUID),
+		})
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, err.Error())
+			}
+
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
 	projectBase, err := m.ProjectService.GetBySingle(input)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

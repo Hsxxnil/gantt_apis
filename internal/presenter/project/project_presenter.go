@@ -149,8 +149,9 @@ func (c *control) GetBySingle(ctx *gin.Context) {
 	projectID := ctx.Param("projectID")
 	input := &projectModel.Field{}
 	input.ProjectUUID = projectID
-	if ctx.MustGet("role").(string) == "user" {
+	if ctx.MustGet("role").(string) != "admin" {
 		input.CreatedBy = util.PointerString(ctx.MustGet("user_id").(string))
+		input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
 	}
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
