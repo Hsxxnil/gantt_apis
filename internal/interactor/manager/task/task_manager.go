@@ -288,6 +288,7 @@ func (m *manager) syncCreateTaskResources(trx *gorm.DB, taskResources []map[stri
 					proResList = append(proResList, &projectResourceModel.Create{
 						ProjectUUID:  projectID,
 						ResourceUUID: res.ResourceUUID,
+						IsEditable:   true,
 						CreatedBy:    createdBy,
 					})
 				}
