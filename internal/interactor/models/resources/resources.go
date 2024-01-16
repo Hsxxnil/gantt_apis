@@ -180,6 +180,8 @@ type Update struct {
 	IsExpand *bool `json:"is_expand,omitempty"`
 	// 更新者
 	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
+	// 使用者角色
+	Role *string `json:"role,omitempty" swaggerignore:"true"`
 }
 
 // TaskSingle return structure file for tasks
