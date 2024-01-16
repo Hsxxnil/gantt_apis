@@ -120,11 +120,17 @@ func (m *manager) GetByList(input *resourceModel.Fields) (int, any) {
 		}
 		resource.ResourceGroups = resourceGroup
 
-		// check if the resource is bind to the user
-		if exist := userMap[*resourceBase[i].ResourceUUID]; exist {
-			resource.IsBind = true
+		// check if the resource is bind to the user and the user can edit or delete the project
+		if exist := userMap[*resourceBase[i].ResourceUUID]; !exist {
+			if input.CreatedBy == nil && input.Role != util.PointerString("admin") {
+				resource.IsEditable = true
+			} else {
+				if *resourceBase[i].CreatedBy == *input.CreatedBy {
+					resource.IsEditable = true
+				}
+			}
 		} else {
-			resource.IsBind = false
+			resource.IsBind = true
 		}
 	}
 

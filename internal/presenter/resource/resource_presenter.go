@@ -90,6 +90,8 @@ func (c *control) GetByList(ctx *gin.Context) {
 	page := ctx.Query("page")
 	input.Limit, _ = strconv.ParseInt(limit, 10, 64)
 	input.Page, _ = strconv.ParseInt(page, 10, 64)
+	input.Role = util.PointerString(ctx.MustGet("role").(string))
+	input.CreatedBy = util.PointerString(ctx.MustGet("user_id").(string))
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))

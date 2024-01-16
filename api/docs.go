@@ -8260,6 +8260,10 @@ const docTemplate = `{
                                 "description": "是否綁定",
                                 "type": "boolean"
                             },
+                            "is_editable": {
+                                "description": "是否可編輯或刪除資源",
+                                "type": "boolean"
+                            },
                             "is_expand": {
                                 "type": "boolean"
                             },
@@ -8334,6 +8338,10 @@ const docTemplate = `{
                 },
                 "is_bind": {
                     "description": "是否綁定",
+                    "type": "boolean"
+                },
+                "is_editable": {
+                    "description": "是否可編輯或刪除資源",
                     "type": "boolean"
                 },
                 "is_expand": {
