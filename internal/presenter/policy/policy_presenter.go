@@ -40,7 +40,7 @@ func Init() Control {
 // @success 200 object code.SuccessfulMessage{body=string} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
-// @Router /v1.0/policies [post]
+// @Router /policies [post]
 func (c *control) Create(ctx *gin.Context) {
 	input := &policyModel.PolicyRule{}
 	if err := ctx.ShouldBindJSON(input); err != nil {
@@ -64,7 +64,7 @@ func (c *control) Create(ctx *gin.Context) {
 // @success 200 object code.SuccessfulMessage{body=[]policies.Single} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
-// @Router /v1.0/policies [get]
+// @Router /policies [get]
 func (c *control) GetByList(ctx *gin.Context) {
 	httpCode, codeMessage := c.Manager.GetByList()
 	ctx.JSON(httpCode, codeMessage)
@@ -82,7 +82,7 @@ func (c *control) GetByList(ctx *gin.Context) {
 // @success 200 object code.SuccessfulMessage{body=string} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
-// @Router /v1.0/policies [delete]
+// @Router /policies [delete]
 func (c *control) Delete(ctx *gin.Context) {
 	input := &policyModel.PolicyRule{}
 	if err := ctx.ShouldBindJSON(input); err != nil {
