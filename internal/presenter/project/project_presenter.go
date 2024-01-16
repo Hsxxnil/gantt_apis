@@ -83,9 +83,10 @@ func (c *control) GetByList(ctx *gin.Context) {
 	page := ctx.Query("page")
 	input.Limit, _ = strconv.ParseInt(limit, 10, 64)
 	input.Page, _ = strconv.ParseInt(page, 10, 64)
-	input.Role = util.PointerString(ctx.MustGet("role").(string))
-	input.CreatedBy = util.PointerString(ctx.MustGet("user_id").(string))
-	input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
+	if ctx.MustGet("role").(string) != "admin" {
+		input.CreatedBy = util.PointerString(ctx.MustGet("user_id").(string))
+		input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
+	}
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
@@ -114,9 +115,10 @@ func (c *control) GetByList(ctx *gin.Context) {
 // @Router /projects/no-pagination [get]
 func (c *control) GetByListNoPagination(ctx *gin.Context) {
 	input := &projectModel.Field{}
-	input.Role = util.PointerString(ctx.MustGet("role").(string))
-	input.CreatedBy = util.PointerString(ctx.MustGet("user_id").(string))
-	input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
+	if ctx.MustGet("role").(string) != "admin" {
+		input.CreatedBy = util.PointerString(ctx.MustGet("user_id").(string))
+		input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
+	}
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
@@ -144,9 +146,10 @@ func (c *control) GetBySingle(ctx *gin.Context) {
 	projectID := ctx.Param("projectID")
 	input := &projectModel.Field{}
 	input.ProjectUUID = projectID
-	input.Role = util.PointerString(ctx.MustGet("role").(string))
-	input.CreatedBy = util.PointerString(ctx.MustGet("user_id").(string))
-	input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
+	if ctx.MustGet("role").(string) != "admin" {
+		input.CreatedBy = util.PointerString(ctx.MustGet("user_id").(string))
+		input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
+	}
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
@@ -176,8 +179,9 @@ func (c *control) Delete(ctx *gin.Context) {
 	input := &projectModel.Update{}
 	input.ProjectUUID = projectID
 	input.UpdatedBy = util.PointerString(ctx.MustGet("user_id").(string))
-	input.Role = util.PointerString(ctx.MustGet("role").(string))
-	input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
+	if ctx.MustGet("role").(string) != "admin" {
+		input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
+	}
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
@@ -208,8 +212,9 @@ func (c *control) Update(ctx *gin.Context) {
 	input := &projectModel.Update{}
 	input.ProjectUUID = projectID
 	input.UpdatedBy = util.PointerString(ctx.MustGet("user_id").(string))
-	input.Role = util.PointerString(ctx.MustGet("role").(string))
-	input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
+	if ctx.MustGet("role").(string) != "admin" {
+		input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
+	}
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
