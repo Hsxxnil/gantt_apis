@@ -53,6 +53,10 @@ type Field struct {
 	ResourceGroup *string `json:"resource_group,omitempty" form:"resource_group"`
 	//
 	IsExpand *bool `json:"is_expand,omitempty" form:"is_expand"`
+	// 創建者
+	CreatedBy *string `json:"created_by,omitempty" form:"created_by"`
+	// 使用者角色
+	Role *string `json:"role,omitempty" form:"role"`
 	// 搜尋欄位
 	Filter `json:"filter"`
 	// 排序欄位
@@ -105,6 +109,8 @@ type List struct {
 		IsExpand bool `json:"is_expand,omitempty"`
 		// 是否綁定
 		IsBind bool `json:"is_bind"`
+		// 是否可編輯或刪除資源
+		IsEditable bool `json:"is_editable"`
 		// 創建者
 		CreatedBy string `json:"created_by,omitempty"`
 		// 更新者
@@ -140,6 +146,8 @@ type Single struct {
 	IsExpand bool `json:"is_expand,omitempty"`
 	// 是否綁定
 	IsBind bool `json:"is_bind"`
+	// 是否可編輯或刪除資源
+	IsEditable bool `json:"is_editable"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty"`
 	// 更新者
