@@ -256,7 +256,7 @@ type Update struct {
 	// 更新者
 	UpdatedBy *string `json:"updated_by,omitempty" swaggerignore:"true"`
 	// 資源UUID
-	ResourceUUID *string `json:"resource_uuid,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
+	ResourceUUID *string `json:"resource_uuid,omitempty" swaggerignore:"true"`
 	// 使用者角色
 	Role *string `json:"role,omitempty" swaggerignore:"true"`
 }
