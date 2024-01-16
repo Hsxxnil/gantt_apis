@@ -3,7 +3,6 @@ package role
 import (
 	"errors"
 	"github.com/bytedance/sonic"
-
 	"hta/internal/interactor/pkg/util"
 
 	roleModel "hta/internal/interactor/models/roles"
@@ -18,6 +17,7 @@ import (
 type Manager interface {
 	Create(trx *gorm.DB, input *roleModel.Create) (int, any)
 	GetByList(input *roleModel.Fields) (int, any)
+	GetByListNoPagination(input *roleModel.Field) (int, any)
 	GetBySingle(input *roleModel.Field) (int, any)
 	Delete(input *roleModel.Update) (int, any)
 	Update(input *roleModel.Update) (int, any)
@@ -72,6 +72,29 @@ func (m *manager) GetByList(input *roleModel.Fields) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 	output.Pages = util.Pagination(quantity, output.Limit)
+	err = sonic.Unmarshal(roleByte, &output.Roles)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	return code.Successful, code.GetCodeMessage(code.Successful, output)
+}
+
+func (m *manager) GetByListNoPagination(input *roleModel.Field) (int, any) {
+	output := &roleModel.List{}
+	roleBase, err := m.RoleService.GetByListNoPagination(input)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	roleByte, err := sonic.Marshal(roleBase)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
 	err = sonic.Unmarshal(roleByte, &output.Roles)
 	if err != nil {
 		log.Error(err)
