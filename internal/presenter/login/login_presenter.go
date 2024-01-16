@@ -150,7 +150,6 @@ func (c *control) Register(ctx *gin.Context) {
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
 		return
 	}
 
