@@ -52,8 +52,6 @@ type Field struct {
 	CreatedBy *string `json:"created_by,omitempty" form:"created_by"`
 	// 資源UUID
 	ResourceUUID *string `json:"resource_uuid,omitempty" form:"resource_uuid"`
-	// 使用者角色
-	Role *string `json:"role,omitempty" form:"role"`
 	// 搜尋欄位
 	Filter `json:"filter"`
 }
@@ -196,8 +194,6 @@ type Update struct {
 	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 	// 更新者ResourceUUID
 	ResourceUUID *string `json:"resource_uuid,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
-	// 使用者角色
-	Role *string `json:"role,omitempty" swaggerignore:"true"`
 }
 
 // ProjectResource is used to sync create or update project_resource.
