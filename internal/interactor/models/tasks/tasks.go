@@ -310,5 +310,7 @@ type DeletedTaskUUIDs struct {
 	// 多筆
 	Tasks []*string `json:"tasks,omitempty"`
 	// 專案UUID
-	ProjectUUID string `json:"project_uuid,omitempty" binding:"required,uuid4" validate:"required,uuid4"`
+	ProjectUUID *string `json:"project_uuid,omitempty" binding:"required,uuid4" validate:"required,uuid4"`
+	// 資源UUID
+	ResourceUUID *string `json:"resource_uuid,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
 }

@@ -1086,9 +1086,31 @@ func (m *manager) GetBySingle(input *taskModel.Field) (int, any) {
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
 
-func (m *manager) Delete(trx *gorm.DB,
-	input *taskModel.DeletedTaskUUIDs) (int, any) {
+func (m *manager) Delete(trx *gorm.DB, input *taskModel.DeletedTaskUUIDs) (int, any) {
 	defer trx.Rollback()
+
+	// check the update_by has the permission to delete the project's tasks
+	if input.ResourceUUID != nil {
+		// search project_resource
+		proResBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
+			ProjectUUID:  input.ProjectUUID,
+			ResourceUUID: input.ResourceUUID,
+		})
+		if err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, err.Error())
+			}
+
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+
+		if proResBase != nil {
+			if !*proResBase.IsEditable {
+				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "You don't have permission to update the project's tasks.")
+			}
+		}
+	}
 
 	err := m.TaskService.WithTrx(trx).Delete(&taskModel.Field{
 		DeletedTaskUUIDs: input.Tasks,
@@ -1106,7 +1128,7 @@ func (m *manager) Delete(trx *gorm.DB,
 	}
 
 	// sync update project's start and end dates
-	err = m.syncUpdateProjectStartEndDate(trx, util.PointerString(input.ProjectUUID), input.Tasks, nil, nil)
+	err = m.syncUpdateProjectStartEndDate(trx, input.ProjectUUID, input.Tasks, nil, nil)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -1149,7 +1171,7 @@ func (m *manager) Update(trx *gorm.DB,
 	if input.ResourceUUID != nil {
 		// search project_resource
 		proResBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
-			ProjectUUID:  projectBase.ProjectUUID,
+			ProjectUUID:  taskBase.ProjectUUID,
 			ResourceUUID: input.ResourceUUID,
 		})
 		if err != nil {
