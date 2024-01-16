@@ -284,8 +284,6 @@ func (m *manager) syncCreateTaskResources(trx *gorm.DB, taskResources []map[stri
 					CreatedBy:    createdBy,
 				})
 
-				log.Debug(res.ResourceUUID)
-				log.Debug(proResMap[res.ResourceUUID])
 				if proResMap[res.ResourceUUID] == nil {
 					proResList = append(proResList, &projectResourceModel.Create{
 						ProjectUUID:  projectID,
