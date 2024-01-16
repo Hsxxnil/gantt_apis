@@ -54,7 +54,6 @@ func (c *control) Create(ctx *gin.Context) {
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
 		return
 	}
 
@@ -81,7 +80,6 @@ func (c *control) GetByList(ctx *gin.Context) {
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
 		return
 	}
 
@@ -113,7 +111,6 @@ func (c *control) GetBySingle(ctx *gin.Context) {
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
 		return
 	}
 
@@ -143,7 +140,6 @@ func (c *control) Delete(ctx *gin.Context) {
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
 		return
 	}
 
@@ -173,7 +169,6 @@ func (c *control) Update(ctx *gin.Context) {
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
 		return
 	}
 
