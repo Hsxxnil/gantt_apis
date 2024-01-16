@@ -4,17 +4,17 @@ import (
 	"bytes"
 	"encoding/csv"
 	"golang.org/x/text/encoding/unicode"
+	"golang.org/x/text/transform"
 	"hta/internal/interactor/pkg/util"
+	"hta/internal/interactor/pkg/util/hash"
 	"net/http"
 
 	"hta/internal/interactor/manager/task"
 	taskModel "hta/internal/interactor/models/tasks"
 	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/hash"
 	"hta/internal/interactor/pkg/util/log"
 
 	"github.com/gin-gonic/gin"
-	"golang.org/x/text/transform"
 	"gorm.io/gorm"
 )
 
@@ -60,7 +60,6 @@ func (c *control) Create(ctx *gin.Context) {
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
 		return
 	}
 
@@ -83,17 +82,15 @@ func (c *control) Create(ctx *gin.Context) {
 // @Router /tasks/create-all [post]
 func (c *control) CreateAll(ctx *gin.Context) {
 	trx := ctx.MustGet("db_trx").(*gorm.DB)
-
 	var input []*taskModel.Create
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
 		return
 	}
 
-	for _, value := range input {
-		value.CreatedBy = ctx.MustGet("user_id").(string)
+	for _, create := range input {
+		create.CreatedBy = ctx.MustGet("user_id").(string)
 	}
 
 	httpCode, codeMessage := c.Manager.CreateAll(trx, input)
@@ -117,7 +114,6 @@ func (c *control) GetByListNoPaginationNoSub(ctx *gin.Context) {
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
 		return
 	}
 
@@ -141,14 +137,12 @@ func (c *control) GetByListNoPaginationNoSub(ctx *gin.Context) {
 // @Router /tasks/get-by-projects [post]
 func (c *control) GetByProjectUUIDList(ctx *gin.Context) {
 	input := &taskModel.ProjectIDs{}
-	if ctx.MustGet("role").(string) != "admin" {
-		input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
-		input.CreatedBy = util.PointerString(ctx.MustGet("user_id").(string))
-	}
+	input.Role = util.PointerString(ctx.MustGet("role").(string))
+	input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
+	input.CreatedBy = util.PointerString(ctx.MustGet("user_id").(string))
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
 		return
 	}
 
@@ -176,7 +170,6 @@ func (c *control) GetBySingle(ctx *gin.Context) {
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
 		return
 	}
 
@@ -200,13 +193,11 @@ func (c *control) GetBySingle(ctx *gin.Context) {
 func (c *control) Delete(ctx *gin.Context) {
 	trx := ctx.MustGet("db_trx").(*gorm.DB)
 	input := &taskModel.DeletedTaskUUIDs{}
-	if ctx.MustGet("role").(string) != "admin" {
-		input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
-	}
+	input.Role = util.PointerString(ctx.MustGet("role").(string))
+	input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
 		return
 	}
 
@@ -234,9 +225,8 @@ func (c *control) Update(ctx *gin.Context) {
 	input := &taskModel.Update{}
 	input.TaskUUID = taskUUID
 	input.UpdatedBy = util.PointerString(ctx.MustGet("user_id").(string))
-	if ctx.MustGet("role").(string) != "admin" {
-		input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
-	}
+	input.Role = util.PointerString(ctx.MustGet("role").(string))
+	input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
@@ -271,9 +261,8 @@ func (c *control) UpdateAll(ctx *gin.Context) {
 
 	for _, update := range input {
 		update.UpdatedBy = util.PointerString(ctx.MustGet("user_id").(string))
-		if ctx.MustGet("role").(string) != "admin" {
-			update.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
-		}
+		update.Role = util.PointerString(ctx.MustGet("role").(string))
+		update.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
 	}
 
 	httpCode, codeMessage := c.Manager.UpdateAll(trx, input)
@@ -296,18 +285,15 @@ func (c *control) UpdateAll(ctx *gin.Context) {
 func (c *control) Import(ctx *gin.Context) {
 	input := &taskModel.Import{}
 	trx := ctx.MustGet("db_trx").(*gorm.DB)
-
-	if err := ctx.ShouldBindJSON(&input); err != nil {
-		log.Error(err)
-		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
-		return
-	}
-
 	input.CreatedBy = ctx.MustGet("user_id").(string)
 	inputByte := hash.Base64StdDecode(input.Base64)
 	readerFile := csv.NewReader(transform.NewReader(bytes.NewBuffer(inputByte), unicode.UTF8.NewDecoder()))
 	input.CSVFile = readerFile
+	if err := ctx.ShouldBindJSON(&input); err != nil {
+		log.Error(err)
+		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
+		return
+	}
 
 	httpCode, codeMessage := c.Manager.Import(trx, input)
 	ctx.JSON(httpCode, codeMessage)
