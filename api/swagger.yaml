@@ -2791,6 +2791,150 @@ paths:
       summary: 登入
       tags:
       - login
+  /policies:
+    delete:
+      consumes:
+      - application/json
+      description: 刪除策略
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 刪除策略
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/policies.PolicyRule'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 刪除策略
+      tags:
+      - policies
+    get:
+      consumes:
+      - application/json
+      description: 取得策略
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  items:
+                    $ref: '#/definitions/policies.Single'
+                  type: array
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 取得策略
+      tags:
+      - policies
+    post:
+      consumes:
+      - application/json
+      description: 新增策略
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 新增策略
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/policies.PolicyRule'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 新增策略
+      tags:
+      - policies
   /project-resources:
     post:
       consumes:
@@ -5389,150 +5533,6 @@ paths:
       summary: 驗證電子郵件
       tags:
       - user
-  /v1.0/policies:
-    delete:
-      consumes:
-      - application/json
-      description: 刪除策略
-      parameters:
-      - description: JWE Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: 刪除策略
-        in: body
-        name: '*'
-        required: true
-        schema:
-          $ref: '#/definitions/policies.PolicyRule'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 成功後返回的值
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.SuccessfulMessage'
-            - properties:
-                body:
-                  type: string
-              type: object
-        "415":
-          description: 必要欄位帶入錯誤
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.ErrorMessage'
-            - properties:
-                detailed:
-                  type: string
-              type: object
-        "500":
-          description: 伺服器非預期錯誤
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.ErrorMessage'
-            - properties:
-                detailed:
-                  type: string
-              type: object
-      summary: 刪除策略
-      tags:
-      - policies
-    get:
-      consumes:
-      - application/json
-      description: 取得策略
-      parameters:
-      - description: JWE Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 成功後返回的值
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.SuccessfulMessage'
-            - properties:
-                body:
-                  items:
-                    $ref: '#/definitions/policies.Single'
-                  type: array
-              type: object
-        "415":
-          description: 必要欄位帶入錯誤
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.ErrorMessage'
-            - properties:
-                detailed:
-                  type: string
-              type: object
-        "500":
-          description: 伺服器非預期錯誤
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.ErrorMessage'
-            - properties:
-                detailed:
-                  type: string
-              type: object
-      summary: 取得策略
-      tags:
-      - policies
-    post:
-      consumes:
-      - application/json
-      description: 新增策略
-      parameters:
-      - description: JWE Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: 新增策略
-        in: body
-        name: '*'
-        required: true
-        schema:
-          $ref: '#/definitions/policies.PolicyRule'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 成功後返回的值
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.SuccessfulMessage'
-            - properties:
-                body:
-                  type: string
-              type: object
-        "415":
-          description: 必要欄位帶入錯誤
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.ErrorMessage'
-            - properties:
-                detailed:
-                  type: string
-              type: object
-        "500":
-          description: 伺服器非預期錯誤
-          schema:
-            allOf:
-            - $ref: '#/definitions/code.ErrorMessage'
-            - properties:
-                detailed:
-                  type: string
-              type: object
-      summary: 新增策略
-      tags:
-      - policies
   /verify:
     post:
       consumes:
@@ -5853,7 +5853,7 @@ paths:
             - $ref: '#/definitions/code.SuccessfulMessage'
             - properties:
                 body:
-                  $ref: '#/definitions/tasks.List'
+                  $ref: '#/definitions/work_days.List'
               type: object
         "415":
           description: 必要欄位帶入錯誤
