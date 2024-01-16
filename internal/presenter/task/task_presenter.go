@@ -200,6 +200,9 @@ func (c *control) GetBySingle(ctx *gin.Context) {
 func (c *control) Delete(ctx *gin.Context) {
 	trx := ctx.MustGet("db_trx").(*gorm.DB)
 	input := &taskModel.DeletedTaskUUIDs{}
+	if ctx.MustGet("role").(string) != "admin" {
+		input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
+	}
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
