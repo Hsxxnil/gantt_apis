@@ -136,7 +136,7 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 	}
 
 	// if the user is not admin, search the project which is created by the user or the user is the project's member
-	if input.CreatedBy != nil && input.ResourceUUID != nil {
+	if input.CreatedBy != nil && input.ResourceUUID != nil && input.Role != util.PointerString("admin") {
 		// search project_resource
 		proResBase, _ := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
 			ResourceUUID: input.ResourceUUID,
@@ -205,7 +205,7 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 		}
 
 		// check the user can edit or delete the project
-		if input.CreatedBy == nil {
+		if input.CreatedBy == nil && input.Role != util.PointerString("admin") {
 			project.IsEditable = true
 		} else {
 			if *projectBase[i].CreatedBy == *input.CreatedBy || project.Manager == *input.ResourceUUID {
@@ -221,7 +221,7 @@ func (m *manager) GetByListNoPagination(input *projectModel.Field) (int, any) {
 	output := &projectModel.ListNoPagination{}
 
 	// if the user is not admin, search the project which is created by the user or the user is the project's member
-	if input.CreatedBy != nil && input.ResourceUUID != nil {
+	if input.CreatedBy != nil && input.ResourceUUID != nil && input.Role != util.PointerString("admin") {
 		// search project_resource
 		proResBase, _ := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
 			ResourceUUID: input.ResourceUUID,
