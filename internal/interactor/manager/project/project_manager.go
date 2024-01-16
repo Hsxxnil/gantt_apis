@@ -356,10 +356,12 @@ func (m *manager) Delete(trx *gorm.DB, input *projectModel.Update) (int, any) {
 		if *projectBase.CreatedBy != *input.UpdatedBy {
 			if pmBase != nil {
 				if *pmBase.ResourceUUID != *input.ResourceUUID {
-					return code.BadRequest, code.GetCodeMessage(code.BadRequest, "You don't have permission to update this project!")
+					log.Info("The user don't have permission to update this project.")
+					return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The user don't have permission to update this project.")
 				}
 			} else {
-				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "You don't have permission to update this project!")
+				log.Info("The user don't have permission to update this project.")
+				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The user don't have permission to update this project.")
 			}
 		}
 	}
@@ -433,10 +435,12 @@ func (m *manager) Update(trx *gorm.DB, input *projectModel.Update) (int, any) {
 		if *projectBase.CreatedBy != *input.UpdatedBy {
 			if pmBase != nil {
 				if *pmBase.ResourceUUID != *input.ResourceUUID {
-					return code.BadRequest, code.GetCodeMessage(code.BadRequest, "You don't have permission to update this project!")
+					log.Info("The user don't have permission to update this project.")
+					return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The user don't have permission to update this project.")
 				}
 			} else {
-				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "You don't have permission to update this project!")
+				log.Info("The user don't have permission to update this project.")
+				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The user don't have permission to update this project.")
 			}
 		}
 	}
