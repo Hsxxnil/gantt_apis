@@ -4085,7 +4085,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "work_day"
+                    "role"
                 ],
                 "summary": "取得全部角色(不用page\u0026limit)",
                 "parameters": [

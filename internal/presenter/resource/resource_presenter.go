@@ -230,15 +230,16 @@ func (c *control) Update(ctx *gin.Context) {
 func (c *control) Import(ctx *gin.Context) {
 	input := &resourceModel.Import{}
 	trx := ctx.MustGet("db_trx").(*gorm.DB)
-	input.CreatedBy = ctx.MustGet("user_id").(string)
-	inputByte := hash.Base64StdDecode(input.Base64)
-	readerFile := csv.NewReader(transform.NewReader(bytes.NewBuffer(inputByte), unicode.UTF8.NewDecoder()))
-	input.CSVFile = readerFile
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
 		return
 	}
+
+	input.CreatedBy = ctx.MustGet("user_id").(string)
+	inputByte := hash.Base64StdDecode(input.Base64)
+	readerFile := csv.NewReader(transform.NewReader(bytes.NewBuffer(inputByte), unicode.UTF8.NewDecoder()))
+	input.CSVFile = readerFile
 
 	httpCode, codeMessage := c.Manager.Import(trx, input)
 	ctx.JSON(httpCode, codeMessage)

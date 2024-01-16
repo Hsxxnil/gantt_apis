@@ -95,7 +95,7 @@ func (c *control) GetByList(ctx *gin.Context) {
 // GetByListNoPagination
 // @Summary 取得全部角色(不用page&limit)
 // @description 取得全部角色
-// @Tags work_day
+// @Tags role
 // @version 1.0
 // @Accept json
 // @produce json
