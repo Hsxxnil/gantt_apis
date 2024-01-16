@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"encoding/csv"
 	"golang.org/x/text/encoding/unicode"
+	"golang.org/x/text/transform"
 	"hta/internal/interactor/pkg/util"
+	"hta/internal/interactor/pkg/util/hash"
 	"net/http"
 	"strconv"
 
@@ -13,11 +15,9 @@ import (
 	"hta/internal/interactor/manager/resource"
 	resourceModel "hta/internal/interactor/models/resources"
 	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/hash"
 	"hta/internal/interactor/pkg/util/log"
 
 	"github.com/gin-gonic/gin"
-	"golang.org/x/text/transform"
 	"gorm.io/gorm"
 )
 
@@ -56,7 +56,6 @@ func Init(db *gorm.DB) Control {
 // @Router /resources [post]
 func (c *control) Create(ctx *gin.Context) {
 	trx := ctx.MustGet("db_trx").(*gorm.DB)
-
 	input := &resourceModel.Create{}
 	input.CreatedBy = ctx.MustGet("user_id").(string)
 	if err := ctx.ShouldBindJSON(input); err != nil {
@@ -172,8 +171,9 @@ func (c *control) GetBySingle(ctx *gin.Context) {
 // @Router /resources/{resource-uuid} [delete]
 func (c *control) Delete(ctx *gin.Context) {
 	resourceUUID := ctx.Param("resourceUUID")
-	input := &resourceModel.Field{}
+	input := &resourceModel.Update{}
 	input.ResourceUUID = resourceUUID
+	input.Role = util.PointerString(ctx.MustGet("role").(string))
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
@@ -203,6 +203,7 @@ func (c *control) Update(ctx *gin.Context) {
 	input := &resourceModel.Update{}
 	input.ResourceUUID = resourceUUID
 	input.UpdatedBy = util.PointerString(ctx.MustGet("user_id").(string))
+	input.Role = util.PointerString(ctx.MustGet("role").(string))
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
@@ -229,17 +230,15 @@ func (c *control) Update(ctx *gin.Context) {
 func (c *control) Import(ctx *gin.Context) {
 	input := &resourceModel.Import{}
 	trx := ctx.MustGet("db_trx").(*gorm.DB)
-
+	input.CreatedBy = ctx.MustGet("user_id").(string)
+	inputByte := hash.Base64StdDecode(input.Base64)
+	readerFile := csv.NewReader(transform.NewReader(bytes.NewBuffer(inputByte), unicode.UTF8.NewDecoder()))
+	input.CSVFile = readerFile
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
 		return
 	}
-
-	input.CreatedBy = ctx.MustGet("user_id").(string)
-	inputByte := hash.Base64StdDecode(input.Base64)
-	readerFile := csv.NewReader(transform.NewReader(bytes.NewBuffer(inputByte), unicode.UTF8.NewDecoder()))
-	input.CSVFile = readerFile
 
 	httpCode, codeMessage := c.Manager.Import(trx, input)
 	ctx.JSON(httpCode, codeMessage)
