@@ -14,6 +14,7 @@ type Entity interface {
 	WithTrx(trx *gorm.DB) Entity
 	Create(input *model.Base) (err error)
 	GetByList(input *model.Base) (quantity int64, output []*model.Table, err error)
+	GetByListNoPagination(input *model.Base) (output []*model.Table, err error)
 	GetBySingle(input *model.Base) (output *model.Table, err error)
 	GetByQuantity(input *model.Base) (quantity int64, err error)
 	Delete(input *model.Base) (err error)
@@ -77,6 +78,21 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 	}
 
 	return quantity, output, nil
+}
+
+func (s *storage) GetByListNoPagination(input *model.Base) (output []*model.Table, err error) {
+	query := s.db.Model(&model.Table{}).Preload(clause.Associations)
+	if input.ID != nil {
+		query.Where("id = ?", input.ID)
+	}
+
+	err = query.Order("created_at desc").Find(&output).Error
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	return output, nil
 }
 
 func (s *storage) GetBySingle(input *model.Base) (output *model.Table, err error) {
