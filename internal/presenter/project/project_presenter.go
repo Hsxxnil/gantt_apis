@@ -55,7 +55,6 @@ func (c *control) Create(ctx *gin.Context) {
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
 		return
 	}
 
@@ -91,7 +90,6 @@ func (c *control) GetByList(ctx *gin.Context) {
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
 		return
 	}
 
@@ -124,7 +122,6 @@ func (c *control) GetByListNoPagination(ctx *gin.Context) {
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
 		return
 	}
 
@@ -149,14 +146,12 @@ func (c *control) GetBySingle(ctx *gin.Context) {
 	projectID := ctx.Param("projectID")
 	input := &projectModel.Field{}
 	input.ProjectUUID = projectID
-	if ctx.MustGet("role").(string) != "admin" {
-		input.CreatedBy = util.PointerString(ctx.MustGet("user_id").(string))
-		input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
-	}
+	input.Role = util.PointerString(ctx.MustGet("role").(string))
+	input.CreatedBy = util.PointerString(ctx.MustGet("user_id").(string))
+	input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
 		return
 	}
 
@@ -183,13 +178,11 @@ func (c *control) Delete(ctx *gin.Context) {
 	input := &projectModel.Update{}
 	input.ProjectUUID = projectID
 	input.UpdatedBy = util.PointerString(ctx.MustGet("user_id").(string))
-	if ctx.MustGet("role").(string) != "admin" {
-		input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
-	}
+	input.Role = util.PointerString(ctx.MustGet("role").(string))
+	input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
 		return
 	}
 
@@ -217,13 +210,11 @@ func (c *control) Update(ctx *gin.Context) {
 	input := &projectModel.Update{}
 	input.ProjectUUID = projectID
 	input.UpdatedBy = util.PointerString(ctx.MustGet("user_id").(string))
-	if ctx.MustGet("role").(string) != "admin" {
-		input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
-	}
+	input.Role = util.PointerString(ctx.MustGet("role").(string))
+	input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
 		return
 	}
 

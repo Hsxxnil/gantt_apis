@@ -255,7 +255,7 @@ func (m *manager) GetByListNoPagination(input *projectModel.Field) (int, any) {
 
 func (m *manager) GetBySingle(input *projectModel.Field) (int, any) {
 	// if the user is not admin, search the project which is created by the user or the user is the project's member
-	if input.CreatedBy != nil && input.ResourceUUID != nil {
+	if input.CreatedBy != nil && input.ResourceUUID != nil && input.Role != util.PointerString("admin") {
 		// search project_resource
 		_, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
 			ResourceUUID: input.ResourceUUID,
@@ -352,7 +352,7 @@ func (m *manager) Delete(trx *gorm.DB, input *projectModel.Update) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	if input.ResourceUUID != nil {
+	if input.ResourceUUID != nil && input.Role != util.PointerString("admin") {
 		if *projectBase.CreatedBy != *input.UpdatedBy {
 			if pmBase != nil {
 				if *pmBase.ResourceUUID != *input.ResourceUUID {
@@ -431,7 +431,7 @@ func (m *manager) Update(trx *gorm.DB, input *projectModel.Update) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	if input.ResourceUUID != nil {
+	if input.ResourceUUID != nil && input.Role != util.PointerString("admin") {
 		if *projectBase.CreatedBy != *input.UpdatedBy {
 			if pmBase != nil {
 				if *pmBase.ResourceUUID != *input.ResourceUUID {

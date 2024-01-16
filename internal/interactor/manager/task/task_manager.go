@@ -714,7 +714,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 	// check if the user is a project manager
 	isPM := false
 	if len(input.Projects) == 1 {
-		if input.ResourceUUID != nil {
+		if input.Role != util.PointerString("admin") && input.ResourceUUID != nil {
 			pmBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
 				ProjectUUID: input.Projects[0],
 				Role:        util.PointerString("PM"),
@@ -830,7 +830,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 				}
 
 				// check the user can edit or delete the task
-				if input.CreatedBy == nil || isPM {
+				if (input.Role == util.PointerString("admin") && input.CreatedBy == nil) || isPM {
 					task.IsEditable = true
 				} else {
 					if *taskBase[i].CreatedBy == *input.CreatedBy {
@@ -1107,7 +1107,7 @@ func (m *manager) Delete(trx *gorm.DB, input *taskModel.DeletedTaskUUIDs) (int, 
 	defer trx.Rollback()
 
 	// check the update_by has the permission to delete the project's tasks
-	if input.ResourceUUID != nil {
+	if input.Role != util.PointerString("admin") && input.ResourceUUID != nil {
 		// search project_resource
 		proResBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
 			ProjectUUID:  input.ProjectUUID,
@@ -1186,7 +1186,7 @@ func (m *manager) Update(trx *gorm.DB,
 	}
 
 	// check the update_by has the permission to update the project's tasks
-	if input.ResourceUUID != nil {
+	if input.Role != util.PointerString("admin") && input.ResourceUUID != nil {
 		// search project_resource
 		proResBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
 			ProjectUUID:  taskBase.ProjectUUID,
@@ -1323,7 +1323,7 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 	)
 
 	// check the update_by has the permission to update the project's tasks
-	if input[0].ResourceUUID != nil {
+	if input[0].Role != util.PointerString("admin") && input[0].ResourceUUID != nil {
 		// search project_resource
 		proResBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
 			ProjectUUID:  input[0].ProjectUUID,

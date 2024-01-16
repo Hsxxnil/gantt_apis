@@ -56,7 +56,6 @@ func (c *control) GetByList(ctx *gin.Context) {
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
 		return
 	}
 
@@ -86,7 +85,6 @@ func (c *control) GetByProjectList(ctx *gin.Context) {
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
 		return
 	}
 
@@ -114,7 +112,6 @@ func (c *control) GetBySingle(ctx *gin.Context) {
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
-
 		return
 	}
 
