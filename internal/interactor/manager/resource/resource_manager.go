@@ -22,7 +22,7 @@ type Manager interface {
 	GetByList(input *resourceModel.Fields) (int, any)
 	GetByListNoPagination(input *resourceModel.Field) (int, any)
 	GetBySingle(input *resourceModel.Field) (int, any)
-	Delete(input *resourceModel.Field) (int, any)
+	Delete(input *resourceModel.Update) (int, any)
 	Update(input *resourceModel.Update) (int, any)
 	Import(trx *gorm.DB, input *resourceModel.Import) (int, any)
 }
@@ -120,11 +120,17 @@ func (m *manager) GetByList(input *resourceModel.Fields) (int, any) {
 		}
 		resource.ResourceGroups = resourceGroup
 
-		// check if the resource is bind to the user
-		if exist := userMap[*resourceBase[i].ResourceUUID]; exist {
-			resource.IsBind = true
+		// check if the resource is bind to the user and the user can edit or delete the project
+		if exist := userMap[*resourceBase[i].ResourceUUID]; !exist {
+			if input.CreatedBy == nil && input.Role != util.PointerString("admin") {
+				resource.IsEditable = true
+			} else {
+				if *resourceBase[i].CreatedBy == *input.CreatedBy {
+					resource.IsEditable = true
+				}
+			}
 		} else {
-			resource.IsBind = false
+			resource.IsBind = true
 		}
 	}
 
@@ -239,8 +245,8 @@ func (m *manager) GetBySingle(input *resourceModel.Field) (int, any) {
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
 
-func (m *manager) Delete(input *resourceModel.Field) (int, any) {
-	_, err := m.ResourceService.GetBySingle(&resourceModel.Field{
+func (m *manager) Delete(input *resourceModel.Update) (int, any) {
+	resourceBase, err := m.ResourceService.GetBySingle(&resourceModel.Field{
 		ResourceUUID: input.ResourceUUID,
 	})
 	if err != nil {
@@ -250,6 +256,14 @@ func (m *manager) Delete(input *resourceModel.Field) (int, any) {
 
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// check the updated_by is the resource's created_by
+	if input.Role != util.PointerString("admin") {
+		if *resourceBase.CreatedBy != *input.UpdatedBy {
+			log.Error("The user don't have permission to update this resource.")
+			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The user don't have permission to update this resource.")
+		}
 	}
 
 	err = m.ResourceService.Delete(input)
@@ -272,6 +286,14 @@ func (m *manager) Update(input *resourceModel.Update) (int, any) {
 
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// check the updated_by is the resource's created_by
+	if input.Role != util.PointerString("admin") {
+		if *resourceBase.CreatedBy != *input.UpdatedBy {
+			log.Error("The user don't have permission to update this resource.")
+			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The user don't have permission to update this resource.")
+		}
 	}
 
 	// transform resource_groups from string slice to string
