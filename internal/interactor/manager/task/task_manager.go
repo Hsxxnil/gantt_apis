@@ -268,8 +268,11 @@ func (m *manager) updateSubtasks(trx *gorm.DB, parentTask *taskModel.Update, sub
 }
 
 // syncCreateTaskResources is a helper function to synchronize the creation of task_resource associations for tasks of a project.
-func (m *manager) syncCreateTaskResources(trx *gorm.DB, taskResources []map[string][]*resourceModel.TaskSingle, createdBy string) error {
-	var resList []*taskResourceModel.Create
+func (m *manager) syncCreateTaskResources(trx *gorm.DB, taskResources []map[string][]*resourceModel.TaskSingle, createdBy string, projectID string, proResMap map[string]*projectResourceModel.Single) error {
+	var (
+		resList    []*taskResourceModel.Create
+		proResList []*projectResourceModel.Create
+	)
 
 	for _, taskRes := range taskResources {
 		for taskUUID, resources := range taskRes {
@@ -280,6 +283,17 @@ func (m *manager) syncCreateTaskResources(trx *gorm.DB, taskResources []map[stri
 					Unit:         res.Unit,
 					CreatedBy:    createdBy,
 				})
+
+				log.Debug(res.ResourceUUID)
+				log.Debug(proResMap[res.ResourceUUID])
+				if proResMap[res.ResourceUUID] == nil {
+					proResList = append(proResList, &projectResourceModel.Create{
+						ProjectUUID:  projectID,
+						ResourceUUID: res.ResourceUUID,
+						CreatedBy:    createdBy,
+					})
+				}
+
 			}
 		}
 	}
@@ -288,6 +302,15 @@ func (m *manager) syncCreateTaskResources(trx *gorm.DB, taskResources []map[stri
 	if err != nil {
 		return err
 	}
+
+	// sync create project_resource
+	if len(proResList) > 0 {
+		_, err = m.ProjectResourceService.WithTrx(trx).CreateAll(proResList)
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -530,12 +553,44 @@ func (m *manager) Create(trx *gorm.DB, input *taskModel.Create) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// sync create task_resource
 	if len(input.Resources) > 0 {
+		// get all resources of the project
+		proResBase, err := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
+			ProjectUUID: util.PointerString(input.ProjectUUID),
+		})
+		if err != nil {
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+		}
+
+		var proRes []*projectResourceModel.Single
+		proResByte, err := sonic.Marshal(proResBase)
+		if err != nil {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+
+		err = sonic.Unmarshal(proResByte, &proRes)
+		if err != nil {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+
+		// create a map of resourceUUID
+		proResMap := make(map[string]*projectResourceModel.Single)
+		if len(proRes) > 0 {
+			for _, res := range proRes {
+				proResMap[res.ResourceUUID] = res
+			}
+		}
+
+		// sync create task_resource
 		taskResMapList := []map[string][]*resourceModel.TaskSingle{
 			{*taskBase.TaskUUID: input.Resources},
 		}
-		err = m.syncCreateTaskResources(trx, taskResMapList, input.CreatedBy)
+		err = m.syncCreateTaskResources(trx, taskResMapList, input.CreatedBy, input.ProjectUUID, proResMap)
 		if err != nil {
 			log.Error(err)
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -561,6 +616,38 @@ func (m *manager) CreateAll(trx *gorm.DB, input []*taskModel.Create) (int, any) 
 		taskResMapList                   []map[string][]*resourceModel.TaskSingle
 		minBaselineStart, maxBaselineEnd *time.Time
 	)
+
+	// get all resources of the project
+	proResBase, err := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
+		ProjectUUID: util.PointerString(input[0].ProjectUUID),
+	})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
+	var proRes []*projectResourceModel.Single
+	proResByte, err := sonic.Marshal(proResBase)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	err = sonic.Unmarshal(proResByte, &proRes)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// create a map of resourceUUID
+	proResMap := make(map[string]*projectResourceModel.Single)
+	if len(proRes) > 0 {
+		for _, res := range proRes {
+			proResMap[res.ResourceUUID] = res
+		}
+	}
 
 	// get the new outline_number
 	topOutlineNumber, err := m.getNextOutlineNumber(false, nil, input[0].ProjectUUID)
@@ -662,7 +749,7 @@ func (m *manager) CreateAll(trx *gorm.DB, input []*taskModel.Create) (int, any) 
 		}
 	}
 	if len(taskResMapList) > 0 {
-		err = m.syncCreateTaskResources(trx, taskResMapList, createList[0].CreatedBy)
+		err = m.syncCreateTaskResources(trx, taskResMapList, createList[0].CreatedBy, createList[0].ProjectUUID, proResMap)
 		if err != nil {
 			log.Error(err)
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -1160,6 +1247,38 @@ func (m *manager) Update(trx *gorm.DB,
 	input *taskModel.Update) (int, any) {
 	defer trx.Rollback()
 
+	// get all resources of the project
+	proResBase, err := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
+		ProjectUUID: input.ProjectUUID,
+	})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
+	var proRes []*projectResourceModel.Single
+	proResByte, err := sonic.Marshal(proResBase)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	err = sonic.Unmarshal(proResByte, &proRes)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// create a map of resourceUUID
+	proResMap := make(map[string]*projectResourceModel.Single)
+	if len(proRes) > 0 {
+		for _, res := range proRes {
+			proResMap[res.ResourceUUID] = res
+		}
+	}
+
 	taskBase, err := m.TaskService.GetBySingle(&taskModel.Field{
 		TaskUUID: input.TaskUUID,
 	})
@@ -1187,22 +1306,8 @@ func (m *manager) Update(trx *gorm.DB,
 
 	// check the update_by has the permission to update the project's tasks
 	if input.Role != util.PointerString("admin") && input.ResourceUUID != nil {
-		// search project_resource
-		proResBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
-			ProjectUUID:  taskBase.ProjectUUID,
-			ResourceUUID: input.ResourceUUID,
-		})
-		if err != nil {
-			if errors.Is(err, gorm.ErrRecordNotFound) {
-				return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, err.Error())
-			}
-
-			log.Error(err)
-			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-		}
-
-		if proResBase != nil {
-			if !*proResBase.IsEditable {
+		if proResMap[*input.ResourceUUID] != nil {
+			if !proResMap[*input.ResourceUUID].IsEditable {
 				log.Info("The user don't have permission to update the project's tasks.")
 				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The user don't have permission to update the project's tasks.")
 			}
@@ -1287,7 +1392,7 @@ func (m *manager) Update(trx *gorm.DB,
 		taskResMapList := []map[string][]*resourceModel.TaskSingle{
 			{*taskBase.TaskUUID: input.Resources},
 		}
-		err = m.syncCreateTaskResources(trx, taskResMapList, *input.UpdatedBy)
+		err = m.syncCreateTaskResources(trx, taskResMapList, *input.UpdatedBy, *input.ProjectUUID, proResMap)
 		if err != nil {
 			log.Error(err)
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -1322,24 +1427,42 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 		minBaselineStart, maxBaselineEnd *time.Time
 	)
 
-	// check the update_by has the permission to update the project's tasks
-	if input[0].Role != util.PointerString("admin") && input[0].ResourceUUID != nil {
-		// search project_resource
-		proResBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
-			ProjectUUID:  input[0].ProjectUUID,
-			ResourceUUID: input[0].ResourceUUID,
-		})
-		if err != nil {
-			if errors.Is(err, gorm.ErrRecordNotFound) {
-				return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, err.Error())
-			}
-
+	// get all resources of the project
+	proResBase, err := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
+		ProjectUUID: input[0].ProjectUUID,
+	})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			log.Error(err)
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 		}
+	}
 
-		if proResBase != nil {
-			if !*proResBase.IsEditable {
+	var proRes []*projectResourceModel.Single
+	proResByte, err := sonic.Marshal(proResBase)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	err = sonic.Unmarshal(proResByte, &proRes)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// create a map of resourceUUID
+	proResMap := make(map[string]*projectResourceModel.Single)
+	if len(proRes) > 0 {
+		for _, res := range proRes {
+			proResMap[res.ResourceUUID] = res
+		}
+	}
+
+	// check the update_by has the permission to update the project's tasks
+	if input[0].Role != util.PointerString("admin") && input[0].ResourceUUID != nil {
+		if proResMap[*input[0].ResourceUUID] != nil {
+			if !proResMap[*input[0].ResourceUUID].IsEditable {
 				log.Info("The user don't have permission to update the project's tasks.")
 				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The user don't have permission to update the project's tasks.")
 			}
@@ -1500,7 +1623,7 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 
 	// sync create task_resource
 	if len(taskResMapList) > 0 {
-		err = m.syncCreateTaskResources(trx, taskResMapList, *input[0].UpdatedBy)
+		err = m.syncCreateTaskResources(trx, taskResMapList, *input[0].UpdatedBy, *input[0].ProjectUUID, proResMap)
 		if err != nil {
 			log.Error(err)
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -1522,10 +1645,8 @@ func (m *manager) Import(trx *gorm.DB,
 	input *taskModel.Import) (int, any) {
 	defer trx.Rollback()
 
-	// get project_resources
-	proResBase, err := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
-		ProjectUUID: util.PointerString(input.ProjectUUID),
-	})
+	// get resources
+	resBase, err := m.ResourceService.GetByListNoPagination(&resourceModel.Field{})
 	if err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -1533,9 +1654,9 @@ func (m *manager) Import(trx *gorm.DB,
 	}
 
 	// create a map of resource_name and project_resource_id
-	nameToProResIDMap := make(map[string]string)
-	for _, res := range proResBase {
-		nameToProResIDMap[*res.Resources.ResourceName] = *res.ResourceUUID
+	nameToResIDMap := make(map[string]string)
+	for _, res := range resBase {
+		nameToResIDMap[*res.ResourceName] = *res.ResourceUUID
 	}
 
 	// set CSV parse options
@@ -1745,9 +1866,9 @@ func (m *manager) Import(trx *gorm.DB,
 					percentage = 100
 				}
 
-				if nameToProResIDMap[name] != "" {
+				if nameToResIDMap[name] != "" {
 					createTask.Resources = append(createTask.Resources, &resourceModel.TaskSingle{
-						ResourceUUID: nameToProResIDMap[name],
+						ResourceUUID: nameToResIDMap[name],
 						Unit:         percentage,
 					})
 				}
