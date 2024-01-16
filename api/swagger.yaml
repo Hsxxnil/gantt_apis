@@ -4441,7 +4441,7 @@ paths:
               type: object
       summary: 取得全部角色(不用page&limit)
       tags:
-      - work_day
+      - role
   /tasks:
     delete:
       consumes:
