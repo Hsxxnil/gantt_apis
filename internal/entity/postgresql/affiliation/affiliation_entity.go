@@ -122,6 +122,10 @@ func (s *storage) GetBySingle(input *model.Base) (output *model.Table, err error
 		query.Where("user_id = ?", input.UserID)
 	}
 
+	if input.DeptID != nil {
+		query.Where("dept_id = ?", input.DeptID)
+	}
+
 	if input.IsSupervisor != nil {
 		query.Where("is_supervisor = ?", input.IsSupervisor)
 	}
