@@ -78,6 +78,7 @@ func (m *manager) Create(trx *gorm.DB, input *projectModel.Create) (int, any) {
 				ProjectUUID:  *projectBase.ProjectUUID,
 				ResourceUUID: resource.ResourceUUID,
 				Role:         resource.Role,
+				IsEditable:   true,
 				CreatedBy:    input.CreatedBy,
 			}
 			resourceList = append(resourceList, proRes)
@@ -474,6 +475,7 @@ func (m *manager) Update(trx *gorm.DB, input *projectModel.Update) (int, any) {
 				ProjectUUID:  *projectBase.ProjectUUID,
 				ResourceUUID: resource.ResourceUUID,
 				Role:         resource.Role,
+				IsEditable:   true,
 				CreatedBy:    *input.UpdatedBy,
 			}
 			resourceList = append(resourceList, proRes)
