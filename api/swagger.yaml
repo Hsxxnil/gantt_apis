@@ -476,14 +476,11 @@ definitions:
         type: string
       path:
         type: string
-      ptype:
-        type: string
       role_name:
         type: string
     required:
     - method
     - path
-    - ptype
     - role_name
     type: object
   policies.Single:
@@ -2807,7 +2804,9 @@ paths:
         name: '*'
         required: true
         schema:
-          $ref: '#/definitions/policies.PolicyRule'
+          items:
+            $ref: '#/definitions/policies.PolicyRule'
+          type: array
       produces:
       - application/json
       responses:
@@ -2901,7 +2900,9 @@ paths:
         name: '*'
         required: true
         schema:
-          $ref: '#/definitions/policies.PolicyRule'
+          items:
+            $ref: '#/definitions/policies.PolicyRule'
+          type: array
       produces:
       - application/json
       responses:
