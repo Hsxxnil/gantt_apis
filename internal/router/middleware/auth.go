@@ -68,18 +68,36 @@ func init() {
 	Enforcer = newEnforcer(adapter)
 }
 
-func CreatePolicy(pm policyModel.PolicyModel) (bool, error) {
-	result, err := Enforcer.AddPolicy(pm.RoleName, pm.Path, pm.Method)
+func CreatePolicy(pm []*policyModel.PolicyModel) (bool, error) {
+	var policies [][]string
+	for _, p := range pm {
+		policies = append(policies, []string{p.RoleName, p.Path, p.Method})
+	}
+
+	result, err := Enforcer.AddPolicies(policies)
+	if err != nil {
+		return false, err
+	}
+
 	err = Enforcer.LoadPolicy()
 	if err != nil {
 		return false, err
 	}
 
-	return result, err
+	return result, nil
 }
 
-func DeletePolicy(pm policyModel.PolicyModel) (bool, error) {
-	result, err := Enforcer.RemovePolicy(pm.RoleName, pm.Path, pm.Method)
+func DeletePolicy(pm []*policyModel.PolicyModel) (bool, error) {
+	var policies [][]string
+	for _, p := range pm {
+		policies = append(policies, []string{p.RoleName, p.Path, p.Method})
+	}
+
+	result, err := Enforcer.RemovePolicies(policies)
+	if err != nil {
+		return false, err
+	}
+
 	err = Enforcer.LoadPolicy()
 	if err != nil {
 		return false, err
