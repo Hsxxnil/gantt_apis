@@ -12,8 +12,8 @@ POST {{host}}/hta-gantt/v1.0/verify
 Content-Type: application/json
 
 {
-  "user_name": "admin",
-  "passcode": "296247"
+  "user_name": "hsxxnil",
+  "passcode": "544986"
 }
 
 > {% client.global.set("accessToken", response.body.body.access_token); %}
@@ -28,7 +28,7 @@ Authorization: Bearer {{accessToken}}
     "is_milestone": false
   },
   "projects": [
-    "095198af-2651-4477-b574-e0f8871390e2"
+    "f4d46b57-3db6-4088-99ae-832f437f2cb0"
   ]
 }
 
