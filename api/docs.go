@@ -1615,7 +1615,10 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/policies.PolicyRule"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/policies.PolicyRule"
+                            }
                         }
                     }
                 ],
@@ -1702,7 +1705,10 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/policies.PolicyRule"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/policies.PolicyRule"
+                            }
                         }
                     }
                 ],
@@ -7637,7 +7643,6 @@ const docTemplate = `{
             "required": [
                 "method",
                 "path",
-                "ptype",
                 "role_name"
             ],
             "properties": {
@@ -7645,9 +7650,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "path": {
-                    "type": "string"
-                },
-                "ptype": {
                     "type": "string"
                 },
                 "role_name": {
