@@ -169,11 +169,11 @@ func (m *manager) updateSubtasks(trx *gorm.DB, parentTask *taskModel.Update, sub
 
 	for j, subBody := range subtasks {
 		// check if the update_by is the task's creator or assigned resource
-		if subBody.ResourceUUID != nil && taskMap[subBody.TaskUUID] != nil {
+		if subBody.ResUUID != nil && taskMap[subBody.TaskUUID] != nil {
 			if taskMap[subBody.TaskUUID].CreatedBy != *subBody.UpdatedBy {
 				assigned := false
 				for _, res := range taskMap[subBody.TaskUUID].Resources {
-					if res.ResourceUUID == *subBody.ResourceUUID {
+					if res.ResourceUUID == *subBody.ResUUID {
 						assigned = true
 						break
 					}
@@ -800,7 +800,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 	// check if the user is a project manager
 	isPM := false
 	if len(input.Projects) == 1 {
-		if input.ResourceUUID != nil {
+		if input.Role != util.PointerString("admin") {
 			pmBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
 				ProjectUUID: input.Projects[0],
 				Role:        util.PointerString("PM"),
@@ -811,7 +811,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 			}
 
 			if pmBase != nil {
-				if *pmBase.ResourceUUID == *input.ResourceUUID {
+				if *pmBase.ResourceUUID == *input.ResUUID {
 					isPM = true
 				}
 			}
@@ -916,14 +916,14 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 				}
 
 				// check the user can edit or delete the task
-				if input.CreatedBy == nil || isPM {
+				if input.Role == util.PointerString("admin") || isPM {
 					task.IsEditable = true
 				} else {
-					if *taskBase[i].CreatedBy == *input.CreatedBy {
+					if *taskBase[i].CreatedBy == *input.UserID {
 						task.IsEditable = true
 					} else {
 						for _, res := range task.Resources {
-							if res.ResourceUUID == *input.ResourceUUID {
+							if res.ResourceUUID == *input.ResUUID {
 								task.IsEditable = true
 								break
 							}
@@ -1193,11 +1193,11 @@ func (m *manager) Delete(trx *gorm.DB, input *taskModel.DeletedTaskUUIDs) (int, 
 	defer trx.Rollback()
 
 	// check the update_by has the permission to delete the project's tasks
-	if input.ResourceUUID != nil {
+	if input.Role != util.PointerString("admin") {
 		// search project_resource
 		proResBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
 			ProjectUUID:  input.ProjectUUID,
-			ResourceUUID: input.ResourceUUID,
+			ResourceUUID: input.ResUUID,
 		})
 		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -1304,9 +1304,9 @@ func (m *manager) Update(trx *gorm.DB,
 	}
 
 	// check the update_by has the permission to update the project's tasks
-	if input.ResourceUUID != nil {
-		if proResMap[*input.ResourceUUID] != nil {
-			if !proResMap[*input.ResourceUUID].IsEditable {
+	if input.Role != util.PointerString("admin") {
+		if proResMap[*input.ResUUID] != nil {
+			if !proResMap[*input.ResUUID].IsEditable {
 				log.Info("The user don't have permission to update the project's tasks.")
 				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The user don't have permission to update the project's tasks.")
 			}
@@ -1316,7 +1316,7 @@ func (m *manager) Update(trx *gorm.DB,
 		if taskBase.CreatedBy != input.UpdatedBy {
 			assigned := false
 			for _, res := range taskBase.TaskResources {
-				if *res.ResourceUUID == *input.ResourceUUID {
+				if *res.ResourceUUID == *input.ResUUID {
 					assigned = true
 					break
 				}
@@ -1459,9 +1459,9 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 	}
 
 	// check the update_by has the permission to update the project's tasks
-	if input[0].ResourceUUID != nil {
-		if proResMap[*input[0].ResourceUUID] != nil {
-			if !proResMap[*input[0].ResourceUUID].IsEditable {
+	if input[0].Role != util.PointerString("admin") {
+		if proResMap[*input[0].ResUUID] != nil {
+			if !proResMap[*input[0].ResUUID].IsEditable {
 				log.Info("The user don't have permission to update the project's tasks.")
 				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The user don't have permission to update the project's tasks.")
 			}
@@ -1503,11 +1503,11 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 	// update the main task
 	for i, inputBody := range input {
 		// check if the update_by is the task's creator or assigned resource
-		if inputBody.ResourceUUID != nil && taskMap[inputBody.TaskUUID] != nil {
+		if inputBody.ResUUID != nil && taskMap[inputBody.TaskUUID] != nil {
 			if taskMap[inputBody.TaskUUID].CreatedBy != *inputBody.UpdatedBy {
 				assigned := false
 				for _, res := range taskMap[inputBody.TaskUUID].Resources {
-					if res.ResourceUUID == *inputBody.ResourceUUID {
+					if res.ResourceUUID == *inputBody.ResUUID {
 						assigned = true
 						break
 					}
