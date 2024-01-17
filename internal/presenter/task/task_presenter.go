@@ -137,10 +137,9 @@ func (c *control) GetByListNoPaginationNoSub(ctx *gin.Context) {
 // @Router /tasks/get-by-projects [post]
 func (c *control) GetByProjectUUIDList(ctx *gin.Context) {
 	input := &taskModel.ProjectIDs{}
-	if ctx.MustGet("role").(string) != "admin" {
-		input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
-		input.CreatedBy = util.PointerString(ctx.MustGet("user_id").(string))
-	}
+	input.Role = util.PointerString(ctx.MustGet("role").(string))
+	input.UserID = util.PointerString(ctx.MustGet("user_id").(string))
+	input.ResUUID = util.PointerString(ctx.MustGet("resource_id").(string))
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
@@ -194,9 +193,8 @@ func (c *control) GetBySingle(ctx *gin.Context) {
 func (c *control) Delete(ctx *gin.Context) {
 	trx := ctx.MustGet("db_trx").(*gorm.DB)
 	input := &taskModel.DeletedTaskUUIDs{}
-	if ctx.MustGet("role").(string) != "admin" {
-		input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
-	}
+	input.Role = util.PointerString(ctx.MustGet("role").(string))
+	input.ResUUID = util.PointerString(ctx.MustGet("resource_id").(string))
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
@@ -227,9 +225,8 @@ func (c *control) Update(ctx *gin.Context) {
 	input := &taskModel.Update{}
 	input.TaskUUID = taskUUID
 	input.UpdatedBy = util.PointerString(ctx.MustGet("user_id").(string))
-	if ctx.MustGet("role").(string) != "admin" {
-		input.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
-	}
+	input.Role = util.PointerString(ctx.MustGet("role").(string))
+	input.ResUUID = util.PointerString(ctx.MustGet("resource_id").(string))
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
@@ -264,9 +261,8 @@ func (c *control) UpdateAll(ctx *gin.Context) {
 
 	for _, update := range input {
 		update.UpdatedBy = util.PointerString(ctx.MustGet("user_id").(string))
-		if ctx.MustGet("role").(string) != "admin" {
-			update.ResourceUUID = util.PointerString(ctx.MustGet("resource_id").(string))
-		}
+		update.Role = util.PointerString(ctx.MustGet("role").(string))
+		update.ResUUID = util.PointerString(ctx.MustGet("resource_id").(string))
 	}
 
 	httpCode, codeMessage := c.Manager.UpdateAll(trx, input)

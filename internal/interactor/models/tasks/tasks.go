@@ -256,7 +256,9 @@ type Update struct {
 	// 更新者
 	UpdatedBy *string `json:"updated_by,omitempty" swaggerignore:"true"`
 	// 資源UUID
-	ResourceUUID *string `json:"resource_uuid,omitempty" swaggerignore:"true"`
+	ResUUID *string `json:"res_uuid,omitempty" swaggerignore:"true"`
+	// 角色
+	Role *string `json:"role,omitempty" swaggerignore:"true"`
 }
 
 // Segments struct is used to segment the task
@@ -297,10 +299,12 @@ type Import struct {
 type ProjectIDs struct {
 	// 多筆
 	Projects []*string `json:"projects"`
+	// 使用者ID
+	UserID *string `json:"user_id,omitempty" swaggerignore:"true"`
 	// 資源UUID
-	ResourceUUID *string `json:"resource_uuid,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
-	// 創建者
-	CreatedBy *string `json:"created_by,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
+	ResUUID *string `json:"res_uuid,omitempty" swaggerignore:"true"`
+	// 角色
+	Role *string `json:"role,omitempty" swaggerignore:"true"`
 	// 搜尋欄位
 	Filter `json:"filter"`
 }
@@ -312,5 +316,7 @@ type DeletedTaskUUIDs struct {
 	// 專案UUID
 	ProjectUUID *string `json:"project_uuid,omitempty" binding:"required,uuid4" validate:"required,uuid4"`
 	// 資源UUID
-	ResourceUUID *string `json:"resource_uuid,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
+	ResUUID *string `json:"res_uuid,omitempty" swaggerignore:"true"`
+	// 角色
+	Role *string `json:"role,omitempty" swaggerignore:"true"`
 }
