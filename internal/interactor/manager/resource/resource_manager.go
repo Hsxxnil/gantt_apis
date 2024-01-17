@@ -122,7 +122,7 @@ func (m *manager) GetByList(input *resourceModel.Fields) (int, any) {
 
 		// check if the resource is bind to the user and the user can edit or delete the project
 		if exist := userMap[*resourceBase[i].ResourceUUID]; !exist {
-			if input.CreatedBy == nil && input.Role != util.PointerString("admin") {
+			if *input.Role == "admin" {
 				resource.IsEditable = true
 			} else {
 				if *resourceBase[i].CreatedBy == *input.CreatedBy {
@@ -259,7 +259,7 @@ func (m *manager) Delete(input *resourceModel.Update) (int, any) {
 	}
 
 	// check the updated_by is the resource's created_by
-	if input.Role != util.PointerString("admin") {
+	if *input.Role != "admin" {
 		if *resourceBase.CreatedBy != *input.UpdatedBy {
 			log.Error("The user don't have permission to update this resource.")
 			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The user don't have permission to update this resource.")
@@ -289,7 +289,7 @@ func (m *manager) Update(input *resourceModel.Update) (int, any) {
 	}
 
 	// check the updated_by is the resource's created_by
-	if input.Role != util.PointerString("admin") {
+	if *input.Role != "admin" {
 		if *resourceBase.CreatedBy != *input.UpdatedBy {
 			log.Error("The user don't have permission to update this resource.")
 			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The user don't have permission to update this resource.")
