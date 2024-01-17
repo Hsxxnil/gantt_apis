@@ -36,14 +36,14 @@ func Init() Control {
 // @Accept json
 // @produce json
 // @param Authorization header string  true "JWE Token"
-// @param * body policies.PolicyRule true "新增策略"
+// @param * body []policies.PolicyRule true "新增策略"
 // @success 200 object code.SuccessfulMessage{body=string} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
 // @Router /policies [post]
 func (c *control) Create(ctx *gin.Context) {
-	input := &policyModel.PolicyRule{}
-	if err := ctx.ShouldBindJSON(input); err != nil {
+	var input []*policyModel.PolicyRule
+	if err := ctx.ShouldBindJSON(&input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
 		return
@@ -78,14 +78,14 @@ func (c *control) GetByList(ctx *gin.Context) {
 // @Accept json
 // @produce json
 // @param Authorization header string  true "JWE Token"
-// @param * body policies.PolicyRule true "刪除策略"
+// @param * body []policies.PolicyRule true "刪除策略"
 // @success 200 object code.SuccessfulMessage{body=string} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
 // @Router /policies [delete]
 func (c *control) Delete(ctx *gin.Context) {
-	input := &policyModel.PolicyRule{}
-	if err := ctx.ShouldBindJSON(input); err != nil {
+	var input []*policyModel.PolicyRule
+	if err := ctx.ShouldBindJSON(&input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
 		return

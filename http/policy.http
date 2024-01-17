@@ -12,8 +12,8 @@ POST {{host}}/hta-gantt/v1.0/verify
 Content-Type: application/json
 
 {
-  "user_name": "woni",
-  "passcode": "367130"
+  "user_name": "admin",
+  "passcode": "714564"
 }
 
 > {% client.global.set("accessToken", response.body.body.access_token); %}
@@ -28,21 +28,333 @@ POST {{host}}/hta-gantt/v1.0/policies
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
-{
-  "ptype": "p",
-  "role_name": "admin",
-  "path": "/hta-gantt/*",
-  "method": "PATCH"
-}
+[
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/event-marks/*",
+    "method": "DELETE"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/event-marks/*",
+    "method": "PATCH"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/holidays/*",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/projects/*",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/projects/*",
+    "method": "POST"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/projects/*",
+    "method": "PATCH"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/projects/*",
+    "method": "DELETE"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/users/*",
+    "method": "POST"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/users/*",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/users/*",
+    "method": "PATCH"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/departments/*",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/project-resources/*",
+    "method": "POST"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/departments",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/event-marks",
+    "method": "POST"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/holidays",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/project-resources",
+    "method": "POST"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/project-resources/*",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/project-types",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/project-types/*",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/projects",
+    "method": "POST"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/resources",
+    "method": "POST"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/resources/*",
+    "method": "POST"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/resources/*",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/resources/*",
+    "method": "DELETE"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/resources/*",
+    "method": "PATCH"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/tasks/*",
+    "method": "PATCH"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/tasks/*",
+    "method": "DELETE"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/tasks/*",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/tasks/*",
+    "method": "POST"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/tasks",
+    "method": "POST"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/work-days",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/work-days/*",
+    "method": "GET"
+  }
+]
 
 ### DeletePolicy
 DELETE {{host}}/hta-gantt/v1.0/policies
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
-{
-  "ptype": "p",
-  "role_name": "admin",
-  "path": "/hta-gantt/*",
-  "method": "GET"
-}
+[
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/event-marks/*",
+    "method": "DELETE"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/event-marks/*",
+    "method": "PATCH"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/holidays/*",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/projects/*",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/projects/*",
+    "method": "POST"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/projects/*",
+    "method": "PATCH"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/projects/*",
+    "method": "DELETE"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/users/*",
+    "method": "POST"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/users/*",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/users/*",
+    "method": "PATCH"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/departments/*",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/project-resources/*",
+    "method": "POST"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/departments",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/event-marks",
+    "method": "POST"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/holidays",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/project-resources",
+    "method": "POST"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/project-resources/*",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/project-types",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/project-types/*",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/projects",
+    "method": "POST"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/resources",
+    "method": "POST"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/resources/*",
+    "method": "POST"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/resources/*",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/resources/*",
+    "method": "DELETE"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/resources/*",
+    "method": "PATCH"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/tasks/*",
+    "method": "PATCH"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/tasks/*",
+    "method": "DELETE"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/tasks/*",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/tasks/*",
+    "method": "POST"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/tasks",
+    "method": "POST"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/work-days",
+    "method": "GET"
+  },
+  {
+    "role_name": "supervisor",
+    "path": "/hta-gantt/v1.0/work-days/*",
+    "method": "GET"
+  }
+]

@@ -1612,7 +1612,10 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/policies.PolicyRule"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/policies.PolicyRule"
+                            }
                         }
                     }
                 ],
@@ -1699,7 +1702,10 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/policies.PolicyRule"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/policies.PolicyRule"
+                            }
                         }
                     }
                 ],
@@ -7634,7 +7640,6 @@
             "required": [
                 "method",
                 "path",
-                "ptype",
                 "role_name"
             ],
             "properties": {
@@ -7642,9 +7647,6 @@
                     "type": "string"
                 },
                 "path": {
-                    "type": "string"
-                },
-                "ptype": {
                     "type": "string"
                 },
                 "role_name": {
