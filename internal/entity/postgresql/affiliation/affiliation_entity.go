@@ -145,6 +145,14 @@ func (s *storage) GetByQuantity(input *model.Base) (quantity int64, err error) {
 		query.Where("id = ?", input.ID)
 	}
 
+	if input.UserID != nil {
+		query.Where("user_id = ?", input.UserID)
+	}
+
+	if input.IsSupervisor != nil {
+		query.Where("is_supervisor = ?", input.IsSupervisor)
+	}
+
 	err = query.Count(&quantity).Select("*").Error
 	if err != nil {
 		log.Error(err)
