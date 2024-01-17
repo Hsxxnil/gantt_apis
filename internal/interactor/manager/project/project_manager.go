@@ -136,8 +136,9 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 		}
 	}
 
-	// if the user is not admin, search the project which is created by the user or the user is the project's member
-	if input.Role != util.PointerString("admin") {
+	// if the user is user, search the project which is created by the user or the user is the project's member
+	if *input.Role == "user" {
+		input.CreatedBy = input.UserID
 		// search project_resource
 		proResBase, _ := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
 			ResourceUUID: input.ResUUID,
@@ -209,7 +210,7 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 		}
 
 		// check the user can edit or delete the project
-		if input.Role == util.PointerString("admin") {
+		if *input.Role == "admin" {
 			project.IsEditable = true
 		} else {
 			if *projectBase[i].CreatedBy == *input.UserID || proResUUIDMap[*projectBase[i].ProjectUUID] == *input.ResUUID {
@@ -224,8 +225,9 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 func (m *manager) GetByListNoPagination(input *projectModel.Field) (int, any) {
 	output := &projectModel.ListNoPagination{}
 
-	// if the user is not admin, search the project which is created by the user or the user is the project's member
-	if input.Role != util.PointerString("admin") {
+	// if the user is user, search the project which is created by the user or the user is the project's member
+	if *input.Role == "user" {
+		input.CreatedBy = input.UserID
 		// search project_resource
 		proResBase, _ := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
 			ResourceUUID: input.ResUUID,
@@ -258,8 +260,9 @@ func (m *manager) GetByListNoPagination(input *projectModel.Field) (int, any) {
 }
 
 func (m *manager) GetBySingle(input *projectModel.Field) (int, any) {
-	// if the user is not admin, search the project which is created by the user or the user is the project's member
-	if input.Role != util.PointerString("admin") {
+	// if the user is user, search the project which is created by the user or the user is the project's member
+	if *input.Role == "user" {
+		input.CreatedBy = input.UserID
 		// search project_resource
 		_, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
 			ResourceUUID: input.ResUUID,
@@ -357,7 +360,7 @@ func (m *manager) Delete(trx *gorm.DB,
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	if input.Role != util.PointerString("admin") {
+	if *input.Role != "admin" {
 		if *projectBase.CreatedBy != *input.UpdatedBy {
 			if pmBase != nil {
 				if *pmBase.ResourceUUID != *input.ResUUID {
@@ -437,7 +440,7 @@ func (m *manager) Update(trx *gorm.DB,
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	if input.Role != util.PointerString("admin") {
+	if *input.Role != "admin" {
 		if *projectBase.CreatedBy != *input.UpdatedBy {
 			if pmBase != nil {
 				if *pmBase.ResourceUUID != *input.ResUUID {

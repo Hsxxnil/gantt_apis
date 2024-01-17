@@ -54,6 +54,8 @@ type Field struct {
 	ResUUID *string `json:"res_uuid,omitempty" form:"res_uuid" swaggerignore:"true"`
 	// 角色
 	Role *string `json:"role,omitempty" form:"role" swaggerignore:"true"`
+	// 創建者
+	CreatedBy *string `json:"created_by,omitempty" form:"created_by" swaggerignore:"true"`
 	// 搜尋欄位
 	Filter `json:"filter"`
 }
