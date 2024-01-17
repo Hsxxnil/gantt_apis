@@ -11,6 +11,17 @@ definitions:
     required:
     - dept_id
     type: object
+  affiliations.CreateForDept:
+    properties:
+      job_title:
+        description: 職稱
+        type: string
+      user_id:
+        description: 使用者ID
+        type: string
+    required:
+    - user_id
+    type: object
   affiliations.Single:
     properties:
       created_at:
@@ -85,6 +96,11 @@ definitions:
     type: object
   departments.Create:
     properties:
+      affiliations:
+        description: affiliations data
+        items:
+          $ref: '#/definitions/affiliations.CreateForDept'
+        type: array
       fax:
         description: 傳真
         type: string
