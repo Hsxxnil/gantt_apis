@@ -13,7 +13,7 @@ Content-Type: application/json
 
 {
   "user_name": "admin",
-  "passcode": "045790"
+  "passcode": "105620"
 }
 
 > {% client.global.set("accessToken", response.body.body.access_token); %}
@@ -43,7 +43,7 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### Update
-PATCH {{host}}/hta-gantt/v1.0/departments/0ef6e3ef-341f-40bb-aa5e-cd7f06666d34
+PATCH {{host}}/hta-gantt/v1.0/departments/90c20ee5-c2cd-4a76-b19c-e3ea18fc7cb0
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 

@@ -4,8 +4,12 @@ import (
 	"errors"
 	"github.com/bytedance/sonic"
 	affiliationModel "hta/internal/interactor/models/affiliations"
+	roleModel "hta/internal/interactor/models/roles"
+	userModel "hta/internal/interactor/models/users"
 	"hta/internal/interactor/pkg/util"
 	affiliationService "hta/internal/interactor/service/affiliation"
+	roleService "hta/internal/interactor/service/role"
+	userService "hta/internal/interactor/service/user"
 
 	"gorm.io/gorm"
 
@@ -28,12 +32,16 @@ type Manager interface {
 type manager struct {
 	DepartmentService  departmentService.Service
 	AffiliationService affiliationService.Service
+	RoleService        roleService.Service
+	UserService        userService.Service
 }
 
 func Init(db *gorm.DB) Manager {
 	return &manager{
 		DepartmentService:  departmentService.Init(db),
 		AffiliationService: affiliationService.Init(db),
+		RoleService:        roleService.Init(db),
+		UserService:        userService.Init(db),
 	}
 }
 
@@ -275,6 +283,21 @@ func (m *manager) Update(trx *gorm.DB, input *departmentModel.Update) (int, any)
 	}
 
 	if input.SupervisorID != nil {
+		// get all roles
+		roleBase, err := m.RoleService.GetByListNoPagination(&roleModel.Field{})
+		if err != nil {
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+		}
+
+		// create role map
+		roleMap := make(map[string]string)
+		for _, role := range roleBase {
+			roleMap[*role.Name] = *role.ID
+		}
+
 		// check the original supervisor exist
 		originalAffiliationBase, err := m.AffiliationService.GetBySingle(&affiliationModel.Field{
 			DeptID:       util.PointerString(input.ID),
@@ -288,6 +311,29 @@ func (m *manager) Update(trx *gorm.DB, input *departmentModel.Update) (int, any)
 		}
 
 		if originalAffiliationBase != nil {
+			// check if the original supervisor is other department's supervisor
+			quantity, err := m.AffiliationService.GetByQuantity(&affiliationModel.Field{
+				UserID:       originalAffiliationBase.UserID,
+				IsSupervisor: util.PointerBool(true),
+			})
+			if err != nil {
+				if !errors.Is(err, gorm.ErrRecordNotFound) {
+					log.Error(err)
+					return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+				}
+			}
+
+			// get the original supervisor's user info
+			userBase, err := m.UserService.GetBySingle(&userModel.Field{
+				ID: *originalAffiliationBase.UserID,
+			})
+			if err != nil {
+				if !errors.Is(err, gorm.ErrRecordNotFound) {
+					log.Error(err)
+					return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+				}
+			}
+
 			// update the original supervisor's affiliation
 			err = m.AffiliationService.WithTrx(trx).Update(&affiliationModel.Update{
 				ID:           *originalAffiliationBase.ID,
@@ -295,6 +341,30 @@ func (m *manager) Update(trx *gorm.DB, input *departmentModel.Update) (int, any)
 				UpdatedBy:    input.UpdatedBy,
 			})
 			if err != nil {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+
+			// sync update the original supervisor's role
+			if quantity <= 1 && *userBase.RoleID != roleMap["admin"] {
+				err = m.UserService.WithTrx(trx).Update(&userModel.Update{
+					ID:        *originalAffiliationBase.UserID,
+					RoleID:    util.PointerString(roleMap["user"]),
+					UpdatedBy: input.UpdatedBy,
+				})
+				if err != nil {
+					log.Error(err)
+					return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+				}
+			}
+		}
+
+		// get the new supervisor's user info
+		userBase, err := m.UserService.GetBySingle(&userModel.Field{
+			ID: *input.SupervisorID,
+		})
+		if err != nil {
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
 				log.Error(err)
 				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 			}
@@ -310,6 +380,19 @@ func (m *manager) Update(trx *gorm.DB, input *departmentModel.Update) (int, any)
 		if err != nil {
 			log.Error(err)
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+
+		// sync update the new supervisor's role
+		if *userBase.RoleID != roleMap["admin"] {
+			err = m.UserService.WithTrx(trx).Update(&userModel.Update{
+				ID:        *input.SupervisorID,
+				RoleID:    util.PointerString(roleMap["supervisor"]),
+				UpdatedBy: input.UpdatedBy,
+			})
+			if err != nil {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
 		}
 	}
 
