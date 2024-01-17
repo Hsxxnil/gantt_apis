@@ -800,7 +800,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 	// check if the user is a project manager
 	isPM := false
 	if len(input.Projects) == 1 {
-		if input.Role != util.PointerString("admin") {
+		if *input.Role != "admin" {
 			pmBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
 				ProjectUUID: input.Projects[0],
 				Role:        util.PointerString("PM"),
@@ -916,7 +916,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 				}
 
 				// check the user can edit or delete the task
-				if input.Role == util.PointerString("admin") || isPM {
+				if *input.Role == "admin" || isPM {
 					task.IsEditable = true
 				} else {
 					if *taskBase[i].CreatedBy == *input.UserID {
@@ -1193,7 +1193,7 @@ func (m *manager) Delete(trx *gorm.DB, input *taskModel.DeletedTaskUUIDs) (int, 
 	defer trx.Rollback()
 
 	// check the update_by has the permission to delete the project's tasks
-	if input.Role != util.PointerString("admin") {
+	if *input.Role != "admin" {
 		// search project_resource
 		proResBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
 			ProjectUUID:  input.ProjectUUID,
@@ -1304,7 +1304,7 @@ func (m *manager) Update(trx *gorm.DB,
 	}
 
 	// check the update_by has the permission to update the project's tasks
-	if input.Role != util.PointerString("admin") {
+	if *input.Role != "admin" {
 		if proResMap[*input.ResUUID] != nil {
 			if !proResMap[*input.ResUUID].IsEditable {
 				log.Info("The user don't have permission to update the project's tasks.")
@@ -1459,7 +1459,7 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 	}
 
 	// check the update_by has the permission to update the project's tasks
-	if input[0].Role != util.PointerString("admin") {
+	if *input[0].Role != "admin" {
 		if proResMap[*input[0].ResUUID] != nil {
 			if !proResMap[*input[0].ResUUID].IsEditable {
 				log.Info("The user don't have permission to update the project's tasks.")
