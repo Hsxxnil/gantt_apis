@@ -19,6 +19,18 @@ type Create struct {
 	CreatedBy string `json:"created_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }
 
+// CreateForDept struct is used create achieves for dept
+type CreateForDept struct {
+	// 使用者ID
+	UserID string `json:"user_id,omitempty" binding:"required,uuid4" validate:"required,uuid4"`
+	// 部門ID
+	DeptID string `json:"dept_id,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
+	// 職稱
+	JobTitle string `json:"job_title,omitempty"`
+	// 創建者
+	CreatedBy string `json:"created_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
+}
+
 // Field is structure file for search
 type Field struct {
 	// 表ID

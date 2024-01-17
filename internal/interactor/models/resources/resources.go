@@ -35,6 +35,8 @@ type Create struct {
 type Field struct {
 	// 表ID
 	ResourceUUID string `json:"resource_uuid,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
+	// 表IDs (後端查詢用)
+	ResourceUUIDs []*string `json:"resource_uuids,omitempty" form:"resource_uuids" swaggerignore:"true"`
 	// 舊編號 ＆ 頁面ID
 	ResourceID *int64 `json:"resource_id,omitempty" form:"resource_id"`
 	// 名字

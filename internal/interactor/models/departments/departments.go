@@ -16,6 +16,8 @@ type Create struct {
 	Fax string `json:"fax,omitempty"`
 	// 電話
 	Tel string `json:"tel,omitempty"`
+	// affiliations data
+	Affiliations []*affiliations.CreateForDept `json:"affiliations,omitempty"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }

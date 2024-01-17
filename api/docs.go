@@ -7002,6 +7002,22 @@ const docTemplate = `{
                 }
             }
         },
+        "affiliations.CreateForDept": {
+            "type": "object",
+            "required": [
+                "user_id"
+            ],
+            "properties": {
+                "job_title": {
+                    "description": "職稱",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "使用者ID",
+                    "type": "string"
+                }
+            }
+        },
         "affiliations.Single": {
             "type": "object",
             "properties": {
@@ -7108,6 +7124,13 @@ const docTemplate = `{
                 "name"
             ],
             "properties": {
+                "affiliations": {
+                    "description": "affiliations data",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/affiliations.CreateForDept"
+                    }
+                },
                 "fax": {
                     "description": "傳真",
                     "type": "string"

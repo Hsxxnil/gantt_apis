@@ -4,12 +4,15 @@ import (
 	"errors"
 	"github.com/bytedance/sonic"
 	affiliationModel "hta/internal/interactor/models/affiliations"
+	resourceModel "hta/internal/interactor/models/resources"
 	roleModel "hta/internal/interactor/models/roles"
 	userModel "hta/internal/interactor/models/users"
 	"hta/internal/interactor/pkg/util"
 	affiliationService "hta/internal/interactor/service/affiliation"
+	resourceService "hta/internal/interactor/service/resource"
 	roleService "hta/internal/interactor/service/role"
 	userService "hta/internal/interactor/service/user"
+	"strings"
 
 	"gorm.io/gorm"
 
@@ -34,6 +37,7 @@ type manager struct {
 	AffiliationService affiliationService.Service
 	RoleService        roleService.Service
 	UserService        userService.Service
+	ResourceService    resourceService.Service
 }
 
 func Init(db *gorm.DB) Manager {
@@ -42,6 +46,7 @@ func Init(db *gorm.DB) Manager {
 		AffiliationService: affiliationService.Init(db),
 		RoleService:        roleService.Init(db),
 		UserService:        userService.Init(db),
+		ResourceService:    resourceService.Init(db),
 	}
 }
 
@@ -69,7 +74,50 @@ func (m *manager) Create(trx *gorm.DB, input *departmentModel.Create) (int, any)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	// sync create affiliation
+	// get all roles
+	roleBase, err := m.RoleService.GetByListNoPagination(&roleModel.Field{})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
+	// create role map
+	roleMap := make(map[string]string)
+	for _, role := range roleBase {
+		roleMap[*role.Name] = *role.ID
+	}
+
+	// get all users' info
+	userBase, err := m.UserService.GetByListNoPagination(&userModel.Field{})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
+	var users []*userModel.Single
+	userByte, err := sonic.Marshal(userBase)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	err = sonic.Unmarshal(userByte, &users)
+	if err != nil {
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// create user map
+	userMap := make(map[string]*userModel.Single)
+	for _, user := range users {
+		userMap[user.ID] = user
+	}
+
+	// sync create supervisor
 	if input.SupervisorID != nil {
 		_, err = m.AffiliationService.WithTrx(trx).Create(&affiliationModel.Create{
 			UserID:       *input.SupervisorID,
@@ -80,6 +128,74 @@ func (m *manager) Create(trx *gorm.DB, input *departmentModel.Create) (int, any)
 		if err != nil {
 			log.Error(err)
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+
+		// sync update the new supervisor's role
+		if userMap[*input.SupervisorID].RoleID != roleMap["admin"] {
+			err = m.UserService.WithTrx(trx).Update(&userModel.Update{
+				ID:        *input.SupervisorID,
+				RoleID:    util.PointerString(roleMap["supervisor"]),
+				UpdatedBy: util.PointerString(input.CreatedBy),
+			})
+			if err != nil {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+		}
+	}
+
+	// sync create affiliations
+	if len(input.Affiliations) > 0 {
+		var (
+			affiliations []*affiliationModel.Create
+			resUUIDs     []*string
+		)
+		for _, affiliation := range input.Affiliations {
+			affiliations = append(affiliations, &affiliationModel.Create{
+				UserID:    affiliation.UserID,
+				DeptID:    *departmentBase.ID,
+				JobTitle:  affiliation.JobTitle,
+				CreatedBy: input.CreatedBy,
+			})
+
+			// collect resource uuid
+			resUUIDs = append(resUUIDs, util.PointerString(userMap[affiliation.UserID].ResourceUUID))
+		}
+
+		_, err = m.AffiliationService.WithTrx(trx).CreateAll(affiliations)
+		if err != nil {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+
+		// get all affiliations' resource
+		resourceBase, err := m.ResourceService.GetByListNoPagination(&resourceModel.Field{
+			ResourceUUIDs: resUUIDs,
+		})
+		if err != nil {
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+		}
+
+		// add new resource group
+		if resourceBase != nil {
+			for _, resource := range resourceBase {
+				if resource.ResourceGroup != nil {
+					// sync update resource_group
+					newResGroup := strings.TrimSuffix(*resource.ResourceGroup, "]") + `,"` + input.Name + `"]`
+					err = m.ResourceService.WithTrx(trx).Update(&resourceModel.Update{
+						ResourceUUID:  *resource.ResourceUUID,
+						ResourceGroup: util.PointerString(newResGroup),
+						UpdatedBy:     util.PointerString(input.CreatedBy),
+					})
+					if err != nil {
+						log.Error(err)
+						return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+					}
+				}
+			}
 		}
 	}
 

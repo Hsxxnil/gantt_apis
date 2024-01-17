@@ -13,7 +13,7 @@ Content-Type: application/json
 
 {
   "user_name": "admin",
-  "passcode": "105620"
+  "passcode": "503939"
 }
 
 > {% client.global.set("accessToken", response.body.body.access_token); %}
@@ -39,7 +39,17 @@ Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-  "name": "總經理室"
+  "name": "qqqqq",
+  "affiliations": [
+    {
+      "user_id": "079ae399-21c0-4cdd-b636-45961c81be7c",
+      "job_title": "test"
+    },
+    {
+      "user_id": "7c0595cf-2d9a-4e77-858c-a33f9d1e8452",
+      "job_title": "test"
+    }
+  ]
 }
 
 ### Update
