@@ -137,11 +137,12 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 	}
 
 	// if the user is not admin, search the project which is created by the user or the user is the project's member
-	if input.CreatedBy != nil && input.ResourceUUID != nil {
+	if input.Role != util.PointerString("admin") {
 		// search project_resource
 		proResBase, _ := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
-			ResourceUUID: input.ResourceUUID,
+			ResourceUUID: input.ResUUID,
 		})
+
 		if len(proResBase) > 0 {
 			for _, proRes := range proResBase {
 				input.ProjectUUIDs = append(input.ProjectUUIDs, proRes.ProjectUUID)
@@ -180,15 +181,17 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 	}
 
 	// create project's manager map
-	projectMap := make(map[string]string)
+	proResNameMap := make(map[string]string)
+	proResUUIDMap := make(map[string]string)
 	for _, proRes := range proResBase {
-		projectMap[*proRes.ProjectUUID] = *proRes.Resources.ResourceName
+		proResNameMap[*proRes.ProjectUUID] = *proRes.Resources.ResourceName
+		proResUUIDMap[*proRes.ProjectUUID] = *proRes.ResourceUUID
 	}
 
 	today := time.Now().UTC()
 	for i, project := range output.Projects {
 		project.Type = *projectBase[i].ProjectTypes.Name
-		project.Manager = projectMap[*projectBase[i].ProjectUUID]
+		project.Manager = proResNameMap[*projectBase[i].ProjectUUID]
 		project.CreatedBy = *projectBase[i].CreatedByUsers.Name
 		project.UpdatedBy = *projectBase[i].UpdatedByUsers.Name
 		// calculate project progress
@@ -206,10 +209,10 @@ func (m *manager) GetByList(input *projectModel.Fields) (int, any) {
 		}
 
 		// check the user can edit or delete the project
-		if input.CreatedBy == nil {
+		if input.Role == util.PointerString("admin") {
 			project.IsEditable = true
 		} else {
-			if *projectBase[i].CreatedBy == *input.CreatedBy || project.Manager == *input.ResourceUUID {
+			if *projectBase[i].CreatedBy == *input.UserID || proResUUIDMap[*projectBase[i].ProjectUUID] == *input.ResUUID {
 				project.IsEditable = true
 			}
 		}
@@ -222,10 +225,10 @@ func (m *manager) GetByListNoPagination(input *projectModel.Field) (int, any) {
 	output := &projectModel.ListNoPagination{}
 
 	// if the user is not admin, search the project which is created by the user or the user is the project's member
-	if input.CreatedBy != nil && input.ResourceUUID != nil {
+	if input.Role != util.PointerString("admin") {
 		// search project_resource
 		proResBase, _ := m.ProjectResourceService.GetByListNoPagination(&projectResourceModel.Field{
-			ResourceUUID: input.ResourceUUID,
+			ResourceUUID: input.ResUUID,
 		})
 		if len(proResBase) > 0 {
 			for _, proRes := range proResBase {
@@ -256,10 +259,10 @@ func (m *manager) GetByListNoPagination(input *projectModel.Field) (int, any) {
 
 func (m *manager) GetBySingle(input *projectModel.Field) (int, any) {
 	// if the user is not admin, search the project which is created by the user or the user is the project's member
-	if input.CreatedBy != nil && input.ResourceUUID != nil {
+	if input.Role != util.PointerString("admin") {
 		// search project_resource
 		_, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
-			ResourceUUID: input.ResourceUUID,
+			ResourceUUID: input.ResUUID,
 			ProjectUUID:  util.PointerString(input.ProjectUUID),
 		})
 		if err != nil {
@@ -325,7 +328,8 @@ func (m *manager) GetBySingle(input *projectModel.Field) (int, any) {
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
 
-func (m *manager) Delete(trx *gorm.DB, input *projectModel.Update) (int, any) {
+func (m *manager) Delete(trx *gorm.DB,
+	input *projectModel.Update) (int, any) {
 	defer trx.Rollback()
 
 	// check the update_by is the project's manager
@@ -353,10 +357,10 @@ func (m *manager) Delete(trx *gorm.DB, input *projectModel.Update) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	if input.ResourceUUID != nil {
+	if input.Role != util.PointerString("admin") {
 		if *projectBase.CreatedBy != *input.UpdatedBy {
 			if pmBase != nil {
-				if *pmBase.ResourceUUID != *input.ResourceUUID {
+				if *pmBase.ResourceUUID != *input.ResUUID {
 					log.Info("The user don't have permission to update this project.")
 					return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The user don't have permission to update this project.")
 				}
@@ -404,7 +408,8 @@ func (m *manager) Delete(trx *gorm.DB, input *projectModel.Update) (int, any) {
 	return code.Successful, code.GetCodeMessage(code.Successful, "Delete ok!")
 }
 
-func (m *manager) Update(trx *gorm.DB, input *projectModel.Update) (int, any) {
+func (m *manager) Update(trx *gorm.DB,
+	input *projectModel.Update) (int, any) {
 	defer trx.Rollback()
 
 	// check the update_by is the project's manager
@@ -432,10 +437,10 @@ func (m *manager) Update(trx *gorm.DB, input *projectModel.Update) (int, any) {
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
-	if input.ResourceUUID != nil {
+	if input.Role != util.PointerString("admin") {
 		if *projectBase.CreatedBy != *input.UpdatedBy {
 			if pmBase != nil {
-				if *pmBase.ResourceUUID != *input.ResourceUUID {
+				if *pmBase.ResourceUUID != *input.ResUUID {
 					log.Info("The user don't have permission to update this project.")
 					return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The user don't have permission to update this project.")
 				}
