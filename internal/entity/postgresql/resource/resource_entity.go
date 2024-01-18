@@ -117,6 +117,10 @@ func (s *storage) GetByListNoPagination(input *model.Base) (output []*model.Tabl
 		query.Where("resource_uuid = ?", input.ResourceUUID)
 	}
 
+	if input.ResourceUUIDs != nil {
+		query.Where("resource_uuid in (?)", input.ResourceUUIDs)
+	}
+
 	if input.ResourceName != nil {
 		query.Where("resource_name like ?", "%"+*input.ResourceName+"%")
 	}

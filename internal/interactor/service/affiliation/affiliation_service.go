@@ -15,6 +15,7 @@ import (
 type Service interface {
 	WithTrx(tx *gorm.DB) Service
 	Create(input *model.Create) (output *db.Base, err error)
+	CreateAll(input []*model.Create) (output []*db.Base, err error)
 	GetByList(input *model.Fields) (quantity int64, output []*db.Base, err error)
 	GetByListNoPagination(input *model.Field) (output []*db.Base, err error)
 	GetBySingle(input *model.Field) (output *db.Base, err error)
@@ -58,6 +59,50 @@ func (s *service) Create(input *model.Create) (output *db.Base, err error) {
 	base.UpdatedAt = util.PointerTime(util.NowToUTC())
 	base.UpdatedBy = util.PointerString(input.CreatedBy)
 	err = s.Repository.Create(base)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	marshal, err = sonic.Marshal(base)
+	if err != nil {
+		log.Error(err)
+
+		return nil, err
+	}
+
+	err = sonic.Unmarshal(marshal, &output)
+	if err != nil {
+		log.Error(err)
+
+		return nil, err
+	}
+
+	return output, nil
+}
+
+func (s *service) CreateAll(input []*model.Create) (output []*db.Base, err error) {
+	var base []*db.Base
+	marshal, err := sonic.Marshal(input)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	err = sonic.Unmarshal(marshal, &base)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	for i, field := range base {
+		field.ID = util.PointerString(uuid.CreatedUUIDString())
+		field.CreatedAt = util.PointerTime(util.NowToUTC())
+		field.UpdatedAt = util.PointerTime(util.NowToUTC())
+		field.UpdatedBy = util.PointerString(input[i].CreatedBy)
+	}
+
+	err = s.Repository.CreateAll(base)
 	if err != nil {
 		log.Error(err)
 		return nil, err
