@@ -142,6 +142,33 @@ func (m *manager) Create(trx *gorm.DB, input *departmentModel.Create) (int, any)
 				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 			}
 		}
+
+		// sync update the new supervisor's resource_group
+		resourceBase, err := m.ResourceService.GetBySingle(&resourceModel.Field{
+			ResourceUUID: userMap[*input.SupervisorID].ResourceUUID,
+		})
+		if err != nil {
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+		}
+
+		if resourceBase != nil {
+			if resourceBase.ResourceGroup != nil {
+				// sync update resource_group
+				newResGroup := strings.TrimSuffix(*resourceBase.ResourceGroup, "]") + `,"` + input.Name + `"]`
+				err = m.ResourceService.WithTrx(trx).Update(&resourceModel.Update{
+					ResourceUUID:  *resourceBase.ResourceUUID,
+					ResourceGroup: util.PointerString(newResGroup),
+					UpdatedBy:     util.PointerString(input.CreatedBy),
+				})
+				if err != nil {
+					log.Error(err)
+					return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+				}
+			}
+		}
 	}
 
 	// sync create affiliations
@@ -497,7 +524,7 @@ func (m *manager) Update(trx *gorm.DB, input *departmentModel.Update) (int, any)
 				}
 			}
 
-			// update the original supervisor's affiliation
+			// sync update the original supervisor's affiliation
 			err = m.AffiliationService.WithTrx(trx).Update(&affiliationModel.Update{
 				ID:           *originalAffiliationBase.ID,
 				IsSupervisor: util.PointerBool(false),
@@ -555,6 +582,151 @@ func (m *manager) Update(trx *gorm.DB, input *departmentModel.Update) (int, any)
 			if err != nil {
 				log.Error(err)
 				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+		}
+	}
+
+	if input.Affiliations != nil {
+		// get original affiliations of the department
+		affiliationBase, err := m.AffiliationService.GetByListNoPagination(&affiliationModel.Field{
+			DeptID: util.PointerString(input.ID),
+		})
+		if err != nil {
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+		}
+
+		// create original affiliation map
+		originalMap := make(map[string]bool)
+		for _, affiliation := range affiliationBase {
+			originalMap[*affiliation.UserID] = true
+		}
+
+		// create new affiliation map
+		newMap := make(map[string]bool)
+		for _, affiliation := range input.Affiliations {
+			newMap[*affiliation.UserID] = true
+		}
+
+		// get all users' info
+		userBase, err := m.UserService.GetByListNoPagination(&userModel.Field{})
+		if err != nil {
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+		}
+
+		// create user's resource_uuid map
+		userMap := make(map[string]string)
+		for _, user := range userBase {
+			userMap[*user.ID] = *user.ResourceUUID
+		}
+
+		// determine if the affiliation in the new map but not in the original map, then create
+		var newResUUID []*string
+		for _, affiliation := range input.Affiliations {
+			if _, ok := originalMap[*affiliation.UserID]; !ok {
+				var jobTitle string
+				if affiliation.JobTitle != nil {
+					jobTitle = *affiliation.JobTitle
+				}
+				_, err = m.AffiliationService.WithTrx(trx).Create(&affiliationModel.Create{
+					UserID:    *affiliation.UserID,
+					DeptID:    input.ID,
+					JobTitle:  jobTitle,
+					CreatedBy: *input.UpdatedBy,
+				})
+				if err != nil {
+					log.Error(err)
+					return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+				}
+
+				// collect resource uuid
+				newResUUID = append(newResUUID, util.PointerString(userMap[*affiliation.UserID]))
+			}
+		}
+
+		// determine if the affiliation in the original map but not in the new map, then delete
+		var originalResUUID []*string
+		for _, affiliation := range affiliationBase {
+			if _, ok := newMap[*affiliation.UserID]; !ok {
+				err = m.AffiliationService.WithTrx(trx).Delete(&affiliationModel.Field{
+					ID: *affiliation.ID,
+				})
+				if err != nil {
+					log.Error(err)
+					return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+				}
+
+				// collect resource uuid
+				originalResUUID = append(originalResUUID, util.PointerString(userMap[*affiliation.UserID]))
+			}
+		}
+
+		// sync update new resource_group
+		if len(newResUUID) > 0 {
+			// get all affiliations' resource
+			resourceBase, err := m.ResourceService.GetByListNoPagination(&resourceModel.Field{
+				ResourceUUIDs: newResUUID,
+			})
+			if err != nil {
+				if !errors.Is(err, gorm.ErrRecordNotFound) {
+					log.Error(err)
+					return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+				}
+			}
+
+			if resourceBase != nil {
+				for _, resource := range resourceBase {
+					if resource.ResourceGroup != nil {
+						// sync update resource_group
+						newResGroup := strings.TrimSuffix(*resource.ResourceGroup, "]") + `,"` + *departmentBase.Name + `"]`
+						err = m.ResourceService.WithTrx(trx).Update(&resourceModel.Update{
+							ResourceUUID:  *resource.ResourceUUID,
+							ResourceGroup: util.PointerString(newResGroup),
+							UpdatedBy:     input.UpdatedBy,
+						})
+						if err != nil {
+							log.Error(err)
+							return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+						}
+					}
+				}
+			}
+		}
+
+		// sync update original resource_group
+		if len(originalResUUID) > 0 {
+			// get all affiliations' resource
+			resourceBase, err := m.ResourceService.GetByListNoPagination(&resourceModel.Field{
+				ResourceUUIDs: originalResUUID,
+			})
+			if err != nil {
+				if !errors.Is(err, gorm.ErrRecordNotFound) {
+					log.Error(err)
+					return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+				}
+			}
+
+			if resourceBase != nil {
+				for _, resource := range resourceBase {
+					if resource.ResourceGroup != nil {
+						// sync update resource_group
+						newResGroup := strings.Replace(*resource.ResourceGroup, `,"`+*departmentBase.Name+`"`, "", -1)
+						err = m.ResourceService.WithTrx(trx).Update(&resourceModel.Update{
+							ResourceUUID:  *resource.ResourceUUID,
+							ResourceGroup: util.PointerString(newResGroup),
+							UpdatedBy:     input.UpdatedBy,
+						})
+						if err != nil {
+							log.Error(err)
+							return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+						}
+					}
+				}
 			}
 		}
 	}

@@ -67,6 +67,21 @@ definitions:
         description: 部門
         type: string
     type: object
+  affiliations.Update:
+    properties:
+      dept_id:
+        description: 部門ID
+        type: string
+      is_supervisor:
+        description: 是否為主管
+        type: boolean
+      job_title:
+        description: 職稱
+        type: string
+      user_id:
+        description: 使用者ID
+        type: string
+    type: object
   code.ErrorMessage:
     properties:
       code:
@@ -215,6 +230,11 @@ definitions:
     type: object
   departments.Update:
     properties:
+      affiliations:
+        description: affiliations data
+        items:
+          $ref: '#/definitions/affiliations.Update'
+        type: array
       fax:
         description: 傳真
         type: string
