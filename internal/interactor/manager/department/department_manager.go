@@ -28,7 +28,7 @@ type Manager interface {
 	GetByList(input *departmentModel.Fields) (int, any)
 	GetByListNoPagination(input *departmentModel.Field) (int, any)
 	GetBySingle(input *departmentModel.Field) (int, any)
-	Delete(trx *gorm.DB, input *departmentModel.Field) (int, any)
+	Delete(trx *gorm.DB, input *departmentModel.Update) (int, any)
 	Update(trx *gorm.DB, input *departmentModel.Update) (int, any)
 }
 
@@ -343,10 +343,10 @@ func (m *manager) GetBySingle(input *departmentModel.Field) (int, any) {
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
 
-func (m *manager) Delete(trx *gorm.DB, input *departmentModel.Field) (int, any) {
+func (m *manager) Delete(trx *gorm.DB, input *departmentModel.Update) (int, any) {
 	defer trx.Rollback()
 
-	_, err := m.DepartmentService.GetBySingle(&departmentModel.Field{
+	deptBase, err := m.DepartmentService.GetBySingle(&departmentModel.Field{
 		ID: input.ID,
 	})
 	if err != nil {
@@ -362,6 +362,53 @@ func (m *manager) Delete(trx *gorm.DB, input *departmentModel.Field) (int, any) 
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// get all affiliations of the department
+	affiliationBase, err := m.AffiliationService.GetByListNoPagination(&affiliationModel.Field{
+		DeptID: util.PointerString(input.ID),
+	})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
+	// collect resource uuid
+	var resUUIDs []*string
+	for _, affiliation := range affiliationBase {
+		resUUIDs = append(resUUIDs, util.PointerString(*affiliation.Users.ResourceUUID))
+	}
+
+	// get all affiliations' resource
+	resourceBase, err := m.ResourceService.GetByListNoPagination(&resourceModel.Field{
+		ResourceUUIDs: resUUIDs,
+	})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
+	// delete resource_group
+	if resourceBase != nil {
+		for _, resource := range resourceBase {
+			if resource.ResourceGroup != nil {
+				// sync update resource_group
+				newResGroup := strings.Replace(*resource.ResourceGroup, `,"`+*deptBase.Name+`"`, "", -1)
+				err = m.ResourceService.WithTrx(trx).Update(&resourceModel.Update{
+					ResourceUUID:  *resource.ResourceUUID,
+					ResourceGroup: util.PointerString(newResGroup),
+					UpdatedBy:     input.UpdatedBy,
+				})
+				if err != nil {
+					log.Error(err)
+					return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+				}
+			}
+		}
 	}
 
 	// sync delete affiliation

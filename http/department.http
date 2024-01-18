@@ -13,7 +13,7 @@ Content-Type: application/json
 
 {
   "user_name": "admin",
-  "passcode": "503939"
+  "passcode": "749816"
 }
 
 > {% client.global.set("accessToken", response.body.body.access_token); %}
@@ -62,6 +62,6 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### Delete
-DELETE {{host}}/hta-gantt/v1.0/departments/787ec21e-8298-471b-a271-8ed4aa18139d
+DELETE {{host}}/hta-gantt/v1.0/departments/47ae6298-dd69-40c6-9cb9-5d1e502ed37f
 Accept: application/json
 Authorization: Bearer {{accessToken}}
