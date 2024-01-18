@@ -7002,6 +7002,22 @@ const docTemplate = `{
                 }
             }
         },
+        "affiliations.CreateForDept": {
+            "type": "object",
+            "required": [
+                "user_id"
+            ],
+            "properties": {
+                "job_title": {
+                    "description": "職稱",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "使用者ID",
+                    "type": "string"
+                }
+            }
+        },
         "affiliations.Single": {
             "type": "object",
             "properties": {
@@ -7064,6 +7080,27 @@ const docTemplate = `{
                 }
             }
         },
+        "affiliations.Update": {
+            "type": "object",
+            "properties": {
+                "dept_id": {
+                    "description": "部門ID",
+                    "type": "string"
+                },
+                "is_supervisor": {
+                    "description": "是否為主管",
+                    "type": "boolean"
+                },
+                "job_title": {
+                    "description": "職稱",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "使用者ID",
+                    "type": "string"
+                }
+            }
+        },
         "code.ErrorMessage": {
             "type": "object",
             "properties": {
@@ -7108,6 +7145,13 @@ const docTemplate = `{
                 "name"
             ],
             "properties": {
+                "affiliations": {
+                    "description": "affiliations data",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/affiliations.CreateForDept"
+                    }
+                },
                 "fax": {
                     "description": "傳真",
                     "type": "string"
@@ -7262,6 +7306,13 @@ const docTemplate = `{
         "departments.Update": {
             "type": "object",
             "properties": {
+                "affiliations": {
+                    "description": "affiliations data",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/affiliations.Update"
+                    }
+                },
                 "fax": {
                     "description": "傳真",
                     "type": "string"

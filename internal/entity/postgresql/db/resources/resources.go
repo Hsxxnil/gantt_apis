@@ -41,6 +41,8 @@ type Table struct {
 type Base struct {
 	// 表ID
 	ResourceUUID *string `json:"resource_uuid,omitempty"`
+	// 表IDs (後端查詢用)
+	ResourceUUIDs []*string `json:"resource_uuids,omitempty"`
 	// 舊編號 ＆ 頁面ID
 	ResourceID *int64 `json:"resource_id,omitempty"`
 	// 名字

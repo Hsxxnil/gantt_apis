@@ -158,8 +158,9 @@ func (c *control) GetBySingle(ctx *gin.Context) {
 func (c *control) Delete(ctx *gin.Context) {
 	trx := ctx.MustGet("db_trx").(*gorm.DB)
 	id := ctx.Param("id")
-	input := &departmentModel.Field{}
+	input := &departmentModel.Update{}
 	input.ID = id
+	input.UpdatedBy = util.PointerString(ctx.MustGet("user_id").(string))
 	if err := ctx.ShouldBindQuery(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))

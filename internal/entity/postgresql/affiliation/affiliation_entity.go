@@ -12,6 +12,7 @@ import (
 type Entity interface {
 	WithTrx(trx *gorm.DB) Entity
 	Create(input *model.Base) (err error)
+	CreateAll(input []*model.Base) (err error)
 	GetByList(input *model.Base) (quantity int64, output []*model.Table, err error)
 	GetByListNoPagination(input *model.Base) (output []*model.Table, err error)
 	GetBySingle(input *model.Base) (output *model.Table, err error)
@@ -44,6 +45,29 @@ func (s *storage) Create(input *model.Base) (err error) {
 	}
 
 	data := &model.Table{}
+	err = sonic.Unmarshal(marshal, data)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	err = s.db.Model(&model.Table{}).Omit(clause.Associations).Create(&data).Error
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	return nil
+}
+
+func (s *storage) CreateAll(input []*model.Base) (err error) {
+	marshal, err := sonic.Marshal(input)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	data := &[]model.Table{}
 	err = sonic.Unmarshal(marshal, data)
 	if err != nil {
 		log.Error(err)
@@ -101,6 +125,10 @@ func (s *storage) GetByListNoPagination(input *model.Base) (output []*model.Tabl
 
 	if input.IsSupervisor != nil {
 		query.Where("is_supervisor = ?", input.IsSupervisor)
+	}
+
+	if input.DeptID != nil {
+		query.Where("dept_id = ?", input.DeptID)
 	}
 
 	err = query.Order("created_at desc").Find(&output).Error
