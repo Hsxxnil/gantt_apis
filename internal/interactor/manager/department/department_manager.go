@@ -472,6 +472,57 @@ func (m *manager) Update(trx *gorm.DB, input *departmentModel.Update) (int, any)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
+	if input.Name != nil {
+		if *input.Name != *departmentBase.Name {
+			// get all affiliations of the department
+			affiliationBase, err := m.AffiliationService.GetByListNoPagination(&affiliationModel.Field{
+				DeptID: util.PointerString(input.ID),
+			})
+			if err != nil {
+				if !errors.Is(err, gorm.ErrRecordNotFound) {
+					log.Error(err)
+					return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+				}
+			}
+
+			// collect resource uuid
+			var resUUIDs []*string
+			for _, affiliation := range affiliationBase {
+				resUUIDs = append(resUUIDs, util.PointerString(*affiliation.Users.ResourceUUID))
+			}
+
+			// get all affiliations' resource
+			resourceBase, err := m.ResourceService.GetByListNoPagination(&resourceModel.Field{
+				ResourceUUIDs: resUUIDs,
+			})
+			if err != nil {
+				if !errors.Is(err, gorm.ErrRecordNotFound) {
+					log.Error(err)
+					return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+				}
+			}
+
+			// update resource_group
+			if resourceBase != nil {
+				for _, resource := range resourceBase {
+					if resource.ResourceGroup != nil {
+						// sync update resource_group
+						newResGroup := strings.Replace(*resource.ResourceGroup, `,"`+*departmentBase.Name+`"`, `,"`+*input.Name+`"`, -1)
+						err = m.ResourceService.WithTrx(trx).Update(&resourceModel.Update{
+							ResourceUUID:  *resource.ResourceUUID,
+							ResourceGroup: util.PointerString(newResGroup),
+							UpdatedBy:     input.UpdatedBy,
+						})
+						if err != nil {
+							log.Error(err)
+							return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+						}
+					}
+				}
+			}
+		}
+	}
+
 	if input.SupervisorID != nil {
 		// get all roles
 		roleBase, err := m.RoleService.GetByListNoPagination(&roleModel.Field{})

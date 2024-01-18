@@ -58,12 +58,7 @@ Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-  "affiliations": [
-    {
-      "user_id": "079ae399-21c0-4cdd-b636-45961c81be7c",
-      "job_title": "test"
-    }
-  ]
+  "name": "abc"
 }
 
 ### Delete
