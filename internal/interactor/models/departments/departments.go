@@ -107,6 +107,8 @@ type Update struct {
 	Fax *string `json:"fax,omitempty"`
 	// 電話
 	Tel *string `json:"tel,omitempty"`
+	// affiliations data
+	Affiliations []*affiliations.Update `json:"affiliations,omitempty"`
 	// 更新者
 	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }

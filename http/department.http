@@ -13,7 +13,7 @@ Content-Type: application/json
 
 {
   "user_name": "admin",
-  "passcode": "749816"
+  "passcode": "528733"
 }
 
 > {% client.global.set("accessToken", response.body.body.access_token); %}
@@ -53,15 +53,20 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### Update
-PATCH {{host}}/hta-gantt/v1.0/departments/90c20ee5-c2cd-4a76-b19c-e3ea18fc7cb0
+PATCH {{host}}/hta-gantt/v1.0/departments/3d183fc1-10ca-46ce-9e61-bddc73b8f189
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-  "supervisor_id": "6b47e0c6-a4b7-418d-9b52-799449a6c58d"
+  "affiliations": [
+    {
+      "user_id": "079ae399-21c0-4cdd-b636-45961c81be7c",
+      "job_title": "test"
+    }
+  ]
 }
 
 ### Delete
-DELETE {{host}}/hta-gantt/v1.0/departments/47ae6298-dd69-40c6-9cb9-5d1e502ed37f
+DELETE {{host}}/hta-gantt/v1.0/departments/e2a1e2d0-75eb-4713-835d-5a866fea3d7f
 Accept: application/json
 Authorization: Bearer {{accessToken}}
