@@ -208,4 +208,6 @@ type ProjectResource struct {
 	ResourceUUID string `json:"resource_uuid,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4"`
 	// 專案角色
 	Role string `json:"role,omitempty"`
+	// 是否可編輯專案任務
+	IsEditable bool `json:"is_editable"`
 }

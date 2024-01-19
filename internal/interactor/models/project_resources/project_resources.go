@@ -14,7 +14,7 @@ type Create struct {
 	// 專案角色
 	Role string `json:"role,omitempty"`
 	// 是否可編輯專案任務
-	IsEditable bool `json:"is_editable,omitempty"`
+	IsEditable bool `json:"is_editable"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }
@@ -34,7 +34,7 @@ type Field struct {
 	// 專案角色
 	Role *string `json:"role,omitempty" form:"role"`
 	// 是否可編輯專案任務
-	IsEditable *bool `json:"is_editable,omitempty" form:"is_editable"`
+	IsEditable *bool `json:"is_editable" form:"is_editable"`
 	// 搜尋欄位
 	Filter `json:"filter"`
 }
@@ -110,7 +110,7 @@ type Update struct {
 	// 專案角色
 	Role *string `json:"role,omitempty"`
 	// 是否可編輯專案任務
-	IsEditable *bool `json:"is_editable,omitempty"`
+	IsEditable *bool `json:"is_editable"`
 	// 更新者
 	UpdatedBy *string `json:"updated_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
 }

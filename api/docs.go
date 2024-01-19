@@ -8153,6 +8153,10 @@ const docTemplate = `{
         "projects.ProjectResource": {
             "type": "object",
             "properties": {
+                "is_editable": {
+                    "description": "是否可編輯專案任務",
+                    "type": "boolean"
+                },
                 "resource_uuid": {
                     "description": "資源UUID",
                     "type": "string"
