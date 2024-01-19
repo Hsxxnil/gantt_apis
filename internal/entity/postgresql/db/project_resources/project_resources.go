@@ -20,7 +20,7 @@ type Table struct {
 	// 專案角色
 	Role string `gorm:"column:role;type:varchar;" json:"role"`
 	// 是否可編輯專案任務
-	IsEditable bool `gorm:"column:is_editable;type:boolean;default:false;" json:"is_editable"`
+	IsEditable *bool `gorm:"column:is_editable;type:boolean;default:true;" json:"is_editable"`
 	// create_users data
 	CreatedByUsers users.Table `gorm:"foreignKey:ID;references:CreatedBy" json:"created_by_users,omitempty"`
 	// update_users data
@@ -44,7 +44,7 @@ type Base struct {
 	// 專案角色
 	Role *string `json:"role,omitempty"`
 	// 是否可編輯專案任務
-	IsEditable *bool `json:"is_editable,omitempty"`
+	IsEditable *bool `json:"is_editable"`
 	// resources data
 	Resources resources.Base `json:"resources,omitempty"`
 	// create_users data
