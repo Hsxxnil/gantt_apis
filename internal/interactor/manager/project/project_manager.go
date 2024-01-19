@@ -7,8 +7,10 @@ import (
 	projectResourceModel "hta/internal/interactor/models/project_resources"
 	projectTypeModel "hta/internal/interactor/models/project_types"
 	resourceModel "hta/internal/interactor/models/resources"
+	roleModel "hta/internal/interactor/models/roles"
 	taskResourceModel "hta/internal/interactor/models/task_resources"
 	taskModel "hta/internal/interactor/models/tasks"
+	userModel "hta/internal/interactor/models/users"
 	"hta/internal/interactor/pkg/util"
 	eventMarkService "hta/internal/interactor/service/event_mark"
 	projectResourceService "hta/internal/interactor/service/project_resource"
@@ -17,6 +19,7 @@ import (
 	roleService "hta/internal/interactor/service/role"
 	taskService "hta/internal/interactor/service/task"
 	taskResourceService "hta/internal/interactor/service/task_resource"
+	userService "hta/internal/interactor/service/user"
 	"time"
 
 	"gorm.io/gorm"
@@ -46,6 +49,7 @@ type manager struct {
 	EventMarkService       eventMarkService.Service
 	RoleService            roleService.Service
 	TaskResourceService    taskResourceService.Service
+	UserService            userService.Service
 }
 
 func Init(db *gorm.DB) Manager {
@@ -58,6 +62,7 @@ func Init(db *gorm.DB) Manager {
 		EventMarkService:       eventMarkService.Init(db),
 		RoleService:            roleService.Init(db),
 		TaskResourceService:    taskResourceService.Init(db),
+		UserService:            userService.Init(db),
 	}
 }
 
@@ -477,20 +482,60 @@ func (m *manager) Update(trx *gorm.DB,
 	}
 
 	if len(input.Resource) > 0 {
+		// get all roles
+		roleBase, err := m.RoleService.GetByListNoPagination(&roleModel.Field{})
+		if err != nil {
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+		}
+
+		// create role map
+		roleMap := make(map[string]string)
+		for _, role := range roleBase {
+			roleMap[*role.ID] = *role.Name
+		}
+
+		// get all users info
+		userBase, err := m.UserService.GetByListNoPagination(&userModel.Field{})
+		if err != nil {
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
+				log.Error(err)
+				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+			}
+		}
+
+		// create user map
+		userRoleMap := make(map[string]string)
+		for _, user := range userBase {
+			userRoleMap[*user.ResourceUUID] = *user.RoleID
+		}
+
 		// sync create project_resource
 		for _, resource := range input.Resource {
+			// determine the user's is_editable
+			isEditable := false
+			if roleMap[userRoleMap[resource.ResourceUUID]] == "admin" {
+				isEditable = true
+			} else {
+				if resource.IsEditable {
+					isEditable = true
+				}
+			}
+
 			proRes := &projectResourceModel.Create{
 				ProjectUUID:  *projectBase.ProjectUUID,
 				ResourceUUID: resource.ResourceUUID,
 				Role:         resource.Role,
-				IsEditable:   true,
+				IsEditable:   isEditable,
 				CreatedBy:    *input.UpdatedBy,
 			}
 			resourceList = append(resourceList, proRes)
 			resourceUUIDs = append(resourceUUIDs, util.PointerString(resource.ResourceUUID))
 		}
 
-		_, err := m.ProjectResourceService.WithTrx(trx).CreateAll(resourceList)
+		_, err = m.ProjectResourceService.WithTrx(trx).CreateAll(resourceList)
 		if err != nil {
 			log.Error(err)
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
