@@ -24,6 +24,8 @@ type Token struct {
 	RefreshToken string `json:"refresh_token,omitempty"`
 	// 是否填寫完整
 	IsComplete bool `json:"is_complete"`
+	// 角色
+	Role string `json:"role,omitempty"`
 }
 
 // Refresh struct is used to refresh token

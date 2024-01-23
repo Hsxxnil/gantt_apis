@@ -349,6 +349,7 @@ func (m *manager) Verify(input *loginModel.Verify) (int, any) {
 	} else {
 		output.IsComplete = true
 	}
+	output.Role = *roleBase.Name
 
 	return code.Successful, code.GetCodeMessage(code.Successful, output)
 }
