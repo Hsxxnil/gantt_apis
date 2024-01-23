@@ -79,7 +79,7 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 	} else if input.ProjectUUIDs != nil {
 		query.Where("project_uuid in (?)", input.ProjectUUIDs)
 	} else if input.CreatedBy != nil {
-		query.Or("created_by = ?", input.CreatedBy)
+		query.Where("created_by = ?", input.CreatedBy)
 	}
 
 	// filter
