@@ -28,7 +28,7 @@ type Base struct {
 	DisplayName *string `json:"display_name,omitempty"`
 	// 角色是否啟用
 	IsEnable *bool `json:"is_enable,omitempty"`
-	//// 引入後端專用
+	// 引入後端專用
 	special.Base
 }
 
