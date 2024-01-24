@@ -12,8 +12,8 @@ POST {{host}}/hta-gantt/v1.0/verify
 Content-Type: application/json
 
 {
-  "user_name": "woni",
-  "passcode": "093728"
+  "user_name": "hsxxnil",
+  "passcode": "193324"
 }
 
 > {%
