@@ -965,6 +965,35 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 	for _, projectsUUID := range input.Projects {
 		if len(projectTaskMap[projectsUUID]) > 0 {
 			if len(input.Projects) == 1 {
+				// check the user can edit or delete tasks of the project
+				proResBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
+					ProjectUUID:  util.PointerString(*projectsUUID),
+					ResourceUUID: input.ResUUID,
+				})
+				if err != nil {
+					if !errors.Is(err, gorm.ErrRecordNotFound) {
+						log.Error(err)
+						return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+					}
+				}
+
+				// if the user is a project member, check if the user can edit or delete tasks of the project
+				if proResBase != nil {
+					if *proResBase.IsEditable {
+						output.IsEditable = true
+					}
+				} else {
+					// if the user is not a project member, check if the user is an admin
+					if *input.Role == "admin" {
+						output.IsEditable = true
+					} else {
+						// if the user is not a project member, check if the user is the creator of the project
+						if projectMap[*projectsUUID].CreatedBy == *input.UserID {
+							output.IsEditable = true
+						}
+					}
+				}
+
 				if !input.FilterMilestone {
 					// filter out the subtasks that have been included in each SubTask
 					var filteredTasks []*taskModel.Single
