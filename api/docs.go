@@ -8349,6 +8349,9 @@ const docTemplate = `{
         },
         "resources.Import": {
             "type": "object",
+            "required": [
+                "base64"
+            ],
             "properties": {
                 "base64": {
                     "description": "Base64",
@@ -8897,6 +8900,7 @@ const docTemplate = `{
         "tasks.Import": {
             "type": "object",
             "required": [
+                "base64",
                 "file_type",
                 "project_uuid"
             ],
