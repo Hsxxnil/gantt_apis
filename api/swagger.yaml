@@ -986,6 +986,8 @@ definitions:
       base64:
         description: Base64
         type: string
+    required:
+    - base64
     type: object
   resources.List:
     properties:
@@ -1390,6 +1392,7 @@ definitions:
         description: 專案UUID
         type: string
     required:
+    - base64
     - file_type
     - project_uuid
     type: object
