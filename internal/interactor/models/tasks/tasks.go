@@ -133,6 +133,8 @@ type List struct {
 	EventMarks []*event_marks.Single `json:"event_marks"`
 	// 專案狀態
 	ProjectStatus string `json:"project_status,omitempty"`
+	// 是否可編輯專案任務
+	IsEditable bool `json:"is_editable,omitempty"`
 	// 分頁返回結構檔
 	page.Total
 }
