@@ -580,6 +580,7 @@ func (m *manager) Update(trx *gorm.DB, input *departmentModel.Update) (int, any)
 			err = m.AffiliationService.WithTrx(trx).Update(&affiliationModel.Update{
 				ID:           *originalAffiliationBase.ID,
 				IsSupervisor: util.PointerBool(false),
+				JobTitle:     util.PointerString(""),
 				UpdatedBy:    input.UpdatedBy,
 			})
 			if err != nil {
@@ -617,6 +618,7 @@ func (m *manager) Update(trx *gorm.DB, input *departmentModel.Update) (int, any)
 			DeptID:       util.PointerString(input.ID),
 			UserID:       input.SupervisorID,
 			IsSupervisor: util.PointerBool(true),
+			JobTitle:     util.PointerString("部門主管"),
 			UpdatedBy:    input.UpdatedBy,
 		})
 		if err != nil {
