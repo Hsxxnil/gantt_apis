@@ -8949,6 +8949,10 @@ const docTemplate = `{
                         "$ref": "#/definitions/event_marks.Single"
                     }
                 },
+                "is_editable": {
+                    "description": "是否可編輯專案任務",
+                    "type": "boolean"
+                },
                 "limit": {
                     "description": "筆數(請從1開始帶入,最高上限20)",
                     "type": "integer"
