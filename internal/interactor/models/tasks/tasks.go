@@ -63,6 +63,10 @@ type Create struct {
 	Notes string `json:"notes,omitempty"`
 	// 創建者
 	CreatedBy string `json:"created_by,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
+	// 資源UUID
+	ResUUID *string `json:"res_uuid,omitempty" swaggerignore:"true"`
+	// 角色
+	Role *string `json:"role,omitempty" swaggerignore:"true"`
 }
 
 // Field is structure file for search
