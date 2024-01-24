@@ -57,6 +57,8 @@ func (c *control) Create(ctx *gin.Context) {
 	trx := ctx.MustGet("db_trx").(*gorm.DB)
 	input := &taskModel.Create{}
 	input.CreatedBy = ctx.MustGet("user_id").(string)
+	input.Role = util.PointerString(ctx.MustGet("role").(string))
+	input.ResUUID = util.PointerString(ctx.MustGet("resource_id").(string))
 	if err := ctx.ShouldBindJSON(input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
@@ -91,6 +93,8 @@ func (c *control) CreateAll(ctx *gin.Context) {
 
 	for _, create := range input {
 		create.CreatedBy = ctx.MustGet("user_id").(string)
+		create.Role = util.PointerString(ctx.MustGet("role").(string))
+		create.ResUUID = util.PointerString(ctx.MustGet("resource_id").(string))
 	}
 
 	httpCode, codeMessage := c.Manager.CreateAll(trx, input)
