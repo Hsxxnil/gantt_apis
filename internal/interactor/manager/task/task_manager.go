@@ -475,6 +475,47 @@ func assembleToCreateAll(tasks []*taskModel.Create, outlineNumber string, select
 func (m *manager) Create(trx *gorm.DB, input *taskModel.Create) (int, any) {
 	defer trx.Rollback()
 
+	// get the project's info
+	projectBase, err := m.ProjectService.GetBySingle(&projectModel.Field{
+		ProjectUUID: input.ProjectUUID,
+	})
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, err.Error())
+		}
+
+		log.Error(err)
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// check if the user is a project member
+	proResBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
+		ProjectUUID:  util.PointerString(input.ProjectUUID),
+		ResourceUUID: input.ResUUID,
+	})
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
+	}
+
+	// if the user is a project member, check if the user can edit or delete tasks of the project
+	if proResBase != nil {
+		if !*proResBase.IsEditable {
+			log.Error("You are not allowed to create tasks for this project.")
+			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "You are not allowed to create tasks for this project.")
+		}
+	} else {
+		// if the user is not a project member, check if the user is an admin or the creator of the project
+		if *input.Role != "admin" {
+			if *projectBase.CreatedBy != input.CreatedBy {
+				log.Error("You are not allowed to create tasks for this project.")
+				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "You are not allowed to create tasks for this project.")
+			}
+		}
+	}
+
 	// determine if the task is a subtask
 	if input.ParentUUID != nil {
 		parentBase, err := m.TaskService.GetBySingle(&taskModel.Field{
@@ -661,6 +702,7 @@ func (m *manager) CreateAll(trx *gorm.DB, input []*taskModel.Create) (int, any) 
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
+	// get the project's info
 	projectBase, err := m.ProjectService.GetBySingle(&projectModel.Field{
 		ProjectUUID: input[0].ProjectUUID,
 	})
@@ -671,6 +713,22 @@ func (m *manager) CreateAll(trx *gorm.DB, input []*taskModel.Create) (int, any) 
 
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+	}
+
+	// if the user is a project member, check if the user can edit or delete tasks of the project
+	if proResMap[*input[0].ResUUID] != nil {
+		if !proResMap[*input[0].ResUUID].IsEditable {
+			log.Error("You are not allowed to create tasks for this project.")
+			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "You are not allowed to create tasks for this project.")
+		}
+	} else {
+		// if the user is not a project member, check if the user is an admin or the creator of the project
+		if *input[0].Role != "admin" {
+			if *projectBase.CreatedBy != input[0].CreatedBy {
+				log.Error("You are not allowed to create tasks for this project.")
+				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "You are not allowed to create tasks for this project.")
+			}
+		}
 	}
 
 	// create the main task
@@ -747,6 +805,8 @@ func (m *manager) CreateAll(trx *gorm.DB, input []*taskModel.Create) (int, any) 
 			taskResMapList = append(taskResMapList, taskResources)
 		}
 	}
+
+	// sync create task_resource
 	if len(taskResMapList) > 0 {
 		err = m.syncCreateTaskResources(trx, taskResMapList, createList[0].CreatedBy, createList[0].ProjectUUID, proResMap)
 		if err != nil {
