@@ -123,6 +123,7 @@ func (m *manager) Create(trx *gorm.DB, input *departmentModel.Create) (int, any)
 			UserID:       *input.SupervisorID,
 			DeptID:       *departmentBase.ID,
 			IsSupervisor: true,
+			JobTitle:     "部門主管",
 			CreatedBy:    input.CreatedBy,
 		})
 		if err != nil {
