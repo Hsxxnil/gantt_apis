@@ -1288,6 +1288,40 @@ definitions:
         description: 角色名稱
         type: string
     type: object
+  s3_files.Create:
+    properties:
+      base64:
+        description: Base64
+        type: string
+      file_name:
+        description: 檔案名稱
+        type: string
+      source_uuid:
+        description: 來源UUID
+        type: string
+    required:
+    - base64
+    - file_name
+    - source_uuid
+    type: object
+  s3_files.Single:
+    properties:
+      created_at:
+        description: 創建時間
+        type: string
+      created_by:
+        description: 創建者
+        type: string
+      file_name:
+        description: 檔案名稱
+        type: string
+      file_url:
+        description: 檔案連結
+        type: string
+      id:
+        description: 表ID
+        type: string
+    type: object
   tasks.Create:
     properties:
       assignments:
@@ -1429,6 +1463,9 @@ definitions:
       pages:
         description: 總頁數
         type: integer
+      project_start_date:
+        description: 專案開始日期
+        type: string
       project_status:
         description: 專案狀態
         type: string
@@ -1497,6 +1534,11 @@ definitions:
       end_date:
         description: 結束日期
         type: string
+      files:
+        description: 附件檔案
+        items:
+          $ref: '#/definitions/s3_files.Single'
+        type: array
       indicators:
         description: 任務標示
         items:
@@ -2448,6 +2490,105 @@ paths:
       summary: 更新單一事件標記
       tags:
       - event_mark
+  /files:
+    post:
+      consumes:
+      - application/json
+      description: 上傳檔案
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 上傳檔案
+        in: body
+        name: '*'
+        required: true
+        schema:
+          $ref: '#/definitions/s3_files.Create'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 上傳檔案
+      tags:
+      - s3_file
+  /files/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 刪除單一檔案
+      parameters:
+      - description: JWE Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 檔案UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功後返回的值
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.SuccessfulMessage'
+            - properties:
+                body:
+                  type: string
+              type: object
+        "415":
+          description: 必要欄位帶入錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+        "500":
+          description: 伺服器非預期錯誤
+          schema:
+            allOf:
+            - $ref: '#/definitions/code.ErrorMessage'
+            - properties:
+                detailed:
+                  type: string
+              type: object
+      summary: 刪除單一檔案
+      tags:
+      - s3_file
   /forget-password:
     post:
       consumes:
