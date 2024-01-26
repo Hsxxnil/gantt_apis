@@ -13,6 +13,7 @@ import (
 	"hta/internal/router/project_type"
 	"hta/internal/router/resource"
 	"hta/internal/router/role"
+	"hta/internal/router/s3_file"
 	"hta/internal/router/task"
 	"hta/internal/router/user"
 	"hta/internal/router/work_day"
@@ -66,6 +67,7 @@ func main() {
 	role.GetRouter(engine, db)
 	task.GetRouter(engine, db)
 	department.GetRouter(engine, db)
+	s3_file.GetRouter(engine, db)
 
 	url := ginSwagger.URL(fmt.Sprintf("http://localhost:8080/swagger/doc.json"))
 	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))

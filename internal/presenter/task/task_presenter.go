@@ -289,13 +289,15 @@ func (c *control) UpdateAll(ctx *gin.Context) {
 func (c *control) Import(ctx *gin.Context) {
 	input := &taskModel.Import{}
 	trx := ctx.MustGet("db_trx").(*gorm.DB)
+	input.CreatedBy = ctx.MustGet("user_id").(string)
+	input.Role = util.PointerString(ctx.MustGet("role").(string))
+	input.ResUUID = util.PointerString(ctx.MustGet("resource_id").(string))
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
 		return
 	}
 
-	input.CreatedBy = ctx.MustGet("user_id").(string)
 	inputByte := hash.Base64StdDecode(input.Base64)
 	readerFile := csv.NewReader(transform.NewReader(bytes.NewBuffer(inputByte), unicode.UTF8.NewDecoder()))
 	input.CSVFile = readerFile

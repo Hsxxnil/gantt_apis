@@ -5,6 +5,7 @@ import (
 	"hta/internal/interactor/models/event_marks"
 	"hta/internal/interactor/models/page"
 	"hta/internal/interactor/models/resources"
+	"hta/internal/interactor/models/s3_files"
 	"hta/internal/interactor/models/section"
 	"time"
 )
@@ -139,6 +140,8 @@ type List struct {
 	ProjectStatus string `json:"project_status,omitempty"`
 	// 是否可編輯專案任務
 	IsEditable bool `json:"is_editable,omitempty"`
+	// 專案開始日期
+	ProjectStartDate *time.Time `json:"project_start_date,omitempty"`
 	// 分頁返回結構檔
 	page.Total
 }
@@ -207,6 +210,8 @@ type Single struct {
 	Indicators []Indicators `json:"indicators,omitempty"`
 	// 子任務
 	Subtask []*Single `json:"subtasks,omitempty"`
+	// 附件檔案
+	Files []*s3_files.Single `json:"files,omitempty"`
 }
 
 // Update struct is used to update achieves
@@ -292,13 +297,17 @@ type Import struct {
 	// CSV檔案
 	CSVFile *csv.Reader `swaggerignore:"true"`
 	// Base64
-	Base64 string `json:"base64"`
+	Base64 string `json:"base64,omitempty" binding:"required,base64" validate:"required,base64""`
 	// 專案UUID
 	ProjectUUID string `json:"project_uuid,omitempty" binding:"required,uuid4" validate:"required,uuid4"`
 	// 檔案類型 1:gantt project 2:saas pmi
 	FileType int64 `json:"file_type,omitempty" binding:"required" validate:"required"`
 	// 創建者
-	CreatedBy string `json:"created_by,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
+	CreatedBy string `json:"created_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
+	// 資源UUID
+	ResUUID *string `json:"res_uuid,omitempty" swaggerignore:"true"`
+	// 角色
+	Role *string `json:"role,omitempty" swaggerignore:"true"`
 }
 
 // ProjectIDs struct is used to get multiple project data

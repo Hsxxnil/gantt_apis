@@ -816,6 +816,182 @@ const docTemplate = `{
                 }
             }
         },
+        "/files": {
+            "post": {
+                "description": "上傳檔案",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "s3_file"
+                ],
+                "summary": "上傳檔案",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "JWE Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "上傳檔案",
+                        "name": "*",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/s3_files.Create"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功後返回的值",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.SuccessfulMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "body": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "415": {
+                        "description": "必要欄位帶入錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "伺服器非預期錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/files/{id}": {
+            "delete": {
+                "description": "刪除單一檔案",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "s3_file"
+                ],
+                "summary": "刪除單一檔案",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "JWE Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "檔案UUID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功後返回的值",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.SuccessfulMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "body": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "415": {
+                        "description": "必要欄位帶入錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "伺服器非預期錯誤",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/code.ErrorMessage"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "detailed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/forget-password": {
             "post": {
                 "description": "忘記密碼",
@@ -8349,6 +8525,9 @@ const docTemplate = `{
         },
         "resources.Import": {
             "type": "object",
+            "required": [
+                "base64"
+            ],
             "properties": {
                 "base64": {
                     "description": "Base64",
@@ -8769,6 +8948,53 @@ const docTemplate = `{
                 }
             }
         },
+        "s3_files.Create": {
+            "type": "object",
+            "required": [
+                "base64",
+                "file_name",
+                "source_uuid"
+            ],
+            "properties": {
+                "base64": {
+                    "description": "Base64",
+                    "type": "string"
+                },
+                "file_name": {
+                    "description": "檔案名稱",
+                    "type": "string"
+                },
+                "source_uuid": {
+                    "description": "來源UUID",
+                    "type": "string"
+                }
+            }
+        },
+        "s3_files.Single": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "創建時間",
+                    "type": "string"
+                },
+                "created_by": {
+                    "description": "創建者",
+                    "type": "string"
+                },
+                "file_name": {
+                    "description": "檔案名稱",
+                    "type": "string"
+                },
+                "file_url": {
+                    "description": "檔案連結",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "表ID",
+                    "type": "string"
+                }
+            }
+        },
         "tasks.Create": {
             "type": "object",
             "required": [
@@ -8897,6 +9123,7 @@ const docTemplate = `{
         "tasks.Import": {
             "type": "object",
             "required": [
+                "base64",
                 "file_type",
                 "project_uuid"
             ],
@@ -8964,6 +9191,10 @@ const docTemplate = `{
                 "pages": {
                     "description": "總頁數",
                     "type": "integer"
+                },
+                "project_start_date": {
+                    "description": "專案開始日期",
+                    "type": "string"
                 },
                 "project_status": {
                     "description": "專案狀態",
@@ -9057,6 +9288,13 @@ const docTemplate = `{
                 "end_date": {
                     "description": "結束日期",
                     "type": "string"
+                },
+                "files": {
+                    "description": "附件檔案",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/s3_files.Single"
+                    }
                 },
                 "indicators": {
                     "description": "任務標示",
