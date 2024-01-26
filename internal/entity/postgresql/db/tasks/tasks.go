@@ -2,6 +2,7 @@ package tasks
 
 import (
 	"hta/internal/entity/postgresql/db/projects"
+	"hta/internal/entity/postgresql/db/s3_files"
 	"hta/internal/entity/postgresql/db/task_resources"
 	"hta/internal/entity/postgresql/db/users"
 	"hta/internal/interactor/models/special"
@@ -59,6 +60,8 @@ type Table struct {
 	Notes string `gorm:"column:notes;type:text;" json:"notes"`
 	// task_resources data
 	TaskResources []task_resources.Table `gorm:"foreignKey:TaskUUID;" json:"resources,omitempty"`
+	// s3_files data
+	S3Files []s3_files.Table `gorm:"foreignKey:SourceUUID;references:TaskUUID" json:"files,omitempty"`
 	// create_users data
 	CreatedByUsers users.Table `gorm:"foreignKey:ID;references:CreatedBy" json:"created_by_users,omitempty"`
 	// update_users data
@@ -117,6 +120,8 @@ type Base struct {
 	Notes *string `json:"notes,omitempty"`
 	// task_resources data
 	TaskResources []task_resources.Base `json:"resources,omitempty"`
+	// s3_files data
+	S3Files []s3_files.Base `json:"files,omitempty"`
 	// create_users data
 	CreatedByUsers users.Base `json:"created_by_users,omitempty"`
 	// update_users data

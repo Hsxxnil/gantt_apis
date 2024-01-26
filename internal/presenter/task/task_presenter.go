@@ -290,6 +290,8 @@ func (c *control) Import(ctx *gin.Context) {
 	input := &taskModel.Import{}
 	trx := ctx.MustGet("db_trx").(*gorm.DB)
 	input.CreatedBy = ctx.MustGet("user_id").(string)
+	input.Role = util.PointerString(ctx.MustGet("role").(string))
+	input.ResUUID = util.PointerString(ctx.MustGet("resource_id").(string))
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
