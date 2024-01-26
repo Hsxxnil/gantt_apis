@@ -432,7 +432,7 @@ func findParentTaskByOutlineNumber(tasks []*taskModel.Single, outlineNumber stri
 }
 
 // assembleToCreateAll is a helper function to recursively assemble a hierarchical structure of tasks.
-func assembleToCreateAll(tasks []*taskModel.Create, outlineNumber string, selectOutlineNumber string, taskRecordIdx map[string]int, task *taskModel.Create, projectID string) []*taskModel.Create {
+func assembleToCreateAll(tasks []*taskModel.Create, taskRecordIdx map[string]int, task *taskModel.Create, outlineNumber, selectOutlineNumber, projectID string, resUUID, role *string) []*taskModel.Create {
 	task.ProjectUUID = projectID
 	outlineNumberSplit := strings.Split(outlineNumber, ".")
 
@@ -445,7 +445,6 @@ func assembleToCreateAll(tasks []*taskModel.Create, outlineNumber string, select
 		// map the outline_number of the current main task to the index position of allTask
 		taskRecordIdx[selectOutlineNumber] = len(tasks)
 		tasks = append(tasks, task)
-		return tasks
 	} else {
 		// handle the current subtask
 		var newOutlineNumber string
@@ -465,8 +464,17 @@ func assembleToCreateAll(tasks []*taskModel.Create, outlineNumber string, select
 		}
 
 		// handle possible subtasks
-		subTasks := assembleToCreateAll(tasks[taskRecordIdx[selectOutlineNumber]].Subtask, newOutlineNumber, selectOutlineNumber, taskRecordIdx, task, projectID)
+		subTasks := assembleToCreateAll(tasks[taskRecordIdx[selectOutlineNumber]].Subtask, taskRecordIdx, task, newOutlineNumber, selectOutlineNumber, projectID, resUUID, role)
 		tasks[taskRecordIdx[selectOutlineNumber]].Subtask = subTasks
+	}
+
+	for _, task := range tasks {
+		if resUUID != nil {
+			task.ResUUID = resUUID
+		}
+		if role != nil {
+			task.Role = role
+		}
 	}
 
 	return tasks
@@ -929,6 +937,9 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 			for i, task := range projectTasks {
 				task.CreatedBy = *taskBase[i].CreatedByUsers.Name
 				task.UpdatedBy = *taskBase[i].UpdatedByUsers.Name
+				for j, file := range taskBase[i].S3Files {
+					task.Files[j].CreatedBy = *file.CreatedByUsers.Name
+				}
 
 				// transform segments to array
 				var segments []taskModel.Segments
@@ -1159,6 +1170,9 @@ func (m *manager) GetByListNoPaginationNoSub(input *taskModel.Field) (int, any) 
 	for i, task := range output.Tasks {
 		task.CreatedBy = *taskBase[i].CreatedByUsers.Name
 		task.UpdatedBy = *taskBase[i].UpdatedByUsers.Name
+		for j, file := range taskBase[i].S3Files {
+			task.Files[j].CreatedBy = *file.CreatedByUsers.Name
+		}
 
 		// transform segments to array
 		var segments []taskModel.Segments
@@ -1230,6 +1244,9 @@ func (m *manager) GetBySingle(input *taskModel.Field) (int, any) {
 
 	output.CreatedBy = *taskBase.CreatedByUsers.Name
 	output.UpdatedBy = *taskBase.UpdatedByUsers.Name
+	for j, file := range taskBase.S3Files {
+		output.Files[j].CreatedBy = *file.CreatedByUsers.Name
+	}
 
 	// transform segments to array
 	var segments []taskModel.Segments
@@ -1730,8 +1747,7 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 	return code.Successful, code.GetCodeMessage(code.Successful, "Successful update!")
 }
 
-func (m *manager) Import(trx *gorm.DB,
-	input *taskModel.Import) (int, any) {
+func (m *manager) Import(trx *gorm.DB, input *taskModel.Import) (int, any) {
 	defer trx.Rollback()
 
 	// get resources
@@ -2023,12 +2039,12 @@ func (m *manager) Import(trx *gorm.DB,
 		}
 
 		createTask.CreatedBy = input.CreatedBy
-		createAllTask = assembleToCreateAll(createAllTask, record[taskIdx[9]], "", taskRecordIdx, createTask, input.ProjectUUID)
+		createAllTask = assembleToCreateAll(createAllTask, taskRecordIdx, createTask, record[taskIdx[9]], "", input.ProjectUUID, input.ResUUID, input.Role)
 	}
 
-	httpCode, _ := m.CreateAll(trx, createAllTask)
+	httpCode, message := m.CreateAll(trx, createAllTask)
 	if httpCode != code.Successful {
-		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, "import errors")
+		return httpCode, message
 	}
 
 	trx.Commit()
