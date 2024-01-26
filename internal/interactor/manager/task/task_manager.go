@@ -889,8 +889,9 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 	// get project tasks
 	projectTaskMap := make(map[*string][]*taskModel.Single)
 	var (
-		wg sync.WaitGroup
-		mu sync.Mutex
+		wg               sync.WaitGroup
+		mu               sync.Mutex
+		projectStartDate *time.Time
 	)
 
 	// make an error channel
@@ -1080,6 +1081,38 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 				// return project status
 				output.ProjectStatus = *projectBase[0].Status
 
+				// get project start date
+				for _, task := range output.Tasks {
+					if task.BaselineStartDate != nil {
+						if projectStartDate == nil || task.BaselineStartDate.Before(*projectStartDate) {
+							projectStartDate = task.BaselineStartDate
+						}
+					}
+
+					if task.StartDate != nil {
+						if projectStartDate == nil || task.StartDate.Before(*projectStartDate) {
+							projectStartDate = task.StartDate
+						}
+					}
+
+					if task.Subtask != nil {
+						for _, subtask := range task.Subtask {
+							if subtask.BaselineStartDate != nil {
+								if projectStartDate == nil || subtask.BaselineStartDate.Before(*projectStartDate) {
+									projectStartDate = subtask.BaselineStartDate
+								}
+							}
+
+							if subtask.StartDate != nil {
+								if projectStartDate == nil || subtask.StartDate.Before(*projectStartDate) {
+									projectStartDate = subtask.StartDate
+								}
+							}
+						}
+					}
+				}
+				output.ProjectStartDate = projectStartDate
+
 			} else {
 				projectTask := &taskModel.Single{
 					TaskUUID:  projectMap[*projectsUUID].ProjectUUID,
@@ -1110,10 +1143,42 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 
 				// add project to output.Tasks
 				output.Tasks = append(output.Tasks, projectTask)
+
+				// get project start date
+				for _, task := range output.Tasks {
+					if task.BaselineStartDate != nil {
+						if projectStartDate == nil || task.BaselineStartDate.Before(*projectStartDate) {
+							projectStartDate = task.BaselineStartDate
+						}
+					}
+
+					if task.StartDate != nil {
+						if projectStartDate == nil || task.StartDate.Before(*projectStartDate) {
+							projectStartDate = task.StartDate
+						}
+					}
+
+					if task.Subtask != nil {
+						for _, subtask := range task.Subtask {
+							if subtask.BaselineStartDate != nil {
+								if projectStartDate == nil || subtask.BaselineStartDate.Before(*projectStartDate) {
+									projectStartDate = subtask.BaselineStartDate
+								}
+							}
+
+							if subtask.StartDate != nil {
+								if projectStartDate == nil || subtask.StartDate.Before(*projectStartDate) {
+									projectStartDate = subtask.StartDate
+								}
+							}
+						}
+					}
+				}
+				output.ProjectStartDate = projectStartDate
 			}
 		} else {
-			output.Tasks = []*taskModel.Single{}
 			if len(input.Projects) == 1 {
+				output.Tasks = []*taskModel.Single{}
 				// return project status
 				output.ProjectStatus = *projectBase[0].Status
 			}
