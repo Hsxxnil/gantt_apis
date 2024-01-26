@@ -1,0 +1,1 @@
+drop table s3_files;

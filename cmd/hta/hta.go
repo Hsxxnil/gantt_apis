@@ -14,6 +14,7 @@ import (
 	"hta/internal/router/project_type"
 	"hta/internal/router/resource"
 	"hta/internal/router/role"
+	"hta/internal/router/s3_file"
 	"hta/internal/router/task"
 	"hta/internal/router/user"
 	"hta/internal/router/work_day"
@@ -42,6 +43,7 @@ func main() {
 	engine = policy.GetRouter(engine, db)
 	engine = role.GetRouter(engine, db)
 	engine = department.GetRouter(engine, db)
+	engine = s3_file.GetRouter(engine, db)
 
 	log.Fatal(gateway.ListenAndServe(":8080", engine))
 }
