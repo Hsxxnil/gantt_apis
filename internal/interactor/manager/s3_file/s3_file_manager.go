@@ -39,7 +39,7 @@ func (m *manager) Create(trx *gorm.DB, input *s3FileModel.Create) (int, any) {
 	url, err := util.UploadToS3(input.Base64, filePath, s3BucketName)
 	if err != nil {
 		log.Error(err)
-		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, "Upload to s3 failed.")
+		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err)
 	}
 
 	if url == "" {
