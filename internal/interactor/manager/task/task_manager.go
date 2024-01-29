@@ -1056,7 +1056,7 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 					}
 				} else {
 					// if the user is not a project member, check if the user is an admin
-					if *input.Role == "admin" {
+					if *input.Role == "admin" || isPM {
 						output.IsEditable = true
 					} else {
 						// if the user is not a project member, check if the user is the creator of the project
@@ -1181,6 +1181,35 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 				output.Tasks = []*taskModel.Single{}
 				// return project status
 				output.ProjectStatus = *projectBase[0].Status
+
+				// check the user can edit or delete tasks of the project
+				proResBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
+					ProjectUUID:  util.PointerString(*projectsUUID),
+					ResourceUUID: input.ResUUID,
+				})
+				if err != nil {
+					if !errors.Is(err, gorm.ErrRecordNotFound) {
+						log.Error(err)
+						return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+					}
+				}
+
+				// if the user is a project member, check if the user can edit or delete tasks of the project
+				if proResBase != nil {
+					if *proResBase.IsEditable {
+						output.IsEditable = true
+					}
+				} else {
+					// if the user is not a project member, check if the user is an admin
+					if *input.Role == "admin" || isPM {
+						output.IsEditable = true
+					} else {
+						// if the user is not a project member, check if the user is the creator of the project
+						if projectMap[*projectsUUID].CreatedBy == *input.UserID {
+							output.IsEditable = true
+						}
+					}
+				}
 			}
 		}
 
