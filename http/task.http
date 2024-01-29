@@ -30,7 +30,7 @@ Authorization: Bearer {{accessToken}}
     "is_milestone": false
   },
   "projects": [
-    "14648c30-a6be-40ab-88d4-ae539aa0159d"
+    "f4d46b57-3db6-4088-99ae-832f437f2cb0"
   ]
 }
 
