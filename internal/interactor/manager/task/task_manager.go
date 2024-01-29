@@ -846,6 +846,11 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 	}
 
+	if len(projectBase) == 0 {
+		log.Error("record not found")
+		return code.DoesNotExist, code.GetCodeMessage(code.DoesNotExist, "record not found")
+	}
+
 	var projects []*projectModel.Single
 	projectByte, err := sonic.Marshal(projectBase)
 	if err != nil {
@@ -865,21 +870,31 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 		projectMap[project.ProjectUUID] = project
 	}
 
-	// check if the user is a project manager
+	// check the user's permission of the project
 	isPM := false
+	isEditable := false
 	if len(input.Projects) == 1 {
 		if *input.Role != "admin" {
-			pmBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
-				ProjectUUID: input.Projects[0],
-				Role:        util.PointerString("PM"),
+			// check the user can edit or delete tasks of the project
+			proResBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
+				ProjectUUID:  input.Projects[0],
+				ResourceUUID: input.ResUUID,
 			})
 			if err != nil {
-				log.Error(err)
-				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+				if !errors.Is(err, gorm.ErrRecordNotFound) {
+					log.Error(err)
+					return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+				}
 			}
 
-			if pmBase != nil {
-				if *pmBase.ResourceUUID == *input.ResUUID {
+			if proResBase != nil {
+				// check if the user has permission to edit or delete the project
+				if *proResBase.IsEditable {
+					isEditable = true
+				}
+
+				// check if the user is a project manager
+				if *proResBase.Role == "PM" {
 					isPM = true
 				}
 			}
@@ -1037,32 +1052,13 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 	for _, projectsUUID := range input.Projects {
 		if len(projectTaskMap[projectsUUID]) > 0 {
 			if len(input.Projects) == 1 {
-				// check the user can edit or delete tasks of the project
-				proResBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
-					ProjectUUID:  util.PointerString(*projectsUUID),
-					ResourceUUID: input.ResUUID,
-				})
-				if err != nil {
-					if !errors.Is(err, gorm.ErrRecordNotFound) {
-						log.Error(err)
-						return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-					}
-				}
-
-				// if the user is a project member, check if the user can edit or delete tasks of the project
-				if proResBase != nil {
-					if *proResBase.IsEditable {
-						output.IsEditable = true
-					}
+				// if the user is admin or project manager, check if the user can edit or delete tasks of the project
+				if *input.Role == "admin" || isPM || isEditable {
+					output.IsEditable = true
 				} else {
-					// if the user is not a project member, check if the user is an admin
-					if *input.Role == "admin" || isPM {
+					// if the user is not a project member, check if the user is the creator of the project
+					if projectMap[*projectsUUID].CreatedBy == *input.UserID {
 						output.IsEditable = true
-					} else {
-						// if the user is not a project member, check if the user is the creator of the project
-						if projectMap[*projectsUUID].CreatedBy == *input.UserID {
-							output.IsEditable = true
-						}
 					}
 				}
 
@@ -1182,32 +1178,13 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 				// return project status
 				output.ProjectStatus = *projectBase[0].Status
 
-				// check the user can edit or delete tasks of the project
-				proResBase, err := m.ProjectResourceService.GetBySingle(&projectResourceModel.Field{
-					ProjectUUID:  util.PointerString(*projectsUUID),
-					ResourceUUID: input.ResUUID,
-				})
-				if err != nil {
-					if !errors.Is(err, gorm.ErrRecordNotFound) {
-						log.Error(err)
-						return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
-					}
-				}
-
-				// if the user is a project member, check if the user can edit or delete tasks of the project
-				if proResBase != nil {
-					if *proResBase.IsEditable {
-						output.IsEditable = true
-					}
+				// if the user is admin or project manager, check if the user can edit or delete tasks of the project
+				if *input.Role == "admin" || isPM || isEditable {
+					output.IsEditable = true
 				} else {
-					// if the user is not a project member, check if the user is an admin
-					if *input.Role == "admin" || isPM {
+					// if the user is not a project member, check if the user is the creator of the project
+					if projectMap[*projectsUUID].CreatedBy == *input.UserID {
 						output.IsEditable = true
-					} else {
-						// if the user is not a project member, check if the user is the creator of the project
-						if projectMap[*projectsUUID].CreatedBy == *input.UserID {
-							output.IsEditable = true
-						}
 					}
 				}
 			}
