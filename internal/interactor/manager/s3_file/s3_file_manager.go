@@ -31,7 +31,7 @@ func Init(db *gorm.DB) Manager {
 func (m *manager) Create(trx *gorm.DB, input *s3FileModel.Create) (int, any) {
 	defer trx.Rollback()
 	// confirm s3 bucket name
-	s3BucketName := "myhta"
+	s3BucketName := "pm-s3-bucket"
 	input.FileExtension = filepath.Ext(input.FileName)
 	filePath := "files/" + input.SourceUUID + "/" + input.FileName
 
