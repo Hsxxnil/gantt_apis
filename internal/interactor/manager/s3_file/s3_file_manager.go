@@ -14,7 +14,7 @@ import (
 )
 
 type Manager interface {
-	Create(trx *gorm.DB, input *s3FileModel.Create) (int, any)
+	Create(trx *gorm.DB, input []*s3FileModel.Create) (int, any)
 	Delete(trx *gorm.DB, input *s3FileModel.Field) (int, any)
 }
 
@@ -28,33 +28,35 @@ func Init(db *gorm.DB) Manager {
 	}
 }
 
-func (m *manager) Create(trx *gorm.DB, input *s3FileModel.Create) (int, any) {
+func (m *manager) Create(trx *gorm.DB, input []*s3FileModel.Create) (int, any) {
 	defer trx.Rollback()
 
-	input.FileExtension = filepath.Ext(input.FileName)
-	filePath := "files/" + input.SourceUUID + "/" + input.FileName
+	for _, inputBody := range input {
+		inputBody.FileExtension = filepath.Ext(inputBody.FileName)
+		filePath := "files/" + inputBody.SourceUUID + "/" + inputBody.FileName
 
-	// upload file to s3
-	url, err := util.UploadToS3(input.Base64, filePath)
-	if err != nil {
-		log.Error(err)
-		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, "Upload to s3 failed.")
-	}
+		// upload file to s3
+		url, err := util.UploadToS3(inputBody.Base64, filePath)
+		if err != nil {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, "Upload to s3 failed.")
+		}
 
-	if url == "" {
-		log.Error("Upload to s3 failed.")
-		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, "Upload to s3 failed.")
-	}
+		if url == "" {
+			log.Error("Upload to s3 failed.")
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, "Upload to s3 failed.")
+		}
 
-	input.FileUrl = url
-	s3FileBase, err := m.S3FileService.WithTrx(trx).Create(input)
-	if err != nil {
-		log.Error(err)
-		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		inputBody.FileUrl = url
+		_, err = m.S3FileService.WithTrx(trx).Create(inputBody)
+		if err != nil {
+			log.Error(err)
+			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
+		}
 	}
 
 	trx.Commit()
-	return code.Successful, code.GetCodeMessage(code.Successful, s3FileBase.ID)
+	return code.Successful, code.GetCodeMessage(code.Successful, "upload success!")
 }
 
 func (m *manager) Delete(trx *gorm.DB, input *s3FileModel.Field) (int, any) {

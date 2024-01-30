@@ -13,7 +13,7 @@ Content-Type: application/json
 
 {
   "user_name": "admin",
-  "passcode": "625615"
+  "passcode": "520250"
 }
 
 > {% client.global.set("accessToken", response.body.body.access_token); %}
@@ -23,11 +23,18 @@ POST {{host}}/hta-gantt/v1.0/files
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
-{
-  "base64": "77u/SUQs5ZCN56ixLOiyoOiyrOS6uizlt6XkvZzlpKks6ZaL5aeL5pel5pyfLOe1kOadn+aXpeacnyzln7rmupbplovlp4vml6Us5Z+65rqW57WQ5p2f5pelLOWfuua6luW3peS9nOWkqSzpgLLluqYoJSks55u45L6d5oCnLOW3peaZguihqCzlpKfntrHnt6jomZ8NCjEsQSzlkLPntLnlroksNSDlpKksMjAyMi0wNS0xNiwyMDIyLTA1LTIwLDIwMjQtMDEtMDgsMjAyNC0wMS0xMiw15aSpLDQ2LCwsMQ0KMixCLOm7g+aUv+mBlCw1IOWkqSwyMDI0LTAxLTIyLDIwMjQtMDEtMjYsMjAyNC0wMS0yMiwyMDI0LTAxLTI2LDXlpKksMCwsLDINCjMs5pyq5ZG95ZCN5Lu75YuZLCw1IOWkqSwyMDI0LTAxLTE1LDIwMjQtMDEtMTksMjAyNC0wMS0xNSwyMDI0LTAxLTE5LDXlpKksMCwsLDMNCjQs5pyq5ZG95ZCN5Lu75YuZLCwsLCwsLCwwLCwsNA==",
-  "source_uuid": "43f63821-e47e-487a-b80c-597714b3e88f",
-  "file_name": "test.csv"
-}
+[
+  {
+    "base64": "77u/SUQs5ZCN56ixLOiyoOiyrOS6uizlt6XkvZzlpKks6ZaL5aeL5pel5pyfLOe1kOadn+aXpeacnyzln7rmupbplovlp4vml6Us5Z+65rqW57WQ5p2f5pelLOWfuua6luW3peS9nOWkqSzpgLLluqYoJSks55u45L6d5oCnLOW3peaZguihqCzlpKfntrHnt6jomZ8NCjEsQSzlkLPntLnlroksNSDlpKksMjAyMi0wNS0xNiwyMDIyLTA1LTIwLDIwMjQtMDEtMDgsMjAyNC0wMS0xMiw15aSpLDQ2LCwsMQ0KMixCLOm7g+aUv+mBlCw1IOWkqSwyMDI0LTAxLTIyLDIwMjQtMDEtMjYsMjAyNC0wMS0yMiwyMDI0LTAxLTI2LDXlpKksMCwsLDINCjMs5pyq5ZG95ZCN5Lu75YuZLCw1IOWkqSwyMDI0LTAxLTE1LDIwMjQtMDEtMTksMjAyNC0wMS0xNSwyMDI0LTAxLTE5LDXlpKksMCwsLDMNCjQs5pyq5ZG95ZCN5Lu75YuZLCwsLCwsLCwwLCwsNA==",
+    "source_uuid": "43f63821-e47e-487a-b80c-597714b3e88f",
+    "file_name": "test1.csv"
+  },
+  {
+    "base64": "77u/SUQs5ZCN56ixLOiyoOiyrOS6uizlt6XkvZzlpKks6ZaL5aeL5pel5pyfLOe1kOadn+aXpeacnyzln7rmupbplovlp4vml6Us5Z+65rqW57WQ5p2f5pelLOWfuua6luW3peS9nOWkqSzpgLLluqYoJSks55u45L6d5oCnLOW3peaZguihqCzlpKfntrHnt6jomZ8NCjEsQSzlkLPntLnlroksNSDlpKksMjAyMi0wNS0xNiwyMDIyLTA1LTIwLDIwMjQtMDEtMDgsMjAyNC0wMS0xMiw15aSpLDQ2LCwsMQ0KMixCLOm7g+aUv+mBlCw1IOWkqSwyMDI0LTAxLTIyLDIwMjQtMDEtMjYsMjAyNC0wMS0yMiwyMDI0LTAxLTI2LDXlpKksMCwsLDINCjMs5pyq5ZG95ZCN5Lu75YuZLCw1IOWkqSwyMDI0LTAxLTE1LDIwMjQtMDEtMTksMjAyNC0wMS0xNSwyMDI0LTAxLTE5LDXlpKksMCwsLDMNCjQs5pyq5ZG95ZCN5Lu75YuZLCwsLCwsLCwwLCwsNA==",
+    "source_uuid": "43f63821-e47e-487a-b80c-597714b3e88f",
+    "file_name": "test2.csv"
+  }
+]
 
 ### Delete
 DELETE {{host}}/hta-gantt/v1.0/files/7045c169-0e62-4fc3-80be-71fbdfb10c08

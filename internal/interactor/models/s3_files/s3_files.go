@@ -15,7 +15,7 @@ type Create struct {
 	// Base64
 	Base64 string `json:"base64,omitempty" binding:"required,base64" validate:"required,base64"`
 	// 創建者
-	CreatedBy string `json:"created_by,omitempty" binding:"required,uuid4" validate:"required,uuid4" swaggerignore:"true"`
+	CreatedBy string `json:"created_by,omitempty" binding:"omitempty,uuid4" validate:"omitempty,uuid4" swaggerignore:"true"`
 }
 
 // Field is structure file for search
