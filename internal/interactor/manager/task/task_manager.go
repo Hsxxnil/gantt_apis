@@ -1174,7 +1174,6 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 			}
 		} else {
 			if len(input.Projects) == 1 {
-				output.Tasks = []*taskModel.Single{}
 				// return project status
 				output.ProjectStatus = *projectBase[0].Status
 
@@ -1188,6 +1187,11 @@ func (m *manager) GetByProjectListNoPagination(input *taskModel.ProjectIDs) (int
 					}
 				}
 			}
+		}
+
+		// check if output.Tasks is null, return empty array
+		if output.Tasks == nil {
+			output.Tasks = []*taskModel.Single{}
 		}
 
 		// get event_marks
