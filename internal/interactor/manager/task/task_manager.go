@@ -160,7 +160,7 @@ func (m *manager) createSubtasks(trx *gorm.DB, parentTask *taskModel.Create, sub
 }
 
 // updateSubtasks is a helper function to update subtasks recursively for a parent task and returns the UUIDs of updated subtasks.
-func (m *manager) updateSubtasks(trx *gorm.DB, parentTask *taskModel.Update, subtasks []*taskModel.Update, minBaselineStart, maxBaselineEnd *time.Time, taskMap map[string]*taskModel.Single) ([]*string, []*taskModel.Update, []map[string][]*resourceModel.TaskSingle, *time.Time, *time.Time, error) {
+func (m *manager) updateSubtasks(trx *gorm.DB, parentTask *taskModel.Update, subtasks []*taskModel.Update, minBaselineStart, maxBaselineEnd *time.Time, role, resUUID *string, taskMap map[string]*taskModel.Single) ([]*string, []*taskModel.Update, []map[string][]*resourceModel.TaskSingle, *time.Time, *time.Time, error) {
 	var (
 		taskResMapList []map[string][]*resourceModel.TaskSingle
 		updateList     []*taskModel.Update
@@ -169,11 +169,11 @@ func (m *manager) updateSubtasks(trx *gorm.DB, parentTask *taskModel.Update, sub
 
 	for j, subBody := range subtasks {
 		// check if the update_by is the task's creator or assigned resource
-		if *subBody.Role != "admin" && subBody.ResUUID != nil && taskMap[subBody.TaskUUID] != nil {
+		if *role != "admin" && resUUID != nil && taskMap[subBody.TaskUUID] != nil {
 			if taskMap[subBody.TaskUUID].CreatedBy != *subBody.UpdatedBy {
 				assigned := false
 				for _, res := range taskMap[subBody.TaskUUID].Resources {
-					if res.ResourceUUID == *subBody.ResUUID {
+					if res.ResourceUUID == *resUUID {
 						assigned = true
 						break
 					}
@@ -244,7 +244,7 @@ func (m *manager) updateSubtasks(trx *gorm.DB, parentTask *taskModel.Update, sub
 
 		// handle possible subtasks
 		if len(subBody.Subtask) > 0 {
-			subTaskUUIDs, subUpdateList, subTaskResMapList, subMinBaselineStart, subMaxBaselineEnd, err := m.updateSubtasks(trx, subBody, subBody.Subtask, minBaselineStart, maxBaselineEnd, taskMap)
+			subTaskUUIDs, subUpdateList, subTaskResMapList, subMinBaselineStart, subMaxBaselineEnd, err := m.updateSubtasks(trx, subBody, subBody.Subtask, minBaselineStart, maxBaselineEnd, role, resUUID, taskMap)
 			if err != nil {
 				return nil, nil, nil, nil, nil, err
 			}
@@ -315,7 +315,7 @@ func (m *manager) syncCreateTaskResources(trx *gorm.DB, taskResources []map[stri
 
 // syncDeleteTaskResources is a helper function to synchronize the deletion of task_resource associations for a tasks of a project.
 func (m *manager) syncDeleteTaskResources(trx *gorm.DB, TaskUUID *string, TaskUUIDs []*string, isBatch bool) error {
-	if isBatch {
+	if isBatch && len(TaskUUIDs) > 0 {
 		err := m.TaskResourceService.WithTrx(trx).Delete(&taskResourceModel.Field{
 			TaskUUIDs: TaskUUIDs,
 		})
@@ -1639,9 +1639,12 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 	if *input[0].Role != "admin" {
 		if proResMap[*input[0].ResUUID] != nil {
 			if !proResMap[*input[0].ResUUID].IsEditable {
-				log.Info("The user don't have permission to update the project's tasks.")
+				log.Error("The user don't have permission to update the project's tasks.")
 				return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The user don't have permission to update the project's tasks.")
 			}
+		} else {
+			log.Error("The user don't have permission to update the project's tasks.")
+			return code.BadRequest, code.GetCodeMessage(code.BadRequest, "The user don't have permission to update the project's tasks.")
 		}
 	}
 
@@ -1680,11 +1683,11 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 	// update the main task
 	for i, inputBody := range input {
 		// check if the update_by is the task's creator or assigned resource
-		if *inputBody.Role != "admin" && inputBody.ResUUID != nil && taskMap[inputBody.TaskUUID] != nil {
+		if *input[0].Role != "admin" && input[0].ResUUID != nil && taskMap[inputBody.TaskUUID] != nil {
 			if taskMap[inputBody.TaskUUID].CreatedBy != *inputBody.UpdatedBy {
 				assigned := false
 				for _, res := range taskMap[inputBody.TaskUUID].Resources {
-					if res.ResourceUUID == *inputBody.ResUUID {
+					if res.ResourceUUID == *input[0].ResUUID {
 						assigned = true
 						break
 					}
@@ -1742,7 +1745,7 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 
 		// update subtasks
 		if len(inputBody.Subtask) > 0 {
-			subTaskUUIDs, subUpdateList, subTaskResMapList, subMinBaselineStart, subMaxBaselineEnd, err := m.updateSubtasks(trx, inputBody, inputBody.Subtask, minBaselineStart, maxBaselineEnd, taskMap)
+			subTaskUUIDs, subUpdateList, subTaskResMapList, subMinBaselineStart, subMaxBaselineEnd, err := m.updateSubtasks(trx, inputBody, inputBody.Subtask, minBaselineStart, maxBaselineEnd, input[0].Role, input[0].ResUUID, taskMap)
 			if err != nil {
 				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
 			}
@@ -1791,7 +1794,6 @@ func (m *manager) UpdateAll(trx *gorm.DB, input []*taskModel.Update) (int, any) 
 	}
 
 	// sync delete task_resource
-	log.Debug(TaskUUIDs)
 	err = m.syncDeleteTaskResources(trx, nil, TaskUUIDs, true)
 	if err != nil {
 		log.Error(err)
