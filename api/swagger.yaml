@@ -2506,7 +2506,9 @@ paths:
         name: '*'
         required: true
         schema:
-          $ref: '#/definitions/s3_files.Create'
+          items:
+            $ref: '#/definitions/s3_files.Create'
+          type: array
       produces:
       - application/json
       responses:
