@@ -108,7 +108,11 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 }
 
 func (s *storage) GetByListNoPagination(input *model.Base) (output []*model.Table, err error) {
-	query := s.db.Model(&model.Table{}).Preload("TaskResources.Resources.Resources").Preload(clause.Associations)
+	query := s.db.Model(&model.Table{}).
+		Preload("TaskResources.Resources.Resources").
+		Preload("S3Files.CreatedByUsers").
+		Preload(clause.Associations)
+
 	if input.TaskUUID != nil {
 		query.Where("task_uuid = ?", input.TaskUUID)
 	}

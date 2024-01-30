@@ -30,13 +30,12 @@ func Init(db *gorm.DB) Manager {
 
 func (m *manager) Create(trx *gorm.DB, input *s3FileModel.Create) (int, any) {
 	defer trx.Rollback()
-	// confirm s3 bucket name
-	s3BucketName := "pm-s3-bucket"
+
 	input.FileExtension = filepath.Ext(input.FileName)
 	filePath := "files/" + input.SourceUUID + "/" + input.FileName
 
 	// upload file to s3
-	url, err := util.UploadToS3(input.Base64, filePath, s3BucketName)
+	url, err := util.UploadToS3(input.Base64, filePath)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, "Upload to s3 failed.")
