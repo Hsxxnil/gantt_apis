@@ -42,12 +42,15 @@ func Init(db *gorm.DB) Control {
 // @Router /files [post]
 func (c *control) Create(ctx *gin.Context) {
 	trx := ctx.MustGet("db_trx").(*gorm.DB)
-	input := &s3FileModel.Create{}
-	input.CreatedBy = ctx.MustGet("user_id").(string)
-	if err := ctx.ShouldBindJSON(input); err != nil {
+	var input []*s3FileModel.Create
+	if err := ctx.ShouldBindJSON(&input); err != nil {
 		log.Error(err)
 		ctx.JSON(http.StatusUnsupportedMediaType, code.GetCodeMessage(code.FormatError, err.Error()))
 		return
+	}
+
+	for _, create := range input {
+		create.CreatedBy = ctx.MustGet("user_id").(string)
 	}
 
 	httpCode, codeMessage := c.Manager.Create(trx, input)
