@@ -843,7 +843,10 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/s3_files.Create"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/s3_files.Create"
+                            }
                         }
                     }
                 ],
