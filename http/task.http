@@ -13,7 +13,7 @@ Content-Type: application/json
 
 {
   "user_name": "hsxxnil",
-  "passcode": "029137"
+  "passcode": "211195"
 }
 
 > {%
@@ -30,7 +30,7 @@ Authorization: Bearer {{accessToken}}
     "is_milestone": false
   },
   "projects": [
-    "14648c30-a6be-40ab-88d4-ae539aa0159d"
+    "f24d9553-4e42-4998-bd07-c9f7af45ab27"
   ]
 }
 
