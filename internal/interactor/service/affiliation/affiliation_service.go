@@ -1,13 +1,14 @@
 package affiliation
 
 import (
-	"github.com/bytedance/sonic"
 	store "hta/internal/entity/postgresql/affiliation"
 	db "hta/internal/entity/postgresql/db/affiliations"
 	model "hta/internal/interactor/models/affiliations"
 	"hta/internal/interactor/pkg/util"
 	"hta/internal/interactor/pkg/util/log"
 	"hta/internal/interactor/pkg/util/uuid"
+
+	"github.com/bytedance/sonic"
 
 	"gorm.io/gorm"
 )

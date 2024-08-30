@@ -2,10 +2,11 @@ package otp
 
 import (
 	"errors"
-	"github.com/pquerna/otp"
-	"github.com/pquerna/otp/totp"
 	"hta/internal/interactor/pkg/util/log"
 	"time"
+
+	"github.com/pquerna/otp"
+	"github.com/pquerna/otp/totp"
 )
 
 // GenerateOTP  is used to generate the OTP secret and auth url.

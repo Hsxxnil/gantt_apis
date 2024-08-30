@@ -2,7 +2,6 @@ package project
 
 import (
 	"errors"
-	"github.com/bytedance/sonic"
 	eventMarkModel "hta/internal/interactor/models/event_marks"
 	projectResourceModel "hta/internal/interactor/models/project_resources"
 	projectTypeModel "hta/internal/interactor/models/project_types"
@@ -21,6 +20,8 @@ import (
 	taskResourceService "hta/internal/interactor/service/task_resource"
 	userService "hta/internal/interactor/service/user"
 	"time"
+
+	"github.com/bytedance/sonic"
 
 	"gorm.io/gorm"
 

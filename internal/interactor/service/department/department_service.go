@@ -1,13 +1,14 @@
 package department
 
 import (
-	"github.com/bytedance/sonic"
 	db "hta/internal/entity/postgresql/db/departments"
 	store "hta/internal/entity/postgresql/department"
 	model "hta/internal/interactor/models/departments"
 	"hta/internal/interactor/pkg/util"
 	"hta/internal/interactor/pkg/util/log"
 	"hta/internal/interactor/pkg/util/uuid"
+
+	"github.com/bytedance/sonic"
 
 	"gorm.io/gorm"
 )

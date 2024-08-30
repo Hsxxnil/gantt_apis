@@ -3,11 +3,12 @@ package task
 import (
 	"bytes"
 	"encoding/csv"
-	"golang.org/x/text/encoding/unicode"
-	"golang.org/x/text/transform"
 	"hta/internal/interactor/pkg/util"
 	"hta/internal/interactor/pkg/util/hash"
 	"net/http"
+
+	"golang.org/x/text/encoding/unicode"
+	"golang.org/x/text/transform"
 
 	"hta/internal/interactor/manager/task"
 	taskModel "hta/internal/interactor/models/tasks"

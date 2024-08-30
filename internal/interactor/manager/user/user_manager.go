@@ -3,8 +3,6 @@ package user
 import (
 	"errors"
 	"fmt"
-	"github.com/bytedance/sonic"
-	"github.com/ggwhite/go-masker"
 	affiliationModel "hta/internal/interactor/models/affiliations"
 	departmentModel "hta/internal/interactor/models/departments"
 	jwxModel "hta/internal/interactor/models/jwx"
@@ -16,6 +14,9 @@ import (
 	departmentService "hta/internal/interactor/service/department"
 	jwxService "hta/internal/interactor/service/jwx"
 	resourceService "hta/internal/interactor/service/resource"
+
+	"github.com/bytedance/sonic"
+	"github.com/ggwhite/go-masker"
 
 	userModel "hta/internal/interactor/models/users"
 	userService "hta/internal/interactor/service/user"

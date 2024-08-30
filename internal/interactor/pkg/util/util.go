@@ -1,11 +1,12 @@
 package util
 
 import (
-	"github.com/bytedance/sonic"
 	"hta/internal/interactor/pkg/util/log"
 	"math"
 	"math/rand"
 	"time"
+
+	"github.com/bytedance/sonic"
 )
 
 func PointerString(s string) *string     { return &s }

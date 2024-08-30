@@ -1,10 +1,11 @@
 package s3_files
 
 import (
-	"gorm.io/gorm"
 	"hta/internal/entity/postgresql/db/users"
 	"hta/internal/interactor/models/special"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 // Table struct is s3_files database table struct

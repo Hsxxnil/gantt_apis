@@ -1,12 +1,13 @@
 package main
 
 import (
-	"github.com/apex/gateway"
 	"hta/internal/interactor/pkg/connect"
 	"hta/internal/interactor/pkg/util/log"
 	"hta/internal/router"
 	"hta/internal/router/s3_file"
 	"hta/internal/router/task"
+
+	"github.com/apex/gateway"
 )
 
 func main() {

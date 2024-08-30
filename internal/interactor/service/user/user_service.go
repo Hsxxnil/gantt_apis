@@ -1,11 +1,12 @@
 package user
 
 import (
-	"github.com/bytedance/sonic"
 	db "hta/internal/entity/postgresql/db/users"
 	store "hta/internal/entity/postgresql/user"
 	"hta/internal/interactor/pkg/util/encryption"
 	"hta/internal/interactor/pkg/util/hash"
+
+	"github.com/bytedance/sonic"
 
 	model "hta/internal/interactor/models/users"
 	"hta/internal/interactor/pkg/util"

@@ -1,9 +1,10 @@
 package task
 
 import (
-	"github.com/bytedance/sonic"
 	model "hta/internal/entity/postgresql/db/tasks"
 	"hta/internal/interactor/pkg/util/log"
+
+	"github.com/bytedance/sonic"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"

@@ -1,14 +1,15 @@
 package project_type
 
 import (
-	"github.com/bytedance/sonic"
-	"gorm.io/gorm"
 	db "hta/internal/entity/postgresql/db/project_types"
 	store "hta/internal/entity/postgresql/project_type"
 	model "hta/internal/interactor/models/project_types"
 	"hta/internal/interactor/pkg/util"
 	"hta/internal/interactor/pkg/util/log"
 	"hta/internal/interactor/pkg/util/uuid"
+
+	"github.com/bytedance/sonic"
+	"gorm.io/gorm"
 )
 
 type Service interface {

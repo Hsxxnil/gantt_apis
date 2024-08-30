@@ -2,11 +2,12 @@ package resource
 
 import (
 	"errors"
-	"github.com/bytedance/sonic"
 	userModel "hta/internal/interactor/models/users"
 	"hta/internal/interactor/pkg/util"
 	userService "hta/internal/interactor/service/user"
 	"strconv"
+
+	"github.com/bytedance/sonic"
 
 	"gorm.io/gorm"
 

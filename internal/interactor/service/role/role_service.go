@@ -1,14 +1,15 @@
 package role
 
 import (
-	"github.com/bytedance/sonic"
-	"gorm.io/gorm"
 	db "hta/internal/entity/postgresql/db/roles"
 	store "hta/internal/entity/postgresql/role"
 	model "hta/internal/interactor/models/roles"
 	"hta/internal/interactor/pkg/util"
 	"hta/internal/interactor/pkg/util/log"
 	"hta/internal/interactor/pkg/util/uuid"
+
+	"github.com/bytedance/sonic"
+	"gorm.io/gorm"
 )
 
 type Service interface {

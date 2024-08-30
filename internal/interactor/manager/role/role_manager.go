@@ -2,8 +2,9 @@ package role
 
 import (
 	"errors"
-	"github.com/bytedance/sonic"
 	"hta/internal/interactor/pkg/util"
+
+	"github.com/bytedance/sonic"
 
 	roleModel "hta/internal/interactor/models/roles"
 	roleService "hta/internal/interactor/service/role"

@@ -1,13 +1,14 @@
 package task_resource
 
 import (
-	"github.com/bytedance/sonic"
 	db "hta/internal/entity/postgresql/db/task_resources"
 	store "hta/internal/entity/postgresql/task_resource"
 	model "hta/internal/interactor/models/task_resources"
 	"hta/internal/interactor/pkg/util"
 	"hta/internal/interactor/pkg/util/log"
 	"hta/internal/interactor/pkg/util/uuid"
+
+	"github.com/bytedance/sonic"
 
 	"gorm.io/gorm"
 )

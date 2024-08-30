@@ -1,10 +1,11 @@
 package project_type
 
 import (
-	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 	present "hta/internal/presenter/project_type"
 	"hta/internal/router/middleware"
+
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func GetRouter(router *gin.Engine, db *gorm.DB) *gin.Engine {
