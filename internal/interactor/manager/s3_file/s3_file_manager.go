@@ -2,9 +2,10 @@ package s3_file
 
 import (
 	"errors"
-	"gorm.io/gorm"
 	"hta/internal/interactor/pkg/util"
 	"path/filepath"
+
+	"gorm.io/gorm"
 
 	s3FileModel "hta/internal/interactor/models/s3_files"
 	s3FileService "hta/internal/interactor/service/s3_file"

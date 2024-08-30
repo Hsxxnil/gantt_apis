@@ -3,12 +3,13 @@ package resource
 import (
 	"bytes"
 	"encoding/csv"
-	"golang.org/x/text/encoding/unicode"
-	"golang.org/x/text/transform"
 	"hta/internal/interactor/pkg/util"
 	"hta/internal/interactor/pkg/util/hash"
 	"net/http"
 	"strconv"
+
+	"golang.org/x/text/encoding/unicode"
+	"golang.org/x/text/transform"
 
 	constant "hta/internal/interactor/constants"
 

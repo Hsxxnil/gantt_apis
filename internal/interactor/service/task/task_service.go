@@ -1,14 +1,15 @@
 package task
 
 import (
-	"github.com/bytedance/sonic"
-	"gorm.io/gorm"
 	db "hta/internal/entity/postgresql/db/tasks"
 	store "hta/internal/entity/postgresql/task"
 	model "hta/internal/interactor/models/tasks"
 	"hta/internal/interactor/pkg/util"
 	"hta/internal/interactor/pkg/util/log"
 	"hta/internal/interactor/pkg/util/uuid"
+
+	"github.com/bytedance/sonic"
+	"gorm.io/gorm"
 )
 
 type Service interface {

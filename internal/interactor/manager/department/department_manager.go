@@ -2,7 +2,6 @@ package department
 
 import (
 	"errors"
-	"github.com/bytedance/sonic"
 	affiliationModel "hta/internal/interactor/models/affiliations"
 	resourceModel "hta/internal/interactor/models/resources"
 	roleModel "hta/internal/interactor/models/roles"
@@ -13,6 +12,8 @@ import (
 	roleService "hta/internal/interactor/service/role"
 	userService "hta/internal/interactor/service/user"
 	"strings"
+
+	"github.com/bytedance/sonic"
 
 	"gorm.io/gorm"
 

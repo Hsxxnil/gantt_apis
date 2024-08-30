@@ -2,11 +2,12 @@ package util
 
 import (
 	"encoding/base64"
-	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/service/s3"
 	s3pkg "hta/internal/interactor/pkg/aws/s3"
 	"hta/internal/interactor/pkg/util/log"
 	"strings"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 )
 
 // UploadToS3 is used to upload file to s3

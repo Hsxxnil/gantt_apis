@@ -1,13 +1,14 @@
 package s3_file
 
 import (
-	"github.com/bytedance/sonic"
 	db "hta/internal/entity/postgresql/db/s3_files"
 	store "hta/internal/entity/postgresql/s3_file"
 	model "hta/internal/interactor/models/s3_files"
 	"hta/internal/interactor/pkg/util"
 	"hta/internal/interactor/pkg/util/log"
 	"hta/internal/interactor/pkg/util/uuid"
+
+	"github.com/bytedance/sonic"
 
 	"gorm.io/gorm"
 )

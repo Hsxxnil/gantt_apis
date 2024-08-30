@@ -1,13 +1,14 @@
 package event_mark
 
 import (
-	"github.com/bytedance/sonic"
 	db "hta/internal/entity/postgresql/db/event_marks"
 	store "hta/internal/entity/postgresql/event_mark"
 	model "hta/internal/interactor/models/event_marks"
 	"hta/internal/interactor/pkg/util"
 	"hta/internal/interactor/pkg/util/log"
 	"hta/internal/interactor/pkg/util/uuid"
+
+	"github.com/bytedance/sonic"
 
 	"gorm.io/gorm"
 )

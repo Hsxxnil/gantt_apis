@@ -2,8 +2,9 @@ package project_type
 
 import (
 	"errors"
-	"github.com/bytedance/sonic"
 	"hta/internal/interactor/pkg/util"
+
+	"github.com/bytedance/sonic"
 
 	"gorm.io/gorm"
 

@@ -7,9 +7,10 @@ import (
 
 	"github.com/casbin/casbin/v2"
 
-	"github.com/casbin/casbin/v2/model"
 	_ "hta/internal/interactor/pkg/connect"
 	"hta/internal/interactor/pkg/util/log"
+
+	"github.com/casbin/casbin/v2/model"
 
 	gormAdapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/gin-gonic/gin"
@@ -106,7 +107,7 @@ func DeletePolicy(pm []*policyModel.PolicyModel) (bool, error) {
 	return result, err
 }
 
-func GetAllPolicies() [][]string {
+func GetAllPolicies() ([][]string, error) {
 	return Enforcer.GetPolicy()
 }
 

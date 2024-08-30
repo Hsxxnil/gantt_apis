@@ -1,13 +1,14 @@
 package project_resource
 
 import (
-	"github.com/bytedance/sonic"
 	db "hta/internal/entity/postgresql/db/project_resources"
 	store "hta/internal/entity/postgresql/project_resource"
 	model "hta/internal/interactor/models/project_resources"
 	"hta/internal/interactor/pkg/util"
 	"hta/internal/interactor/pkg/util/log"
 	"hta/internal/interactor/pkg/util/uuid"
+
+	"github.com/bytedance/sonic"
 
 	"gorm.io/gorm"
 )

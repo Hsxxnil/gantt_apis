@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/apex/gateway"
 	"hta/internal/interactor/pkg/connect"
 	"hta/internal/interactor/pkg/util/log"
 	"hta/internal/router"
@@ -10,6 +9,8 @@ import (
 	"hta/internal/router/policy"
 	"hta/internal/router/role"
 	"hta/internal/router/user"
+
+	"github.com/apex/gateway"
 )
 
 func main() {

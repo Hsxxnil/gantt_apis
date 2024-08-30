@@ -1,9 +1,10 @@
 package project_resource
 
 import (
-	"github.com/bytedance/sonic"
 	model "hta/internal/entity/postgresql/db/project_resources"
 	"hta/internal/interactor/pkg/util/log"
+
+	"github.com/bytedance/sonic"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"

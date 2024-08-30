@@ -1,10 +1,11 @@
 package resource
 
 import (
-	"github.com/bytedance/sonic"
-	"github.com/lib/pq"
 	model "hta/internal/entity/postgresql/db/resources"
 	"hta/internal/interactor/pkg/util/log"
+
+	"github.com/bytedance/sonic"
+	"github.com/lib/pq"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"

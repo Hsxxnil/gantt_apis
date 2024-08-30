@@ -3,7 +3,6 @@ package task
 import (
 	"errors"
 	"fmt"
-	"github.com/bytedance/sonic"
 	resourceManager "hta/internal/interactor/manager/resource"
 	eventMarkModel "hta/internal/interactor/models/event_marks"
 	projectResourceModel "hta/internal/interactor/models/project_resources"
@@ -20,6 +19,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/bytedance/sonic"
 
 	"gorm.io/gorm"
 

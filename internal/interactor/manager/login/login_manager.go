@@ -3,9 +3,6 @@ package login
 import (
 	"errors"
 	"fmt"
-	"github.com/bytedance/sonic"
-	"github.com/ggwhite/go-masker"
-	"gorm.io/gorm"
 	"hta/config"
 	jwxModel "hta/internal/interactor/models/jwx"
 	loginModel "hta/internal/interactor/models/logins"
@@ -22,6 +19,10 @@ import (
 	resourceService "hta/internal/interactor/service/resource"
 	roleService "hta/internal/interactor/service/role"
 	userService "hta/internal/interactor/service/user"
+
+	"github.com/bytedance/sonic"
+	"github.com/ggwhite/go-masker"
+	"gorm.io/gorm"
 )
 
 type Manager interface {
