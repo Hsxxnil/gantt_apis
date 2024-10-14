@@ -69,7 +69,7 @@ func (s *storage) GetByList(input *model.Base) (quantity int64, output []*model.
 	}
 
 	if input.FilterResourceGroups != nil {
-		query.Where("exists (select 1 from unnest(?::varchar[]) as filter where resource_group like '%' || filter || '%')", pq.Array(input.FilterResourceGroups))
+		query.Where("exists (select 1 from unnest(?::text[]) as filter where resource_group like '%' || filter || '%')", pq.Array(input.FilterResourceGroups))
 	}
 
 	if input.Sort.Field != "" && input.Sort.Direction != "" {

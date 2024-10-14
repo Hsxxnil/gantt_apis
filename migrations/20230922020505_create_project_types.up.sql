@@ -1,7 +1,7 @@
 CREATE TABLE project_types
 (
     id           UUID NOT NULL PRIMARY KEY,
-    name         VARCHAR,
+    name         text,
     created_at   TIMESTAMP default now(),
     created_by   UUID,
     updated_at   TIMESTAMP,

@@ -1,2 +1,2 @@
 alter table tasks
-    add segment VARCHAR;
+    add segment text;

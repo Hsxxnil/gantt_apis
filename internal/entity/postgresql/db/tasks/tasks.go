@@ -19,7 +19,7 @@ type Table struct {
 	// 前端編號 (非表ID)
 	TaskID string `gorm:"column:task_id;type:text;" json:"task_id"`
 	// 任務名稱
-	TaskName string `gorm:"column:task_name;type:varchar;" json:"task_name"`
+	TaskName string `gorm:"column:task_name;type:text;" json:"task_name"`
 	// 起始日期
 	StartDate *time.Time `gorm:"column:start_date;type:timestamp;" json:"start_date"`
 	// 結束日期
@@ -37,15 +37,15 @@ type Table struct {
 	// 花費時間
 	Cost int64 `gorm:"column:cost;type:int;" json:"cost"`
 	// 前任
-	Predecessor string `gorm:"column:predecessor;type:varchar;" json:"predecessor"`
+	Predecessor string `gorm:"column:predecessor;type:text;" json:"predecessor"`
 	// 1.1.2、1.2、1.2.1
-	OutlineNumber string `gorm:"column:outline_number;type:varchar;" json:"outline_number"`
+	OutlineNumber string `gorm:"column:outline_number;type:text;" json:"outline_number"`
 	// 未知
-	Assignments string `gorm:"column:assignments;type:varchar;" json:"assignments"`
+	Assignments string `gorm:"column:assignments;type:text;" json:"assignments"`
 	// 紀錄標的顏色
-	TaskColor string `gorm:"column:task_color;type:varchar;" json:"task_color"`
+	TaskColor string `gorm:"column:task_color;type:text;" json:"task_color"`
 	// 預留：外部連結
-	WebLink string `gorm:"column:web_link;type:varchar;" json:"web_link"`
+	WebLink string `gorm:"column:web_link;type:text;" json:"web_link"`
 	// 是否為任務
 	IsSubTask bool `gorm:"column:is_subtask;type:boolean;default:false" json:"is_subtask"`
 	// 專案UUID
@@ -53,9 +53,9 @@ type Table struct {
 	// projects data
 	Projects projects.Table `gorm:"foreignKey:ProjectUUID;references:ProjectUUID" json:"projects,omitempty"`
 	// 任務分段(陣列的字串型態)
-	Segment string `gorm:"column:segment;type:varchar;" json:"segment"`
+	Segment string `gorm:"column:segment;type:text;" json:"segment"`
 	// 任務標示(陣列的字串型態)
-	Indicator string `gorm:"column:indicator;type:varchar;" json:"indicator"`
+	Indicator string `gorm:"column:indicator;type:text;" json:"indicator"`
 	// 備註
 	Notes string `gorm:"column:notes;type:text;" json:"notes"`
 	// task_resources data

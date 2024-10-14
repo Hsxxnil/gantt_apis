@@ -14,11 +14,11 @@ type Table struct {
 	// 舊編號 ＆ 頁面ID (非表ID)
 	ResourceID int64 `gorm:"->;column:resource_id;type:serial;" json:"resource_id"`
 	// 名字
-	ResourceName string `gorm:"column:resource_name;type:varchar;" json:"resource_name"`
+	ResourceName string `gorm:"column:resource_name;type:text;" json:"resource_name"`
 	// 信箱
-	Email string `gorm:"column:email;type:varchar;" json:"email"`
+	Email string `gorm:"column:email;type:text;" json:"email"`
 	// 電話
-	Phone string `gorm:"column:phone;type:varchar;" json:"phone"`
+	Phone string `gorm:"column:phone;type:text;" json:"phone"`
 	//
 	StandardCost float64 `gorm:"column:standard_cost;type:numeric" json:"standard_cost"`
 	//
@@ -26,7 +26,7 @@ type Table struct {
 	// 總負載
 	TotalLoad float64 `gorm:"column:total_load;type:numeric" json:"total_load"`
 	// 群組
-	ResourceGroup string `gorm:"column:resource_group;type:varchar;" json:"resource_group"`
+	ResourceGroup string `gorm:"column:resource_group;type:text;" json:"resource_group"`
 	//
 	IsExpand bool `gorm:"column:is_expand;type:boolean;default:false" json:"is_expand"`
 	// create_users data

@@ -9,7 +9,7 @@ type Table struct {
 	// 表ID
 	ID string `gorm:"<-:create;column:id;type:uuid;not null;primaryKey;" json:"id"`
 	// 名稱
-	Name string `gorm:"column:name;type:varchar;" json:"name"`
+	Name string `gorm:"column:name;type:text;" json:"name"`
 	// 引入後端專用
 	special.Table
 }

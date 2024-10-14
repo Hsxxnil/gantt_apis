@@ -10,9 +10,9 @@ type Table struct {
 	// 表ID
 	ID string `gorm:"<-:create;column:id;type:uuid;not null;primaryKey;" json:"id"`
 	// 工作日(陣列的字串型態)
-	WorkWeek string `gorm:"column:work_week;type:varchar;" json:"work_week"`
+	WorkWeek string `gorm:"column:work_week;type:text;" json:"work_week"`
 	// 工作時間(陣列的字串型態)
-	WorkingTime string `gorm:"column:working_time;type:varchar;" json:"working_time"`
+	WorkingTime string `gorm:"column:working_time;type:text;" json:"working_time"`
 	// create_users data
 	CreatedByUsers users.Table `gorm:"foreignKey:ID;references:CreatedBy" json:"created_by_users,omitempty"`
 	// update_users data

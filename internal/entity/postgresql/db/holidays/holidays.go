@@ -11,13 +11,13 @@ type Table struct {
 	// 表ID
 	ID string `gorm:"<-:create;column:id;type:uuid;not null;primaryKey;" json:"id"`
 	// 名稱
-	Name string `gorm:"column:name;type:varchar;" json:"label"`
+	Name string `gorm:"column:name;type:text;" json:"label"`
 	// 起始日期
 	StartDate *time.Time `gorm:"column:start_date;type:timestamp;" json:"from"`
 	// 結束日期
 	EndDate *time.Time `gorm:"column:end_date;type:timestamp;" json:"to"`
 	// 前端css
-	Css string `gorm:"column:css;type:varchar;" json:"cssClass"`
+	Css string `gorm:"column:css;type:text;" json:"cssClass"`
 	// create_users data
 	CreatedByUsers users.Table `gorm:"foreignKey:ID;references:CreatedBy" json:"created_by_users,omitempty"`
 	// update_users data

@@ -1,2 +1,2 @@
 alter table tasks
-    add indicator VARCHAR;
+    add indicator text;

@@ -11,7 +11,7 @@ type Table struct {
 	// 表ID
 	ID string `gorm:"<-:create;column:id;type:uuid;not null;primaryKey;" json:"id"`
 	// 名稱
-	Name string `gorm:"column:name;type:varchar;" json:"label"`
+	Name string `gorm:"column:name;type:text;" json:"label"`
 	// 日期
 	Day *time.Time `gorm:"column:day;type:timestamp;" json:"day"`
 	// 專案UUID
