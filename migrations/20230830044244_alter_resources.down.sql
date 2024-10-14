@@ -1,2 +1,2 @@
 alter table resources
-add column role VARCHAR;
+add column role text;

@@ -13,23 +13,23 @@ type Table struct {
 	// 表ID
 	ProjectUUID string `gorm:"<-:create;column:project_uuid;type:uuid;not null;primaryKey;" json:"project_uuid"`
 	// 前端編號 (非表ID)
-	ProjectID string `gorm:"->;column:project_id;type:varchar;" json:"project_id"`
+	ProjectID string `gorm:"->;column:project_id;type:text;" json:"project_id"`
 	// 名稱
-	ProjectName string `gorm:"column:project_name;type:varchar;" json:"project_name"`
+	ProjectName string `gorm:"column:project_name;type:text;" json:"project_name"`
 	// 類別
 	TypeID string `gorm:"column:type_id;type:uuid;" json:"type_id"`
 	// project_types data
 	ProjectTypes project_types.Table `gorm:"foreignKey:ID;references:TypeID" json:"project_types,omitempty"`
 	// 代號
-	Code string `gorm:"column:code;type:varchar;" json:"code"`
+	Code string `gorm:"column:code;type:text;" json:"code"`
 	// 起始日期
 	StartDate *time.Time `gorm:"column:start_date;type:timestamp;" json:"start_date"`
 	// 結束日期
 	EndDate *time.Time `gorm:"column:end_date;type:timestamp;" json:"end_date"`
 	// 客戶
-	Client string `gorm:"column:client;type:varchar;" json:"client"`
+	Client string `gorm:"column:client;type:text;" json:"client"`
 	// 狀態
-	Status string `gorm:"column:status;type:varchar;" json:"status"`
+	Status string `gorm:"column:status;type:text;" json:"status"`
 	// create_users data
 	CreatedByUsers users.Table `gorm:"foreignKey:ID;references:CreatedBy" json:"created_by_users,omitempty"`
 	// update_users data

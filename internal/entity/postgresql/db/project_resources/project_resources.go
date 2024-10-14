@@ -18,7 +18,7 @@ type Table struct {
 	// resources data
 	Resources resources.Table `gorm:"foreignKey:ResourceUUID;references:ResourceUUID" json:"resources,omitempty"`
 	// 專案角色
-	Role string `gorm:"column:role;type:varchar;" json:"role"`
+	Role string `gorm:"column:role;type:text;" json:"role"`
 	// 是否可編輯專案任務
 	IsEditable *bool `gorm:"column:is_editable;type:boolean;default:true;" json:"is_editable"`
 	// create_users data

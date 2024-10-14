@@ -1,7 +1,7 @@
 CREATE TABLE event_marks
 (
     id         UUID    NOT NULL PRIMARY KEY,
-    name       VARCHAR NOT NULL,
+    name       text NOT NULL,
     day        TIMESTAMP,
     created_at TIMESTAMP default now(),
     created_by UUID,
