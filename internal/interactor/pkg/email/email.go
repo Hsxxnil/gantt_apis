@@ -2,21 +2,22 @@ package email
 
 import (
 	"crypto/tls"
+	"hta/config"
 	"hta/internal/interactor/pkg/util/log"
 
 	gomail "gopkg.in/mail.v2"
 )
 
 // SendEmailWithText sends email with text.
-func SendEmailWithText(to, fromAddress, fromName, mailPwd, subject, message string) error {
+func SendEmailWithText(to, fromName, subject, message string) error {
 	m := gomail.NewMessage()
-	m.SetAddressHeader("From", fromAddress, fromName)
+	m.SetAddressHeader("From", config.MailAddress, fromName)
 	m.SetHeader("To", to)
 	m.SetHeader("Subject", subject)
 	m.SetBody("text/plain", message)
 
 	// Settings for SMTP server
-	d := gomail.NewDialer("smtp.gmail.com", 587, fromAddress, mailPwd)
+	d := gomail.NewDialer("smtp.gmail.com", 587, config.MailAddress, config.MailPassword)
 
 	// This is only needed when SSL/TLS certificate is not valid on server.
 	// In production this should be set to false.
@@ -32,15 +33,15 @@ func SendEmailWithText(to, fromAddress, fromName, mailPwd, subject, message stri
 }
 
 // SendEmailWithHtml sends email with html.
-func SendEmailWithHtml(to, fromAddress, fromName, mailPwd, subject, message string) error {
+func SendEmailWithHtml(to, fromName, subject, message string) error {
 	m := gomail.NewMessage()
-	m.SetAddressHeader("From", fromAddress, fromName)
+	m.SetAddressHeader("From", config.MailAddress, fromName)
 	m.SetHeader("To", to)
 	m.SetHeader("Subject", subject)
 	m.SetBody("text/html", message)
 
 	// Settings for SMTP server
-	d := gomail.NewDialer("smtp.gmail.com", 587, fromAddress, mailPwd)
+	d := gomail.NewDialer("smtp.gmail.com", 587, config.MailAddress, config.MailPassword)
 
 	// This is only needed when SSL/TLS certificate is not valid on server.
 	// In production this should be set to false.
