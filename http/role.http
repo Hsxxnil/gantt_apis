@@ -3,7 +3,7 @@ POST {{host}}/hta-gantt/v1.0/login
 Content-Type: application/json
 
 {
-  "user_name": "woni",
+  "user_name": "admin",
   "password": "12345"
 }
 
@@ -13,7 +13,7 @@ Content-Type: application/json
 
 {
   "user_name": "admin",
-  "passcode": "571269"
+  "passcode": "674094"
 }
 
 > {% client.global.set("accessToken", response.body.body.access_token); %}
@@ -39,8 +39,8 @@ Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-  "name": "supervisor",
-  "display_name": "部門主管"
+  "name": "user",
+  "display_name": "使用者"
 }
 
 ### Update

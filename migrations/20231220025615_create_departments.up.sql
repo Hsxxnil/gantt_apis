@@ -38,3 +38,5 @@ create index idx_departments_updated_at
 
 create index idx_departments_updated_by
     on departments using hash (updated_by);
+
+insert into departments (id, name) VALUES ('31d8a229-90fb-4d33-87bc-4f9295110551', '開發測試');
