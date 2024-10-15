@@ -621,9 +621,7 @@ func (m *manager) ChangeEmail(input *userModel.ChangeEmail) (int, any) {
 
 	// send link to email
 	to := input.Email
-	fromAddress := "calla.nkust@gmail.com"
 	fromName := "PMIS平台"
-	mailPwd := "pfyj mkee hpgy sqlj"
 	subject := "【PMIS平台】請驗證信箱(請勿回覆此郵件)"
 	domain := input.Domain
 	httpMod := "https"
@@ -714,7 +712,7 @@ func (m *manager) ChangeEmail(input *userModel.ChangeEmail) (int, any) {
 		</html>
 		`, verifyLink)
 
-	err = email.SendEmailWithHtml(to, fromAddress, fromName, mailPwd, subject, message)
+	err = email.SendEmailWithHtml(to, fromName, subject, message)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())

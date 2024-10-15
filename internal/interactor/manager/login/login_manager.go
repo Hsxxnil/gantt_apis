@@ -82,9 +82,7 @@ func (m *manager) Login(input *loginModel.Login) (int, any) {
 
 		// send passcode to email
 		to := *userBase.Email
-		fromAddress := "calla.nkust@gmail.com"
 		fromName := "PMIS平台"
-		mailPwd := "pfyj mkee hpgy sqlj"
 		subject := "【PMIS平台】系統驗證碼(請勿回覆此郵件)"
 		message := fmt.Sprintf(`
 		<html lang="zh-TW">
@@ -157,7 +155,7 @@ func (m *manager) Login(input *loginModel.Login) (int, any) {
 		</html>
 		`, passcode)
 
-		err = email.SendEmailWithHtml(to, fromAddress, fromName, mailPwd, subject, message)
+		err = email.SendEmailWithHtml(to, fromName, subject, message)
 		if err != nil {
 			log.Error(err)
 			return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -181,9 +179,7 @@ func (m *manager) Login(input *loginModel.Login) (int, any) {
 
 			// send passcode to email
 			to := *userBase.Email
-			fromAddress := "calla.nkust@gmail.com"
 			fromName := "PMIS平台"
-			mailPwd := "pfyj mkee hpgy sqlj"
 			subject := "【PMIS平台】系統驗證碼(請勿回覆此郵件)"
 			message := fmt.Sprintf(`
 			<html lang="zh-TW">
@@ -255,7 +251,7 @@ func (m *manager) Login(input *loginModel.Login) (int, any) {
 			</html>
 			`, passcode)
 
-			err = email.SendEmailWithHtml(to, fromAddress, fromName, mailPwd, subject, message)
+			err = email.SendEmailWithHtml(to, fromName, subject, message)
 			if err != nil {
 				log.Error(err)
 				return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -457,9 +453,7 @@ func (m *manager) Forget(input *loginModel.Forget) (int, any) {
 
 	// send link to email
 	to := input.Email
-	fromAddress := "calla.nkust@gmail.com"
 	fromName := "PMIS平台"
-	mailPwd := "pfyj mkee hpgy sqlj"
 	subject := "【PMIS平台】請重設密碼(請勿回覆此郵件)"
 	domain := input.Domain
 	httpMod := "https"
@@ -550,7 +544,7 @@ func (m *manager) Forget(input *loginModel.Forget) (int, any) {
 	</html>
 	`, resetPasswordLink)
 
-	err = email.SendEmailWithHtml(to, fromAddress, fromName, mailPwd, subject, message)
+	err = email.SendEmailWithHtml(to, fromName, subject, message)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
@@ -655,9 +649,7 @@ func (m *manager) Register(input *loginModel.Register) (int, any) {
 
 	// send link to email
 	to := input.Email
-	fromAddress := "calla.nkust@gmail.com"
 	fromName := "PMIS平台"
-	mailPwd := "pfyj mkee hpgy sqlj"
 	subject := "【PMIS平台】請驗證信箱以完成註冊(請勿回覆此郵件)"
 	domain := input.Domain
 	httpMod := "https"
@@ -748,7 +740,7 @@ func (m *manager) Register(input *loginModel.Register) (int, any) {
 	</html>
 	`, verifyLink)
 
-	err = email.SendEmailWithHtml(to, fromAddress, fromName, mailPwd, subject, message)
+	err = email.SendEmailWithHtml(to, fromName, subject, message)
 	if err != nil {
 		log.Error(err)
 		return code.InternalServerError, code.GetCodeMessage(code.InternalServerError, err.Error())
