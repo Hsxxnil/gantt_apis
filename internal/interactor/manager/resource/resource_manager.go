@@ -2,20 +2,20 @@ package resource
 
 import (
 	"errors"
-	userModel "hta/internal/interactor/models/users"
-	"hta/internal/interactor/pkg/util"
-	userService "hta/internal/interactor/service/user"
+	userModel "gantt/internal/interactor/models/users"
+	"gantt/internal/interactor/pkg/util"
+	userService "gantt/internal/interactor/service/user"
 	"strconv"
 
 	"github.com/bytedance/sonic"
 
 	"gorm.io/gorm"
 
-	resourceModel "hta/internal/interactor/models/resources"
-	resourceService "hta/internal/interactor/service/resource"
+	resourceModel "gantt/internal/interactor/models/resources"
+	resourceService "gantt/internal/interactor/service/resource"
 
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
 )
 
 type Manager interface {

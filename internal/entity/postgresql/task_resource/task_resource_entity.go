@@ -3,8 +3,8 @@ package task_resource
 import (
 	"github.com/bytedance/sonic"
 
-	model "hta/internal/entity/postgresql/db/task_resources"
-	"hta/internal/interactor/pkg/util/log"
+	model "gantt/internal/entity/postgresql/db/task_resources"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"

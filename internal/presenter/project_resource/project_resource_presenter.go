@@ -4,12 +4,12 @@ import (
 	"net/http"
 	"strconv"
 
-	constant "hta/internal/interactor/constants"
+	constant "gantt/internal/interactor/constants"
 
-	"hta/internal/interactor/manager/project_resource"
-	projectResourceModel "hta/internal/interactor/models/project_resources"
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/manager/project_resource"
+	projectResourceModel "gantt/internal/interactor/models/project_resources"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

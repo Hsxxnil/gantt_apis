@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"hta/config"
-	"hta/internal/interactor/pkg/tunnel"
+	"gantt/config"
+	"gantt/internal/interactor/pkg/tunnel"
 )
 
 func main() {

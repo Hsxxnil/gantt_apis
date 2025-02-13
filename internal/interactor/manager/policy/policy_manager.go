@@ -1,10 +1,10 @@
 package policy
 
 import (
-	policyModel "hta/internal/interactor/models/policies"
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
-	"hta/internal/router/middleware"
+	policyModel "gantt/internal/interactor/models/policies"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
+	"gantt/internal/router/middleware"
 
 	"github.com/bytedance/sonic"
 )

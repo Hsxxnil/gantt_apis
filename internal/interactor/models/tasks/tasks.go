@@ -2,11 +2,11 @@ package tasks
 
 import (
 	"encoding/csv"
-	"hta/internal/interactor/models/event_marks"
-	"hta/internal/interactor/models/page"
-	"hta/internal/interactor/models/resources"
-	"hta/internal/interactor/models/s3_files"
-	"hta/internal/interactor/models/section"
+	"gantt/internal/interactor/models/event_marks"
+	"gantt/internal/interactor/models/page"
+	"gantt/internal/interactor/models/resources"
+	"gantt/internal/interactor/models/s3_files"
+	"gantt/internal/interactor/models/section"
 	"time"
 )
 

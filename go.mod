@@ -1,4 +1,4 @@
-module hta
+module gantt
 
 go 1.21.0
 

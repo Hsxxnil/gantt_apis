@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"time"
 
-	"hta/config"
+	"gantt/config"
 
-	dbConfig "hta/internal/interactor/pkg/connect/postgres"
-	"hta/internal/interactor/pkg/util"
-	"hta/internal/interactor/pkg/util/log"
+	dbConfig "gantt/internal/interactor/pkg/connect/postgres"
+	"gantt/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

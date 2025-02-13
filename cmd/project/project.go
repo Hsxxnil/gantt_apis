@@ -1,13 +1,13 @@
 package main
 
 import (
-	"hta/internal/interactor/pkg/connect"
-	"hta/internal/interactor/pkg/util/log"
-	"hta/internal/router"
-	"hta/internal/router/event_mark"
-	"hta/internal/router/project"
-	"hta/internal/router/project_resource"
-	"hta/internal/router/project_type"
+	"gantt/internal/interactor/pkg/connect"
+	"gantt/internal/interactor/pkg/util/log"
+	"gantt/internal/router"
+	"gantt/internal/router/event_mark"
+	"gantt/internal/router/project"
+	"gantt/internal/router/project_resource"
+	"gantt/internal/router/project_type"
 
 	"github.com/apex/gateway"
 )

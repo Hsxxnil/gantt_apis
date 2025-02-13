@@ -1,8 +1,8 @@
 package affiliations
 
 import (
-	"hta/internal/interactor/models/page"
-	"hta/internal/interactor/models/section"
+	"gantt/internal/interactor/models/page"
+	"gantt/internal/interactor/models/section"
 )
 
 // Create struct is used end_date create achieves

@@ -3,8 +3,8 @@ package user
 import (
 	"github.com/bytedance/sonic"
 
-	model "hta/internal/entity/postgresql/db/users"
-	"hta/internal/interactor/pkg/util/log"
+	model "gantt/internal/entity/postgresql/db/users"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"

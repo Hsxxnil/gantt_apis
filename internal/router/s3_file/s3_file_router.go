@@ -1,8 +1,8 @@
 package s3_file
 
 import (
-	present "hta/internal/presenter/s3_file"
-	"hta/internal/router/middleware"
+	present "gantt/internal/presenter/s3_file"
+	"gantt/internal/router/middleware"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

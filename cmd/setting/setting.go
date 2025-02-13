@@ -1,11 +1,11 @@
 package main
 
 import (
-	"hta/internal/interactor/pkg/connect"
-	"hta/internal/interactor/pkg/util/log"
-	"hta/internal/router"
-	"hta/internal/router/holiday"
-	"hta/internal/router/work_day"
+	"gantt/internal/interactor/pkg/connect"
+	"gantt/internal/interactor/pkg/util/log"
+	"gantt/internal/router"
+	"gantt/internal/router/holiday"
+	"gantt/internal/router/work_day"
 
 	"github.com/apex/gateway"
 )

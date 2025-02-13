@@ -1,9 +1,9 @@
 package task_resources
 
 import (
-	"hta/internal/entity/postgresql/db/project_resources"
-	"hta/internal/entity/postgresql/db/users"
-	"hta/internal/interactor/models/special"
+	"gantt/internal/entity/postgresql/db/project_resources"
+	"gantt/internal/entity/postgresql/db/users"
+	"gantt/internal/interactor/models/special"
 )
 
 // Table struct is task_resources database table struct

@@ -1,8 +1,8 @@
 package project_resource
 
 import (
-	present "hta/internal/presenter/project_resource"
-	"hta/internal/router/middleware"
+	present "gantt/internal/presenter/project_resource"
+	"gantt/internal/router/middleware"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

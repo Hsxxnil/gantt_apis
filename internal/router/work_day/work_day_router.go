@@ -1,8 +1,8 @@
 package work_day
 
 import (
-	present "hta/internal/presenter/work_day"
-	"hta/internal/router/middleware"
+	present "gantt/internal/presenter/work_day"
+	"gantt/internal/router/middleware"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

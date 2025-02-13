@@ -2,26 +2,26 @@ package department
 
 import (
 	"errors"
-	affiliationModel "hta/internal/interactor/models/affiliations"
-	resourceModel "hta/internal/interactor/models/resources"
-	roleModel "hta/internal/interactor/models/roles"
-	userModel "hta/internal/interactor/models/users"
-	"hta/internal/interactor/pkg/util"
-	affiliationService "hta/internal/interactor/service/affiliation"
-	resourceService "hta/internal/interactor/service/resource"
-	roleService "hta/internal/interactor/service/role"
-	userService "hta/internal/interactor/service/user"
+	affiliationModel "gantt/internal/interactor/models/affiliations"
+	resourceModel "gantt/internal/interactor/models/resources"
+	roleModel "gantt/internal/interactor/models/roles"
+	userModel "gantt/internal/interactor/models/users"
+	"gantt/internal/interactor/pkg/util"
+	affiliationService "gantt/internal/interactor/service/affiliation"
+	resourceService "gantt/internal/interactor/service/resource"
+	roleService "gantt/internal/interactor/service/role"
+	userService "gantt/internal/interactor/service/user"
 	"strings"
 
 	"github.com/bytedance/sonic"
 
 	"gorm.io/gorm"
 
-	departmentModel "hta/internal/interactor/models/departments"
-	departmentService "hta/internal/interactor/service/department"
+	departmentModel "gantt/internal/interactor/models/departments"
+	departmentService "gantt/internal/interactor/service/department"
 
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
 )
 
 type Manager interface {

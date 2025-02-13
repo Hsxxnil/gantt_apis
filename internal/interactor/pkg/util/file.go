@@ -2,8 +2,8 @@ package util
 
 import (
 	"encoding/base64"
-	s3pkg "hta/internal/interactor/pkg/aws/s3"
-	"hta/internal/interactor/pkg/util/log"
+	s3pkg "gantt/internal/interactor/pkg/aws/s3"
+	"gantt/internal/interactor/pkg/util/log"
 	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"

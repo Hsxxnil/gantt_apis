@@ -1,15 +1,15 @@
 package project_type
 
 import (
-	"hta/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util"
 	"net/http"
 
-	constant "hta/internal/interactor/constants"
+	constant "gantt/internal/interactor/constants"
 
-	"hta/internal/interactor/manager/project_type"
-	projectTypeModel "hta/internal/interactor/models/project_types"
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/manager/project_type"
+	projectTypeModel "gantt/internal/interactor/models/project_types"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

@@ -1,12 +1,12 @@
 package project_resource
 
 import (
-	db "hta/internal/entity/postgresql/db/project_resources"
-	store "hta/internal/entity/postgresql/project_resource"
-	model "hta/internal/interactor/models/project_resources"
-	"hta/internal/interactor/pkg/util"
-	"hta/internal/interactor/pkg/util/log"
-	"hta/internal/interactor/pkg/util/uuid"
+	db "gantt/internal/entity/postgresql/db/project_resources"
+	store "gantt/internal/entity/postgresql/project_resource"
+	model "gantt/internal/interactor/models/project_resources"
+	"gantt/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/uuid"
 
 	"github.com/bytedance/sonic"
 

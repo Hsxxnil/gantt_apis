@@ -1,8 +1,8 @@
 package task
 
 import (
-	model "hta/internal/entity/postgresql/db/tasks"
-	"hta/internal/interactor/pkg/util/log"
+	model "gantt/internal/entity/postgresql/db/tasks"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"github.com/bytedance/sonic"
 

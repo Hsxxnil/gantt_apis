@@ -2,8 +2,8 @@ package email
 
 import (
 	"crypto/tls"
-	"hta/config"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/config"
+	"gantt/internal/interactor/pkg/util/log"
 
 	gomail "gopkg.in/mail.v2"
 )

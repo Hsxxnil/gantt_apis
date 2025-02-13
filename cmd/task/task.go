@@ -1,11 +1,11 @@
 package main
 
 import (
-	"hta/internal/interactor/pkg/connect"
-	"hta/internal/interactor/pkg/util/log"
-	"hta/internal/router"
-	"hta/internal/router/s3_file"
-	"hta/internal/router/task"
+	"gantt/internal/interactor/pkg/connect"
+	"gantt/internal/interactor/pkg/util/log"
+	"gantt/internal/router"
+	"gantt/internal/router/s3_file"
+	"gantt/internal/router/task"
 
 	"github.com/apex/gateway"
 )

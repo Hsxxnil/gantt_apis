@@ -1,13 +1,13 @@
 package event_mark
 
 import (
-	"hta/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util"
 	"net/http"
 
-	"hta/internal/interactor/manager/event_mark"
-	eventMarkModel "hta/internal/interactor/models/event_marks"
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/manager/event_mark"
+	eventMarkModel "gantt/internal/interactor/models/event_marks"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

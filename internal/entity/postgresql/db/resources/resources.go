@@ -1,10 +1,10 @@
 package resources
 
 import (
-	"hta/internal/entity/postgresql/db/users"
-	model "hta/internal/interactor/models/resources"
-	"hta/internal/interactor/models/sort"
-	"hta/internal/interactor/models/special"
+	"gantt/internal/entity/postgresql/db/users"
+	model "gantt/internal/interactor/models/resources"
+	"gantt/internal/interactor/models/sort"
+	"gantt/internal/interactor/models/special"
 )
 
 // Table struct is resources database table struct

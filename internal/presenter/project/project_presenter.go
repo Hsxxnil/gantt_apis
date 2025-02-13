@@ -1,16 +1,16 @@
 package project
 
 import (
-	"hta/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util"
 	"net/http"
 	"strconv"
 
-	constant "hta/internal/interactor/constants"
+	constant "gantt/internal/interactor/constants"
 
-	"hta/internal/interactor/manager/project"
-	projectModel "hta/internal/interactor/models/projects"
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/manager/project"
+	projectModel "gantt/internal/interactor/models/projects"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"hta/config"
-	dbConfig "hta/internal/interactor/pkg/connect/postgres"
-	"hta/internal/interactor/pkg/util"
+	"gantt/config"
+	dbConfig "gantt/internal/interactor/pkg/connect/postgres"
+	"gantt/internal/interactor/pkg/util"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"

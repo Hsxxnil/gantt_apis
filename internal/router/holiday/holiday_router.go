@@ -1,8 +1,8 @@
 package holiday
 
 import (
-	present "hta/internal/presenter/holiday"
-	"hta/internal/router/middleware"
+	present "gantt/internal/presenter/holiday"
+	"gantt/internal/router/middleware"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

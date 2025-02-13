@@ -1,7 +1,7 @@
 package util
 
 import (
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/log"
 	"math"
 	"math/rand"
 	"time"

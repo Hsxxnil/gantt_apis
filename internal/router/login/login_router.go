@@ -1,7 +1,7 @@
 package login
 
 import (
-	present "hta/internal/presenter/login"
+	present "gantt/internal/presenter/login"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

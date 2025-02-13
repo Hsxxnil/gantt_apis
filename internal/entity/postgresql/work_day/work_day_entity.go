@@ -3,8 +3,8 @@ package work_day
 import (
 	"github.com/bytedance/sonic"
 
-	model "hta/internal/entity/postgresql/db/work_days"
-	"hta/internal/interactor/pkg/util/log"
+	model "gantt/internal/entity/postgresql/db/work_days"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"

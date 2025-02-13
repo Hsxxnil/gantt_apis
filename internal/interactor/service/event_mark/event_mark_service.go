@@ -1,12 +1,12 @@
 package event_mark
 
 import (
-	db "hta/internal/entity/postgresql/db/event_marks"
-	store "hta/internal/entity/postgresql/event_mark"
-	model "hta/internal/interactor/models/event_marks"
-	"hta/internal/interactor/pkg/util"
-	"hta/internal/interactor/pkg/util/log"
-	"hta/internal/interactor/pkg/util/uuid"
+	db "gantt/internal/entity/postgresql/db/event_marks"
+	store "gantt/internal/entity/postgresql/event_mark"
+	model "gantt/internal/interactor/models/event_marks"
+	"gantt/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/uuid"
 
 	"github.com/bytedance/sonic"
 

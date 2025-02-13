@@ -1,10 +1,10 @@
 package projects
 
 import (
-	"hta/internal/entity/postgresql/db/project_types"
-	"hta/internal/entity/postgresql/db/users"
-	model "hta/internal/interactor/models/projects"
-	"hta/internal/interactor/models/special"
+	"gantt/internal/entity/postgresql/db/project_types"
+	"gantt/internal/entity/postgresql/db/users"
+	model "gantt/internal/interactor/models/projects"
+	"gantt/internal/interactor/models/special"
 	"time"
 )
 

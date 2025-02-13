@@ -1,8 +1,8 @@
 package policy
 
 import (
-	present "hta/internal/presenter/policy"
-	"hta/internal/router/middleware"
+	present "gantt/internal/presenter/policy"
+	"gantt/internal/router/middleware"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

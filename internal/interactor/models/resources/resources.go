@@ -2,9 +2,9 @@ package resources
 
 import (
 	"encoding/csv"
-	"hta/internal/interactor/models/page"
-	"hta/internal/interactor/models/section"
-	"hta/internal/interactor/models/sort"
+	"gantt/internal/interactor/models/page"
+	"gantt/internal/interactor/models/section"
+	"gantt/internal/interactor/models/sort"
 )
 
 // Create struct is used to create achieves

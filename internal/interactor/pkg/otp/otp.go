@@ -2,7 +2,7 @@ package otp
 
 import (
 	"errors"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/log"
 	"time"
 
 	"github.com/pquerna/otp"

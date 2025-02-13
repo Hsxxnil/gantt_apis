@@ -1,8 +1,8 @@
 package project_type
 
 import (
-	present "hta/internal/presenter/project_type"
-	"hta/internal/router/middleware"
+	present "gantt/internal/presenter/project_type"
+	"gantt/internal/router/middleware"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

@@ -3,17 +3,17 @@ package task
 import (
 	"bytes"
 	"encoding/csv"
-	"hta/internal/interactor/pkg/util"
-	"hta/internal/interactor/pkg/util/hash"
+	"gantt/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util/hash"
 	"net/http"
 
 	"golang.org/x/text/encoding/unicode"
 	"golang.org/x/text/transform"
 
-	"hta/internal/interactor/manager/task"
-	taskModel "hta/internal/interactor/models/tasks"
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/manager/task"
+	taskModel "gantt/internal/interactor/models/tasks"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

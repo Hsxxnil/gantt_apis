@@ -1,12 +1,12 @@
 package policy
 
 import (
-	"hta/internal/interactor/manager/policy"
-	policyModel "hta/internal/interactor/models/policies"
+	"gantt/internal/interactor/manager/policy"
+	policyModel "gantt/internal/interactor/models/policies"
 	"net/http"
 
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"github.com/gin-gonic/gin"
 	_ "gorm.io/gorm"

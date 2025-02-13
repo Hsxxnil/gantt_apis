@@ -1,8 +1,8 @@
 package event_mark
 
 import (
-	present "hta/internal/presenter/event_mark"
-	"hta/internal/router/middleware"
+	present "gantt/internal/presenter/event_mark"
+	"gantt/internal/router/middleware"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

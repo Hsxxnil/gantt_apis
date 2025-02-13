@@ -1,8 +1,8 @@
 package affiliations
 
 import (
-	"hta/internal/entity/postgresql/db/users"
-	"hta/internal/interactor/models/special"
+	"gantt/internal/entity/postgresql/db/users"
+	"gantt/internal/interactor/models/special"
 )
 
 // Table struct is affiliations database table struct

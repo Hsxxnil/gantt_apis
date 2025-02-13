@@ -5,11 +5,11 @@ import (
 
 	"gorm.io/gorm"
 
-	eventMarkModel "hta/internal/interactor/models/event_marks"
-	eventMarkService "hta/internal/interactor/service/event_mark"
+	eventMarkModel "gantt/internal/interactor/models/event_marks"
+	eventMarkService "gantt/internal/interactor/service/event_mark"
 
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
 )
 
 type Manager interface {

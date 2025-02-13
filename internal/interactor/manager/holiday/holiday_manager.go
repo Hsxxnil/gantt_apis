@@ -2,17 +2,17 @@ package holiday
 
 import (
 	"errors"
-	"hta/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util"
 
 	"github.com/bytedance/sonic"
 
 	"gorm.io/gorm"
 
-	holidayModel "hta/internal/interactor/models/holidays"
-	holidayService "hta/internal/interactor/service/holiday"
+	holidayModel "gantt/internal/interactor/models/holidays"
+	holidayService "gantt/internal/interactor/service/holiday"
 
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
 )
 
 type Manager interface {

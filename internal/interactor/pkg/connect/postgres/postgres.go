@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"time"
 
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

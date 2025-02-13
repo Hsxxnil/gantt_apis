@@ -1,6 +1,6 @@
 package s3_files
 
-import "hta/internal/interactor/models/page"
+import "gantt/internal/interactor/models/page"
 
 // Create struct is used to create achieves
 type Create struct {

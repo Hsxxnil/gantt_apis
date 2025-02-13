@@ -3,20 +3,20 @@ package resource
 import (
 	"bytes"
 	"encoding/csv"
-	"hta/internal/interactor/pkg/util"
-	"hta/internal/interactor/pkg/util/hash"
+	"gantt/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util/hash"
 	"net/http"
 	"strconv"
 
 	"golang.org/x/text/encoding/unicode"
 	"golang.org/x/text/transform"
 
-	constant "hta/internal/interactor/constants"
+	constant "gantt/internal/interactor/constants"
 
-	"hta/internal/interactor/manager/resource"
-	resourceModel "hta/internal/interactor/models/resources"
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/manager/resource"
+	resourceModel "gantt/internal/interactor/models/resources"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
