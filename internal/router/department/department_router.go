@@ -1,8 +1,8 @@
 package department
 
 import (
-	present "hta/internal/presenter/department"
-	"hta/internal/router/middleware"
+	present "gantt/internal/presenter/department"
+	"gantt/internal/router/middleware"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

@@ -3,8 +3,8 @@ package holiday
 import (
 	"github.com/bytedance/sonic"
 
-	model "hta/internal/entity/postgresql/db/holidays"
-	"hta/internal/interactor/pkg/util/log"
+	model "gantt/internal/entity/postgresql/db/holidays"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"

@@ -1,8 +1,8 @@
 package user
 
 import (
-	present "hta/internal/presenter/user"
-	"hta/internal/router/middleware"
+	present "gantt/internal/presenter/user"
+	"gantt/internal/router/middleware"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

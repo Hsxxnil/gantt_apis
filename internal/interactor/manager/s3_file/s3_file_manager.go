@@ -2,16 +2,16 @@ package s3_file
 
 import (
 	"errors"
-	"hta/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util"
 	"path/filepath"
 
 	"gorm.io/gorm"
 
-	s3FileModel "hta/internal/interactor/models/s3_files"
-	s3FileService "hta/internal/interactor/service/s3_file"
+	s3FileModel "gantt/internal/interactor/models/s3_files"
+	s3FileService "gantt/internal/interactor/service/s3_file"
 
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
 )
 
 type Manager interface {

@@ -3,28 +3,28 @@ package user
 import (
 	"errors"
 	"fmt"
-	affiliationModel "hta/internal/interactor/models/affiliations"
-	departmentModel "hta/internal/interactor/models/departments"
-	jwxModel "hta/internal/interactor/models/jwx"
-	resourceModel "hta/internal/interactor/models/resources"
-	"hta/internal/interactor/pkg/email"
-	"hta/internal/interactor/pkg/otp"
-	"hta/internal/interactor/pkg/util"
-	affiliationService "hta/internal/interactor/service/affiliation"
-	departmentService "hta/internal/interactor/service/department"
-	jwxService "hta/internal/interactor/service/jwx"
-	resourceService "hta/internal/interactor/service/resource"
+	affiliationModel "gantt/internal/interactor/models/affiliations"
+	departmentModel "gantt/internal/interactor/models/departments"
+	jwxModel "gantt/internal/interactor/models/jwx"
+	resourceModel "gantt/internal/interactor/models/resources"
+	"gantt/internal/interactor/pkg/email"
+	"gantt/internal/interactor/pkg/otp"
+	"gantt/internal/interactor/pkg/util"
+	affiliationService "gantt/internal/interactor/service/affiliation"
+	departmentService "gantt/internal/interactor/service/department"
+	jwxService "gantt/internal/interactor/service/jwx"
+	resourceService "gantt/internal/interactor/service/resource"
 
 	"github.com/bytedance/sonic"
 	"github.com/ggwhite/go-masker"
 
-	userModel "hta/internal/interactor/models/users"
-	userService "hta/internal/interactor/service/user"
+	userModel "gantt/internal/interactor/models/users"
+	userService "gantt/internal/interactor/service/user"
 
 	"gorm.io/gorm"
 
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
 )
 
 type Manager interface {

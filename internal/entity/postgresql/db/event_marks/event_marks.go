@@ -1,8 +1,8 @@
 package event_marks
 
 import (
-	"hta/internal/entity/postgresql/db/users"
-	"hta/internal/interactor/models/special"
+	"gantt/internal/entity/postgresql/db/users"
+	"gantt/internal/interactor/models/special"
 	"time"
 )
 

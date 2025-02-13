@@ -1,12 +1,12 @@
 package affiliation
 
 import (
-	store "hta/internal/entity/postgresql/affiliation"
-	db "hta/internal/entity/postgresql/db/affiliations"
-	model "hta/internal/interactor/models/affiliations"
-	"hta/internal/interactor/pkg/util"
-	"hta/internal/interactor/pkg/util/log"
-	"hta/internal/interactor/pkg/util/uuid"
+	store "gantt/internal/entity/postgresql/affiliation"
+	db "gantt/internal/entity/postgresql/db/affiliations"
+	model "gantt/internal/interactor/models/affiliations"
+	"gantt/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/uuid"
 
 	"github.com/bytedance/sonic"
 

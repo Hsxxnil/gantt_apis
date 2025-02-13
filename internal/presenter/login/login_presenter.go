@@ -3,11 +3,11 @@ package login
 import (
 	"net/http"
 
-	"hta/internal/interactor/manager/login"
-	jwxModel "hta/internal/interactor/models/jwx"
-	loginModel "hta/internal/interactor/models/logins"
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/manager/login"
+	jwxModel "gantt/internal/interactor/models/jwx"
+	loginModel "gantt/internal/interactor/models/logins"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

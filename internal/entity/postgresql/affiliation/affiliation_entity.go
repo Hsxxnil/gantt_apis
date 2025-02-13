@@ -1,8 +1,8 @@
 package affiliation
 
 import (
-	model "hta/internal/entity/postgresql/db/affiliations"
-	"hta/internal/interactor/pkg/util/log"
+	model "gantt/internal/entity/postgresql/db/affiliations"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"github.com/bytedance/sonic"
 

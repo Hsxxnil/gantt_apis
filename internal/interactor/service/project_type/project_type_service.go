@@ -1,12 +1,12 @@
 package project_type
 
 import (
-	db "hta/internal/entity/postgresql/db/project_types"
-	store "hta/internal/entity/postgresql/project_type"
-	model "hta/internal/interactor/models/project_types"
-	"hta/internal/interactor/pkg/util"
-	"hta/internal/interactor/pkg/util/log"
-	"hta/internal/interactor/pkg/util/uuid"
+	db "gantt/internal/entity/postgresql/db/project_types"
+	store "gantt/internal/entity/postgresql/project_type"
+	model "gantt/internal/interactor/models/project_types"
+	"gantt/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/uuid"
 
 	"github.com/bytedance/sonic"
 	"gorm.io/gorm"

@@ -1,8 +1,8 @@
 package s3_file
 
 import (
-	model "hta/internal/entity/postgresql/db/s3_files"
-	"hta/internal/interactor/pkg/util/log"
+	model "gantt/internal/entity/postgresql/db/s3_files"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"github.com/bytedance/sonic"
 

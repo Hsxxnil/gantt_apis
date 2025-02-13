@@ -1,14 +1,14 @@
 package main
 
 import (
-	"hta/internal/interactor/pkg/connect"
-	"hta/internal/interactor/pkg/util/log"
-	"hta/internal/router"
-	"hta/internal/router/department"
-	"hta/internal/router/login"
-	"hta/internal/router/policy"
-	"hta/internal/router/role"
-	"hta/internal/router/user"
+	"gantt/internal/interactor/pkg/connect"
+	"gantt/internal/interactor/pkg/util/log"
+	"gantt/internal/router"
+	"gantt/internal/router/department"
+	"gantt/internal/router/login"
+	"gantt/internal/router/policy"
+	"gantt/internal/router/role"
+	"gantt/internal/router/user"
 
 	"github.com/apex/gateway"
 )

@@ -1,8 +1,8 @@
 package project
 
 import (
-	model "hta/internal/entity/postgresql/db/projects"
-	"hta/internal/interactor/pkg/util/log"
+	model "gantt/internal/entity/postgresql/db/projects"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"github.com/bytedance/sonic"
 

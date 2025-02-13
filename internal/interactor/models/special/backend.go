@@ -3,8 +3,8 @@ package special
 import (
 	"time"
 
-	"hta/internal/interactor/models/page"
-	"hta/internal/interactor/models/section"
+	"gantt/internal/interactor/models/page"
+	"gantt/internal/interactor/models/section"
 
 	"gorm.io/gorm"
 )

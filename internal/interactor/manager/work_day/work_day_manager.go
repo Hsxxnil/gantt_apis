@@ -2,17 +2,17 @@ package work_day
 
 import (
 	"errors"
-	"hta/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util"
 
 	"github.com/bytedance/sonic"
 
 	"gorm.io/gorm"
 
-	workDayModel "hta/internal/interactor/models/work_days"
-	workDayService "hta/internal/interactor/service/work_day"
+	workDayModel "gantt/internal/interactor/models/work_days"
+	workDayService "gantt/internal/interactor/service/work_day"
 
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
 )
 
 type Manager interface {

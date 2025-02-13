@@ -1,12 +1,12 @@
 package holiday
 
 import (
-	db "hta/internal/entity/postgresql/db/holidays"
-	store "hta/internal/entity/postgresql/holiday"
-	model "hta/internal/interactor/models/holidays"
-	"hta/internal/interactor/pkg/util"
-	"hta/internal/interactor/pkg/util/log"
-	"hta/internal/interactor/pkg/util/uuid"
+	db "gantt/internal/entity/postgresql/db/holidays"
+	store "gantt/internal/entity/postgresql/holiday"
+	model "gantt/internal/interactor/models/holidays"
+	"gantt/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/uuid"
 
 	"github.com/bytedance/sonic"
 

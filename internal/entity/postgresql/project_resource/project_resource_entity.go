@@ -1,8 +1,8 @@
 package project_resource
 
 import (
-	model "hta/internal/entity/postgresql/db/project_resources"
-	"hta/internal/interactor/pkg/util/log"
+	model "gantt/internal/entity/postgresql/db/project_resources"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"github.com/bytedance/sonic"
 

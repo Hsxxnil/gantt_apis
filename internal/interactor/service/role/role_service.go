@@ -1,12 +1,12 @@
 package role
 
 import (
-	db "hta/internal/entity/postgresql/db/roles"
-	store "hta/internal/entity/postgresql/role"
-	model "hta/internal/interactor/models/roles"
-	"hta/internal/interactor/pkg/util"
-	"hta/internal/interactor/pkg/util/log"
-	"hta/internal/interactor/pkg/util/uuid"
+	db "gantt/internal/entity/postgresql/db/roles"
+	store "gantt/internal/entity/postgresql/role"
+	model "gantt/internal/interactor/models/roles"
+	"gantt/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/uuid"
 
 	"github.com/bytedance/sonic"
 	"gorm.io/gorm"

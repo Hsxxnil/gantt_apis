@@ -1,12 +1,12 @@
 package department
 
 import (
-	db "hta/internal/entity/postgresql/db/departments"
-	store "hta/internal/entity/postgresql/department"
-	model "hta/internal/interactor/models/departments"
-	"hta/internal/interactor/pkg/util"
-	"hta/internal/interactor/pkg/util/log"
-	"hta/internal/interactor/pkg/util/uuid"
+	db "gantt/internal/entity/postgresql/db/departments"
+	store "gantt/internal/entity/postgresql/department"
+	model "gantt/internal/interactor/models/departments"
+	"gantt/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/uuid"
 
 	"github.com/bytedance/sonic"
 

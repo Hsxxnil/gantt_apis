@@ -1,14 +1,14 @@
 package middleware
 
 import (
-	policyModel "hta/internal/interactor/models/policies"
-	"hta/internal/interactor/pkg/connect"
+	policyModel "gantt/internal/interactor/models/policies"
+	"gantt/internal/interactor/pkg/connect"
 	"net/http"
 
 	"github.com/casbin/casbin/v2"
 
-	_ "hta/internal/interactor/pkg/connect"
-	"hta/internal/interactor/pkg/util/log"
+	_ "gantt/internal/interactor/pkg/connect"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"github.com/casbin/casbin/v2/model"
 

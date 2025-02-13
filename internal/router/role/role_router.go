@@ -1,8 +1,8 @@
 package role
 
 import (
-	present "hta/internal/presenter/role"
-	"hta/internal/router/middleware"
+	present "gantt/internal/presenter/role"
+	"gantt/internal/router/middleware"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

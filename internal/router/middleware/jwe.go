@@ -3,10 +3,10 @@ package middleware
 import (
 	"net/http"
 
-	"hta/config"
-	"hta/internal/interactor/pkg/jwx"
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/config"
+	"gantt/internal/interactor/pkg/jwx"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"github.com/gin-gonic/gin"
 )

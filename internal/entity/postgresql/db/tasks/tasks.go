@@ -1,12 +1,12 @@
 package tasks
 
 import (
-	"hta/internal/entity/postgresql/db/projects"
-	"hta/internal/entity/postgresql/db/s3_files"
-	"hta/internal/entity/postgresql/db/task_resources"
-	"hta/internal/entity/postgresql/db/users"
-	"hta/internal/interactor/models/special"
-	model "hta/internal/interactor/models/tasks"
+	"gantt/internal/entity/postgresql/db/projects"
+	"gantt/internal/entity/postgresql/db/s3_files"
+	"gantt/internal/entity/postgresql/db/task_resources"
+	"gantt/internal/entity/postgresql/db/users"
+	"gantt/internal/interactor/models/special"
+	model "gantt/internal/interactor/models/tasks"
 	"time"
 )
 

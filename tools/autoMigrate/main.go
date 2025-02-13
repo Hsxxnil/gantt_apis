@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	//accessLogDB "hta/internal/entity/postgresql/db/access_logs"
-	//membersPhoneDB "hta/internal/entity/postgresql/db/members_phone"
+	//accessLogDB "gantt/internal/entity/postgresql/db/access_logs"
+	//membersPhoneDB "gantt/internal/entity/postgresql/db/members_phone"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"

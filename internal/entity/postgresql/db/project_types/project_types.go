@@ -1,7 +1,7 @@
 package project_types
 
 import (
-	"hta/internal/interactor/models/special"
+	"gantt/internal/interactor/models/special"
 )
 
 // Table struct is project_types database table struct

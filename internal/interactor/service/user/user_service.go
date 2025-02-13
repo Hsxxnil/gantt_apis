@@ -1,17 +1,17 @@
 package user
 
 import (
-	db "hta/internal/entity/postgresql/db/users"
-	store "hta/internal/entity/postgresql/user"
-	"hta/internal/interactor/pkg/util/encryption"
-	"hta/internal/interactor/pkg/util/hash"
+	db "gantt/internal/entity/postgresql/db/users"
+	store "gantt/internal/entity/postgresql/user"
+	"gantt/internal/interactor/pkg/util/encryption"
+	"gantt/internal/interactor/pkg/util/hash"
 
 	"github.com/bytedance/sonic"
 
-	model "hta/internal/interactor/models/users"
-	"hta/internal/interactor/pkg/util"
-	"hta/internal/interactor/pkg/util/log"
-	"hta/internal/interactor/pkg/util/uuid"
+	model "gantt/internal/interactor/models/users"
+	"gantt/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/uuid"
 
 	"gorm.io/gorm"
 )

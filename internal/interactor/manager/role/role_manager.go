@@ -2,17 +2,17 @@ package role
 
 import (
 	"errors"
-	"hta/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util"
 
 	"github.com/bytedance/sonic"
 
-	roleModel "hta/internal/interactor/models/roles"
-	roleService "hta/internal/interactor/service/role"
+	roleModel "gantt/internal/interactor/models/roles"
+	roleService "gantt/internal/interactor/service/role"
 
 	"gorm.io/gorm"
 
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
 )
 
 type Manager interface {

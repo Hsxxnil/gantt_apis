@@ -3,14 +3,14 @@ package user
 import (
 	"net/http"
 
-	"hta/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util"
 
-	constant "hta/internal/interactor/constants"
+	constant "gantt/internal/interactor/constants"
 
-	"hta/internal/interactor/manager/user"
-	userModel "hta/internal/interactor/models/users"
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/manager/user"
+	userModel "gantt/internal/interactor/models/users"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

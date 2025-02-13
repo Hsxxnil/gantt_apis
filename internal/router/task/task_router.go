@@ -1,8 +1,8 @@
 package task
 
 import (
-	present "hta/internal/presenter/task"
-	"hta/internal/router/middleware"
+	present "gantt/internal/presenter/task"
+	"gantt/internal/router/middleware"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

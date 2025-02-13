@@ -3,10 +3,10 @@ package s3_file
 import (
 	"net/http"
 
-	"hta/internal/interactor/manager/s3_file"
-	s3FileModel "hta/internal/interactor/models/s3_files"
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/manager/s3_file"
+	s3FileModel "gantt/internal/interactor/models/s3_files"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

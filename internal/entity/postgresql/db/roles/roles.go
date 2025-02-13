@@ -1,7 +1,7 @@
 package roles
 
 import (
-	"hta/internal/interactor/models/special"
+	"gantt/internal/interactor/models/special"
 )
 
 // Table struct is roles database table struct

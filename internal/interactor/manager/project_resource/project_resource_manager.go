@@ -2,17 +2,17 @@ package project_resource
 
 import (
 	"errors"
-	"hta/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util"
 
 	"github.com/bytedance/sonic"
 
 	"gorm.io/gorm"
 
-	projectResourceModel "hta/internal/interactor/models/project_resources"
-	projectResourceService "hta/internal/interactor/service/project_resource"
+	projectResourceModel "gantt/internal/interactor/models/project_resources"
+	projectResourceService "gantt/internal/interactor/service/project_resource"
 
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
 )
 
 type Manager interface {

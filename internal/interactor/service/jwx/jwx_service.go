@@ -3,11 +3,11 @@ package jwx
 import (
 	"time"
 
-	"hta/config"
-	model "hta/internal/interactor/models/jwx"
-	"hta/internal/interactor/pkg/jwx"
-	"hta/internal/interactor/pkg/util"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/config"
+	model "gantt/internal/interactor/models/jwx"
+	"gantt/internal/interactor/pkg/jwx"
+	"gantt/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util/log"
 )
 
 type Service interface {

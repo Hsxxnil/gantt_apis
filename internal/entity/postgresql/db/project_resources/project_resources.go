@@ -1,10 +1,10 @@
 package project_resources
 
 import (
-	"hta/internal/entity/postgresql/db/resources"
-	"hta/internal/entity/postgresql/db/users"
-	model "hta/internal/interactor/models/project_resources"
-	"hta/internal/interactor/models/special"
+	"gantt/internal/entity/postgresql/db/resources"
+	"gantt/internal/entity/postgresql/db/users"
+	model "gantt/internal/interactor/models/project_resources"
+	"gantt/internal/interactor/models/special"
 )
 
 // Table struct is project_resources database table struct

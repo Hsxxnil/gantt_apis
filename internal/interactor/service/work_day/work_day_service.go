@@ -1,12 +1,12 @@
 package work_day
 
 import (
-	db "hta/internal/entity/postgresql/db/work_days"
-	store "hta/internal/entity/postgresql/work_day"
-	model "hta/internal/interactor/models/work_days"
-	"hta/internal/interactor/pkg/util"
-	"hta/internal/interactor/pkg/util/log"
-	"hta/internal/interactor/pkg/util/uuid"
+	db "gantt/internal/entity/postgresql/db/work_days"
+	store "gantt/internal/entity/postgresql/work_day"
+	model "gantt/internal/interactor/models/work_days"
+	"gantt/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/uuid"
 
 	"github.com/bytedance/sonic"
 

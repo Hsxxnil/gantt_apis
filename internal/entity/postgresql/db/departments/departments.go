@@ -1,9 +1,9 @@
 package departments
 
 import (
-	"hta/internal/entity/postgresql/db/affiliations"
-	"hta/internal/entity/postgresql/db/users"
-	"hta/internal/interactor/models/special"
+	"gantt/internal/entity/postgresql/db/affiliations"
+	"gantt/internal/entity/postgresql/db/users"
+	"gantt/internal/interactor/models/special"
 )
 
 // Table struct is departments database table struct

@@ -2,17 +2,17 @@ package project_type
 
 import (
 	"errors"
-	"hta/internal/interactor/pkg/util"
+	"gantt/internal/interactor/pkg/util"
 
 	"github.com/bytedance/sonic"
 
 	"gorm.io/gorm"
 
-	projectTypeModel "hta/internal/interactor/models/project_types"
-	projectTypeService "hta/internal/interactor/service/project_type"
+	projectTypeModel "gantt/internal/interactor/models/project_types"
+	projectTypeService "gantt/internal/interactor/service/project_type"
 
-	"hta/internal/interactor/pkg/util/code"
-	"hta/internal/interactor/pkg/util/log"
+	"gantt/internal/interactor/pkg/util/code"
+	"gantt/internal/interactor/pkg/util/log"
 )
 
 type Manager interface {

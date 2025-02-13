@@ -1,9 +1,9 @@
 package users
 
 import (
-	"hta/internal/entity/postgresql/db/roles"
-	"hta/internal/interactor/models/special"
-	model "hta/internal/interactor/models/users"
+	"gantt/internal/entity/postgresql/db/roles"
+	"gantt/internal/interactor/models/special"
+	model "gantt/internal/interactor/models/users"
 )
 
 // Table struct is users database table struct

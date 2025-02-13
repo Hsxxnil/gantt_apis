@@ -3,8 +3,8 @@ package event_mark
 import (
 	"github.com/bytedance/sonic"
 
-	model "hta/internal/entity/postgresql/db/event_marks"
-	"hta/internal/interactor/pkg/util/log"
+	model "gantt/internal/entity/postgresql/db/event_marks"
+	"gantt/internal/interactor/pkg/util/log"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
