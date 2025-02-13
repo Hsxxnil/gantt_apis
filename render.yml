@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: gantt_apis
+    runtime: go
+    secretFiles:
+      - name: config.go
+        envVarName: CONFIG_GO_CONTENT
+        path: config/config.go
