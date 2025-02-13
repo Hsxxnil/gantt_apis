@@ -34,4 +34,5 @@ create index idx_roles_updated_by
     on roles using hash (updated_by);
 
 insert into roles(id, display_name, name)
-values ('d56fc184-9441-4396-be6c-d48580650171', '管理員', 'admin')
+values ('d56fc184-9441-4396-be6c-d48580650171', '管理員', 'admin'),
+       ('9c0667db-9bda-4ab8-91ea-e412667ac9ec', '使用者', 'user');
