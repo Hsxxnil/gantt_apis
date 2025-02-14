@@ -18,8 +18,9 @@ import (
 	"gantt/internal/router/task"
 	"gantt/internal/router/user"
 	"gantt/internal/router/work_day"
+	"net/http"
 	"os"
-	"github.com/apex/gateway"
+	// "github.com/apex/gateway"
 )
 
 func main() {
@@ -50,5 +51,5 @@ func main() {
 		port = "8080"
 	}
 
-	log.Fatal(gateway.ListenAndServe(":"+port, engine))
+	log.Fatal(http.ListenAndServe("0.0.0.0:"+port, engine))
 }
