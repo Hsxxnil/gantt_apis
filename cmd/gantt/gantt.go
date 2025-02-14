@@ -18,7 +18,7 @@ import (
 	"gantt/internal/router/task"
 	"gantt/internal/router/user"
 	"gantt/internal/router/work_day"
-
+	"os"
 	"github.com/apex/gateway"
 )
 
@@ -45,5 +45,10 @@ func main() {
 	engine = department.GetRouter(engine, db)
 	engine = s3_file.GetRouter(engine, db)
 
-	log.Fatal(gateway.ListenAndServe(":8080", engine))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	log.Fatal(gateway.ListenAndServe(":"+port, engine))
 }
