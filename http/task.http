@@ -1,5 +1,5 @@
 ### login
-POST {{host}}/hta-gantt/v1.0/login
+POST {{host}}/gantt/v1.0/login
 Content-Type: application/json
 
 {
@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ### verify
 # @name verify
-POST {{host}}/hta-gantt/v1.0/verify
+POST {{host}}/gantt/v1.0/verify
 Content-Type: application/json
 
 {
@@ -21,7 +21,7 @@ Content-Type: application/json
 @accessToken = {{verify.response.body.body.access_token}}
 
 ### GetByProjectUUIDList
-POST {{host}}/hta-gantt/v1.0/tasks/get-by-projects
+POST {{host}}/gantt/v1.0/tasks/get-by-projects
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -35,17 +35,17 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### GetByListNoPaginationNoSub
-GET {{host}}/hta-gantt/v1.0/tasks/no-pagination/no-sub-filter
+GET {{host}}/gantt/v1.0/tasks/no-pagination/no-sub-filter
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### GetBySingle
-GET {{host}}/hta-gantt/v1.0/tasks/ce9180ec-f24f-43fa-b60f-2578d35d725d
+GET {{host}}/gantt/v1.0/tasks/ce9180ec-f24f-43fa-b60f-2578d35d725d
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### Create
-POST {{host}}/hta-gantt/v1.0/tasks
+POST {{host}}/gantt/v1.0/tasks
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -59,14 +59,14 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### CreateAll
-POST {{host}}/hta-gantt/v1.0/tasks/create-all
+POST {{host}}/gantt/v1.0/tasks/create-all
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 []
 
 ### Update
-PATCH {{host}}/hta-gantt/v1.0/tasks/40de0b9f-db01-4c70-8878-d1ff8932bbbe
+PATCH {{host}}/gantt/v1.0/tasks/40de0b9f-db01-4c70-8878-d1ff8932bbbe
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -75,14 +75,14 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### UpdateAll
-PATCH {{host}}/hta-gantt/v1.0/tasks/update-all
+PATCH {{host}}/gantt/v1.0/tasks/update-all
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 []
 
 ### Delete
-DELETE {{host}}/hta-gantt/v1.0/tasks
+DELETE {{host}}/gantt/v1.0/tasks
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -98,7 +98,7 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### Import
-POST {{host}}/hta-gantt/v1.0/tasks/import
+POST {{host}}/gantt/v1.0/tasks/import
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 

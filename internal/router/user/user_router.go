@@ -10,7 +10,7 @@ import (
 
 func GetRouter(router *gin.Engine, db *gorm.DB) *gin.Engine {
 	control := present.Init(db)
-	v10 := router.Group("hta-gantt").Group("v1.0").Group("users")
+	v10 := router.Group("gantt").Group("v1.0").Group("users")
 	{
 		v10.POST("list", middleware.Verify(), middleware.CheckPermission(), control.GetByList)
 		v10.POST("check-duplicate", control.Duplicate)

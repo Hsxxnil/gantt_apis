@@ -1,5 +1,5 @@
 ### login
-POST {{host}}/hta-gantt/v1.0/login
+POST {{host}}/gantt/v1.0/login
 Content-Type: application/json
 
 {
@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ### verify
 # @name verify
-POST {{host}}/hta-gantt/v1.0/verify
+POST {{host}}/gantt/v1.0/verify
 Content-Type: application/json
 
 {
@@ -21,22 +21,22 @@ Content-Type: application/json
 @accessToken = {{verify.response.body.body.access_token}}
 
 ### GetByList
-GET {{host}}/hta-gantt/v1.0/roles?page=1&limit=20
+GET {{host}}/gantt/v1.0/roles?page=1&limit=20
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### GetByListNoPagination
-GET {{host}}/hta-gantt/v1.0/roles/no-pagination
+GET {{host}}/gantt/v1.0/roles/no-pagination
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### GetBySingle
-GET {{host}}/hta-gantt/v1.0/roles/9787e109-5724-4654-b8a9-324fed5326fe
+GET {{host}}/gantt/v1.0/roles/9787e109-5724-4654-b8a9-324fed5326fe
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### Create
-POST {{host}}/hta-gantt/v1.0/roles
+POST {{host}}/gantt/v1.0/roles
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -46,7 +46,7 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### Update
-PATCH {{host}}/hta-gantt/v1.0/roles/0c1668c9-ecd7-442c-ab94-ecefa377eec9
+PATCH {{host}}/gantt/v1.0/roles/0c1668c9-ecd7-442c-ab94-ecefa377eec9
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -55,6 +55,6 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### Delete
-DELETE {{host}}/hta-gantt/v1.0/roles/5ed8fb9c-dc87-49a6-b4f9-4d54b01ac04a
+DELETE {{host}}/gantt/v1.0/roles/5ed8fb9c-dc87-49a6-b4f9-4d54b01ac04a
 Accept: application/json
 Authorization: Bearer {{accessToken}}

@@ -19,9 +19,9 @@ import (
 	"gantt/internal/router/work_day"
 	"net/http"
 
+	_ "gantt/api"
 	"gantt/internal/interactor/pkg/util/log"
 	"gantt/internal/router"
-	_ "gantt/api"
 
 	//"gantt/internal/router/permission"
 
@@ -31,9 +31,9 @@ import (
 
 // main is run all api form localhost port 8080
 
-//	@title			HTA GANTT APIs
+//	@title			GANTT APIs
 //	@version		0.1
-//	@description	HTA2 GANTT APIs
+//	@description	GANTT APIs
 //	@termsOfService
 
 //	@contact.name
@@ -43,8 +43,8 @@ import (
 //	@license.name	AGPL 3.0
 //	@license.url	https://www.gnu.org/licenses/agpl-3.0.en.html
 
-// @host		pmip.t.api.likbox.com
-// @BasePath	/hta-gantt/v1.0
+// @host		localhost:18080
+// @BasePath	/gantt/v1.0
 // @schemes	https
 func main() {
 	db, err := connect.PostgresSQL()

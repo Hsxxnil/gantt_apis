@@ -1,5 +1,5 @@
 ### login
-POST {{host}}/hta-gantt/v1.0/login
+POST {{host}}/gantt/v1.0/login
 Content-Type: application/json
 
 {
@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ### verify
 # @name verify
-POST {{host}}/hta-gantt/v1.0/verify
+POST {{host}}/gantt/v1.0/verify
 Content-Type: application/json
 
 {
@@ -21,7 +21,7 @@ Content-Type: application/json
 @accessToken = {{verify.response.body.body.access_token}}
 
 ### GetByList
-POST {{host}}/hta-gantt/v1.0/resources/list?page=1&limit=20
+POST {{host}}/gantt/v1.0/resources/list?page=1&limit=20
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -39,17 +39,17 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### GetByListNoPagination
-GET {{host}}/hta-gantt/v1.0/resources/no-pagination
+GET {{host}}/gantt/v1.0/resources/no-pagination
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### GetBySingle
-GET {{host}}/hta-gantt/v1.0/resources/7c2df8a1-df2c-4a8d-947e-5118f4928902
+GET {{host}}/gantt/v1.0/resources/7c2df8a1-df2c-4a8d-947e-5118f4928902
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### Create
-POST {{host}}/hta-gantt/v1.0/resources
+POST {{host}}/gantt/v1.0/resources
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -65,7 +65,7 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### Update
-PATCH {{host}}/hta-gantt/v1.0/resources/726b4aaf-378c-4abd-9b70-d1b7ec283d27
+PATCH {{host}}/gantt/v1.0/resources/726b4aaf-378c-4abd-9b70-d1b7ec283d27
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -74,12 +74,12 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### Delete
-DELETE {{host}}/hta-gantt/v1.0/resources/726b4aaf-378c-4abd-9b70-d1b7ec283d27
+DELETE {{host}}/gantt/v1.0/resources/726b4aaf-378c-4abd-9b70-d1b7ec283d27
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### Import
-POST {{host}}/hta-gantt/v1.0/resources/import
+POST {{host}}/gantt/v1.0/resources/import
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 

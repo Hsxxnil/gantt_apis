@@ -4,8 +4,8 @@
     ],
     "swagger": "2.0",
     "info": {
-        "description": "HTA2 GANTT APIs",
-        "title": "HTA GANTT APIs",
+        "description": "GANTT APIs",
+        "title": "GANTT APIs",
         "contact": {},
         "license": {
             "name": "AGPL 3.0",
@@ -13,8 +13,8 @@
         },
         "version": "0.1"
     },
-    "host": "pmip.t.api.likbox.com",
-    "basePath": "/hta-gantt/v1.0",
+    "host": "localhost:18080",
+    "basePath": "/gantt/v1.0",
     "paths": {
         "/departments": {
             "get": {

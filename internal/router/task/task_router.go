@@ -10,7 +10,7 @@ import (
 
 func GetRouter(router *gin.Engine, db *gorm.DB) *gin.Engine {
 	control := present.Init(db)
-	v10 := router.Group("hta-gantt").Group("v1.0").Group("tasks")
+	v10 := router.Group("gantt").Group("v1.0").Group("tasks")
 	{
 		v10.POST("", middleware.Verify(), middleware.CheckPermission(), middleware.Transaction(db), control.Create)
 		v10.POST("create-all", middleware.Verify(), middleware.CheckPermission(), middleware.Transaction(db), control.CreateAll)

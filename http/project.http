@@ -1,5 +1,5 @@
 ### login
-POST {{host}}/hta-gantt/v1.0/login
+POST {{host}}/gantt/v1.0/login
 Content-Type: application/json
 
 {
@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ### verify
 # @name verify
-POST {{host}}/hta-gantt/v1.0/verify
+POST {{host}}/gantt/v1.0/verify
 Content-Type: application/json
 
 {
@@ -21,7 +21,7 @@ Content-Type: application/json
 @accessToken = {{verify.response.body.body.access_token}}
 
 ### GetByList
-POST {{host}}/hta-gantt/v1.0/projects/list?page=1&limit=20
+POST {{host}}/gantt/v1.0/projects/list?page=1&limit=20
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -37,17 +37,17 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### GetByListNoPagination
-GET {{host}}/hta-gantt/v1.0/projects/no-pagination
+GET {{host}}/gantt/v1.0/projects/no-pagination
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### GetBySingle
-GET {{host}}/hta-gantt/v1.0/projects/f24d9553-4e42-4998-bd07-c9f7af45ab27
+GET {{host}}/gantt/v1.0/projects/f24d9553-4e42-4998-bd07-c9f7af45ab27
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### Create
-POST {{host}}/hta-gantt/v1.0/projects
+POST {{host}}/gantt/v1.0/projects
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -59,7 +59,7 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### Update
-PATCH {{host}}/hta-gantt/v1.0/projects/f24d9553-4e42-4998-bd07-c9f7af45ab27
+PATCH {{host}}/gantt/v1.0/projects/f24d9553-4e42-4998-bd07-c9f7af45ab27
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -85,6 +85,6 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### Delete
-DELETE {{host}}/hta-gantt/v1.0/projects/a0228eb9-a7ed-44d4-8e7a-e19d5cd36d67
+DELETE {{host}}/gantt/v1.0/projects/a0228eb9-a7ed-44d4-8e7a-e19d5cd36d67
 Accept: application/json
 Authorization: Bearer {{accessToken}}

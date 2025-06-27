@@ -1,5 +1,5 @@
 ### login
-POST {{host}}/hta-gantt/v1.0/login
+POST {{host}}/gantt/v1.0/login
 Content-Type: application/json
 
 {
@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ### verify
 # @name verify
-POST {{host}}/hta-gantt/v1.0/verify
+POST {{host}}/gantt/v1.0/verify
 Content-Type: application/json
 
 {
@@ -21,27 +21,27 @@ Content-Type: application/json
 @accessToken = {{verify.response.body.body.access_token}}
 
 ### GetByList
-POST {{host}}/hta-gantt/v1.0/users/list?page=1&limit=20
+POST {{host}}/gantt/v1.0/users/list?page=1&limit=20
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### GetByListNoPagination
-GET {{host}}/hta-gantt/v1.0/users?page=1&limit=20
+GET {{host}}/gantt/v1.0/users?page=1&limit=20
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### GetBySingle
-GET {{host}}/hta-gantt/v1.0/users/6b47e0c6-a4b7-418d-9b52-799449a6c58d
+GET {{host}}/gantt/v1.0/users/6b47e0c6-a4b7-418d-9b52-799449a6c58d
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### GetByCurrent
-GET {{host}}/hta-gantt/v1.0/users/current-user
+GET {{host}}/gantt/v1.0/users/current-user
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### Create
-POST {{host}}/hta-gantt/v1.0/users
+POST {{host}}/gantt/v1.0/users
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -54,7 +54,7 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### Update
-PATCH {{host}}/hta-gantt/v1.0/users/current-user
+PATCH {{host}}/gantt/v1.0/users/current-user
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -74,7 +74,7 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### Enable
-PATCH {{host}}/hta-gantt/v1.0/users/enable/85cee689-bcb2-461f-8b0a-ea6922f1cb07
+PATCH {{host}}/gantt/v1.0/users/enable/85cee689-bcb2-461f-8b0a-ea6922f1cb07
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -83,12 +83,12 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### EnableByCurrent
-POST {{host}}/hta-gantt/v1.0/users/enable/current-user
+POST {{host}}/gantt/v1.0/users/enable/current-user
 Accept: application/json
 Authorization: Bearer REMOVED
 
 ### ResetPassword
-POST {{host}}/hta-gantt/v1.0/users/reset-password/current-user
+POST {{host}}/gantt/v1.0/users/reset-password/current-user
 Content-Type: application/json
 Authorization: Bearer REMOVEDREMOVED
 
@@ -97,12 +97,12 @@ Authorization: Bearer REMOVEDREMOVED
 }
 
 ### Delete
-DELETE {{host}}/hta-gantt/v1.0/users/c5fa10ae-c1f9-4840-bb53-254a64068d66
+DELETE {{host}}/gantt/v1.0/users/c5fa10ae-c1f9-4840-bb53-254a64068d66
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### Duplicate
-POST {{host}}/hta-gantt/v1.0/users/check-duplicate
+POST {{host}}/gantt/v1.0/users/check-duplicate
 Content-Type: application/json
 
 {
@@ -113,7 +113,7 @@ Content-Type: application/json
 }
 
 ### EnableAuthenticator
-POST {{host}}/hta-gantt/v1.0/users/authenticator/current-user
+POST {{host}}/gantt/v1.0/users/authenticator/current-user
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -122,7 +122,7 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### ChangeEmail
-POST {{host}}/hta-gantt/v1.0/users/change-email/current-user
+POST {{host}}/gantt/v1.0/users/change-email/current-user
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -132,6 +132,6 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### VerifyEmail
-POST {{host}}/hta-gantt/v1.0/users/verify-email/current-user
+POST {{host}}/gantt/v1.0/users/verify-email/current-user
 Accept: application/json
 Authorization: Bearer REMOVED

@@ -1,5 +1,5 @@
 ### login
-POST {{host}}/hta-gantt/v1.0/login
+POST {{host}}/gantt/v1.0/login
 Content-Type: application/json
 
 {
@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ### verify
 # @name verify
-POST {{host}}/hta-gantt/v1.0/verify
+POST {{host}}/gantt/v1.0/verify
 Content-Type: application/json
 
 {
@@ -21,7 +21,7 @@ Content-Type: application/json
 @refreshToken = {{verify.response.body.body.refresh_token}}
 
 ### refresh
-POST {{host}}/hta-gantt/v1.0/refresh
+POST {{host}}/gantt/v1.0/refresh
 Content-Type: application/json
 
 {
@@ -29,7 +29,7 @@ Content-Type: application/json
 }
 
 ### forget
-POST {{host}}/hta-gantt/v1.0/forget-password
+POST {{host}}/gantt/v1.0/forget-password
 Content-Type: application/json
 
 {
@@ -39,7 +39,7 @@ Content-Type: application/json
 }
 
 ### register
-POST {{host}}/hta-gantt/v1.0/register
+POST {{host}}/gantt/v1.0/register
 Content-Type: application/json
 
 {

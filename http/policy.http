@@ -1,5 +1,5 @@
 ### login
-POST {{host}}/hta-gantt/v1.0/login
+POST {{host}}/gantt/v1.0/login
 Content-Type: application/json
 
 {
@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ### verify
 # @name verify
-POST {{host}}/hta-gantt/v1.0/verify
+POST {{host}}/gantt/v1.0/verify
 Content-Type: application/json
 
 {
@@ -21,34 +21,34 @@ Content-Type: application/json
 @accessToken = {{verify.response.body.body.access_token}}
 
 ### GetAllPolicies
-GET {{host}}/hta-gantt/v1.0/policies
+GET {{host}}/gantt/v1.0/policies
 Accept: application/json
 Authorization: Bearer {{accessToken}}
 
 ### AddPolicy
-POST {{host}}/hta-gantt/v1.0/policies
+POST {{host}}/gantt/v1.0/policies
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 [
   {
     "role_name": "admin",
-    "path": "/hta-gantt/v1.0/*",
+    "path": "/gantt/v1.0/*",
     "method": "DELETE"
   },
   {
     "role_name": "admin",
-    "path": "/hta-gantt/v1.0/*",
+    "path": "/gantt/v1.0/*",
     "method": "PATCH"
   },
   {
     "role_name": "admin",
-    "path": "/hta-gantt/v1.0/*",
+    "path": "/gantt/v1.0/*",
     "method": "GET"
   },
   {
     "role_name": "admin",
-    "path": "/hta-gantt/v1.0/*",
+    "path": "/gantt/v1.0/*",
     "method": "POST"
   },
 ],

@@ -1,5 +1,5 @@
 ### login
-POST {{host}}/hta-gantt/v1.0/login
+POST {{host}}/gantt/v1.0/login
 Content-Type: application/json
 
 {
@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ### verify
 # @name verify
-POST {{host}}/hta-gantt/v1.0/verify
+POST {{host}}/gantt/v1.0/verify
 Content-Type: application/json
 
 {
@@ -21,7 +21,7 @@ Content-Type: application/json
 @accessToken = {{verify.response.body.body.access_token}}
 
 ### Create
-POST {{host}}/hta-gantt/v1.0/files
+POST {{host}}/gantt/v1.0/files
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -39,5 +39,5 @@ Authorization: Bearer {{accessToken}}
 ]
 
 ### Delete
-DELETE {{host}}/hta-gantt/v1.0/files/7045c169-0e62-4fc3-80be-71fbdfb10c08
+DELETE {{host}}/gantt/v1.0/files/7045c169-0e62-4fc3-80be-71fbdfb10c08
 Accept: application/json

@@ -1,5 +1,5 @@
 ### login
-POST {{host}}/hta-gantt/v1.0/login
+POST {{host}}/gantt/v1.0/login
 Content-Type: application/json
 
 {
@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ### verify
 # @name verify
-POST {{host}}/hta-gantt/v1.0/verify
+POST {{host}}/gantt/v1.0/verify
 Content-Type: application/json
 
 {
@@ -21,7 +21,7 @@ Content-Type: application/json
 @accessToken = {{verify.response.body.body.access_token}}
 
 ### GetByList
-POST {{host}}/hta-gantt/v1.0/project-resources?page=1&limit=20
+POST {{host}}/gantt/v1.0/project-resources?page=1&limit=20
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -34,7 +34,7 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### GetByProjectList
-POST {{host}}/hta-gantt/v1.0/project-resources/get-by-project
+POST {{host}}/gantt/v1.0/project-resources/get-by-project
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -46,6 +46,6 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### GetBySingle
-GET {{host}}/hta-gantt/v1.0/project-resources/3341cbab-a72b-44ce-9945-9cb08d2ecfe6
+GET {{host}}/gantt/v1.0/project-resources/3341cbab-a72b-44ce-9945-9cb08d2ecfe6
 Accept: application/json
 Authorization: Bearer {{accessToken}}
