@@ -1011,7 +1011,7 @@ const docTemplate = `{
                 "summary": "忘記密碼",
                 "parameters": [
                     {
-                        "description": "登入帶入",
+                        "description": "忘記密碼",
                         "name": "*",
                         "in": "body",
                         "required": true,
@@ -1620,7 +1620,7 @@ const docTemplate = `{
                 "summary": "登入",
                 "parameters": [
                     {
-                        "description": "登入帶入",
+                        "description": "登入",
                         "name": "*",
                         "in": "body",
                         "required": true,
@@ -3305,7 +3305,7 @@ const docTemplate = `{
                 "summary": "換新的令牌",
                 "parameters": [
                     {
-                        "description": "登入帶入",
+                        "description": "換新令牌",
                         "name": "*",
                         "in": "body",
                         "required": true,
@@ -4910,14 +4910,6 @@ const docTemplate = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/tasks.ProjectIDs"
-                        }
-                    },
-                    {
-                        "description": "搜尋",
-                        "name": "*",
-                        "in": "body",
-                        "schema": {
-                            "$ref": "#/definitions/tasks.Filter"
                         }
                     }
                 ],
@@ -6570,7 +6562,7 @@ const docTemplate = `{
                 "summary": "驗證",
                 "parameters": [
                     {
-                        "description": "驗證帶入",
+                        "description": "驗證",
                         "name": "*",
                         "in": "body",
                         "required": true,

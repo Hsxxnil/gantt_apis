@@ -135,7 +135,6 @@ func (c *control) GetByListNoPaginationNoSub(ctx *gin.Context) {
 // @produce json
 // @param Authorization header string true "JWE Token"
 // @param * body tasks.ProjectIDs true "專案UUIDs"
-// @param * body tasks.Filter false "搜尋"
 // @success 200 object code.SuccessfulMessage{body=tasks.List} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"

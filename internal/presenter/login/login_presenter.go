@@ -38,7 +38,7 @@ func Init(db *gorm.DB) Control {
 // @version 1.0
 // @Accept json
 // @produce json
-// @param * body logins.Login true "登入帶入"
+// @param * body logins.Login true "登入"
 // @success 200 object code.SuccessfulMessage{body=string} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
@@ -63,7 +63,7 @@ func (c *control) Login(ctx *gin.Context) {
 // @version 1.0
 // @Accept json
 // @produce json
-// @param * body logins.Verify true "驗證帶入"
+// @param * body logins.Verify true "驗證"
 // @success 200 object code.SuccessfulMessage{body=jwx.Token} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
@@ -88,7 +88,7 @@ func (c *control) Verify(ctx *gin.Context) {
 // @version 1.0
 // @Accept json
 // @produce json
-// @param * body jwx.Refresh true "登入帶入"
+// @param * body jwx.Refresh true "換新令牌"
 // @success 200 object code.SuccessfulMessage{body=jwx.Token} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
@@ -112,7 +112,7 @@ func (c *control) Refresh(ctx *gin.Context) {
 // @version 1.0
 // @Accept json
 // @produce json
-// @param * body logins.Forget true "登入帶入"
+// @param * body logins.Forget true "忘記密碼"
 // @success 200 object code.SuccessfulMessage{body=string} "成功後返回的值"
 // @failure 415 object code.ErrorMessage{detailed=string} "必要欄位帶入錯誤"
 // @failure 500 object code.ErrorMessage{detailed=string} "伺服器非預期錯誤"
