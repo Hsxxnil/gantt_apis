@@ -5,7 +5,7 @@
 ## 專案連結
 
 * 前端畫面：[點我查看](http://hsxxnil.notion.site/PMIP-11c5b51f95f5816e904ec80bdb5a9023)
-* Swagger API 文件：[點我查看](https://hsxxnil.github.io/swagger-ui/)
+* Swagger API 文件：[點我查看](https://hsxxnil.github.io/swagger-ui/?urls.primaryName=Gantt)
 
 ## 安裝
 1. 下載專案
