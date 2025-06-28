@@ -6064,5 +6064,5 @@ paths:
       tags:
       - work_day
 schemes:
-- https
+- http
 swagger: "2.0"

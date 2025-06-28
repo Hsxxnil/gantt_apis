@@ -45,7 +45,7 @@ import (
 
 // @host		localhost:18080
 // @BasePath	/gantt/v1.0
-// @schemes	https
+// @schemes	http
 func main() {
 	db, err := connect.PostgresSQL()
 	if err != nil {
