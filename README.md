@@ -18,22 +18,36 @@ cd gantt_apis
 2. 建立 Makefile
 
 > 請根據您的作業系統選擇對應的範本進行複製：
-* Windows
-```bash
-copy Makefile.example.windows Makefile
-```
 * Linux / macOS
 ```bash
 cp Makefile.example.linux Makefile
 ```
 
+* Windows
+```bash
+copy Makefile.example.windows Makefile
+```
+
 3. 初始化
+
+> 如為初次建立開發環境，請先根據您的作業系統安裝必要套件：
+* Linux / macOS
+```bash
+brew install golang-migrate golangci-lint protobuf
+```
+
+* Windows（建議使用 Scoop，或手動安裝以下套件）：
+```bash
+scoop install golang-migrate golangci-lint protobuf
+```
 
 > 執行以下指令將自動安裝依賴套件並建立必要的目錄結構：
 ```bash
 make setup
 ```
+
 4. 設定環境參數
+
 > 開啟並編輯以下檔案，填入資料庫連線資訊、JWT 金鑰等必要參數：
 ```file
 config/debug_config.go
