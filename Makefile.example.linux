@@ -3,12 +3,13 @@ PROJECT = $(shell pwd)
 GO = $(shell which go)
 OUTPUTS = $(shell pwd)/deploy
 TAG ?= debug
+LAMBDAS =
 
 ## 首次使用專案模版時, 必要執行一次
-setup:
+setup: update_lib
 	cp $(PROJECT)/config/config.go.example $(PROJECT)/config/debug_config.go
-	cp $(PROJECT)/config/config.go.example $(PROJECT)/config/production_config.go
-	cp $(PROJECT)/air.example $(PROJECT)/.air.toml
+	# cp $(PROJECT)/config/config.go.example $(PROJECT)/config/production_config.go
+	cp $(PROJECT)/air.example.linux $(PROJECT)/.air.toml
 
 ## 映射遠端Ports至本地端Ports
 ssh:
@@ -26,9 +27,11 @@ format:
 	goimports -w $(PROJECT)
 
 ## 以下由CI/CD人員維護!!!
-authority:
-	GOOS=linux GOARCH=amd64 $(GO) build -tags $(TAG) -o $(OUTPUTS)/authority cmd/lambda/authority.go
-	zip -D -j -r $(OUTPUTS)/authority.zip $(OUTPUTS)/authority
+$(LAMBDAS):
+	GOOS=linux GOARCH=amd64 $(GO) build -tags $(TAG) -o $(OUTPUTS)/$@ cmd/lambda/$@.go
+	zip -D -j -r $(OUTPUTS)/$@.zip $(OUTPUTS)/$@
+
+build-lambdas: $(LAMBDAS)
 
 clean:
 	rm -rf $(OUTPUTS)
@@ -41,12 +44,8 @@ changeLog:
 	git-chglog > ./changeLog.md
 
 update_lib:
-	#brew install golang-migrate
-	#brew install golangci-lint
-	#brew install protobuf
-	go get -u github.com/golang/protobuf/protoc-gen-go
-	# path: /opt/homebrew/bin/golangci-lint
+	# brew install golang-migrate golangci-lint protobuf
 	go install github.com/swaggo/swag/cmd/swag@latest
-	go install github.com/cosmtrek/air@latest
-	go get -u
-	go get -u ...
+	go install github.com/air-verse/air@latest
+	go get -u ./...
+	go mod tidy

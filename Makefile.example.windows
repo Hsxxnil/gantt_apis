@@ -3,14 +3,14 @@ PROJECT = $(shell cd /d %cd% && echo %cd%)
 GO = go
 OUTPUTS = $(shell cd /d %cd% && echo %cd%\deploy)
 TAG ?= debug
+LAMBDAS =
 
 ## 首次使用專案模版時, 必要執行一次
-setup:
+setup: update_lib
 	copy $(PROJECT)\config\config.go.example $(PROJECT)\config\debug_config.go
-	copy $(PROJECT)\config\config.go.example $(PROJECT)\config\production_config.go
+	rem copy $(PROJECT)\config\config.go.example $(PROJECT)\config\production_config.go
 	copy $(PROJECT)\air.example.windows $(PROJECT)\.air.toml
-	curl -fLo air.exe https://github.com/cosmtrek/air/releases/download/v1.43.0/air_1.43.0_windows_amd64.exe
-
+	
 ## 映射遠端Ports至本地端Ports
 ssh:
 	go run -tags $(TAG) $(PROJECT)\tools\ssh\ssh.go
@@ -27,12 +27,14 @@ format:
 	goimports -w $(PROJECT)
 
 ## 以下由CI\CD人員維護!!!
-authority:
-	GOOS=linux GOARCH=amd64 $(GO) build -tags $(TAG) -o $(OUTPUTS)\authority cmd\lambda\authority.go
-	zip -D -j -r $(OUTPUTS)\authority.zip $(OUTPUTS)\authority
+$(LAMBDAS):
+	GOOS=linux GOARCH=amd64 $(GO) build -tags $(TAG) -o "$(OUTPUTS)/$@" "cmd/lambda/$@.go"
+	powershell -Command "Compress-Archive -Path '$(OUTPUTS)/$@' -DestinationPath '$(OUTPUTS)/$@.zip' -Force"
+
+build-lambdas: $(LAMBDAS)
 
 clean:
-	rm -rf $(OUTPUTS)
+	rmdir /s /q "$(OUTPUTS)"
 
 task:
 	make clean
@@ -42,9 +44,8 @@ changeLog:
 	git-chglog > .\changeLog.md
 
 update_lib:
-	rem brew install golang-migrate
-	rem brew install golangci-lint
-	go install github.com\swaggo\swag\cmd\swag@latest
-	go install github.com\cosmtrek\air@latest
-	go get -u
-	rem go get -u ...
+	rem 建議安裝套件方式：scoop install golang-migrate golangci-lint protobuf
+	go install github.com/swaggo/swag/cmd/swag@latest
+	go install github.com/air-verse/air@latest
+	go get -u ./...
+	go mod tidy
