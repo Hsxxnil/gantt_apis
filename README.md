@@ -53,6 +53,13 @@ make setup
 config/debug_config.go
 ```
 
+5. 更新套件
+
+>執行以下指令升級相關套件
+```bash
+make update_lib
+```
+
 ## 資料庫遷移
 
 > 執行以下指令使用[golang-migrate](https://github.com/golang-migrate/migrate)做資料庫遷移及做資料表版控：

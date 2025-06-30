@@ -6,7 +6,7 @@ TAG ?= debug
 LAMBDAS =
 
 ## 首次使用專案模版時, 必要執行一次
-setup: update_lib
+setup: 
 	copy $(PROJECT)\config\config.go.example $(PROJECT)\config\debug_config.go
 	rem copy $(PROJECT)\config\config.go.example $(PROJECT)\config\production_config.go
 	copy $(PROJECT)\air.example.windows $(PROJECT)\.air.toml
