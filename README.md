@@ -9,6 +9,8 @@
   
 透過前後端分離架構設計，系統具備良好的擴充性與維護性，致力於打造一個高效、直覺的專案管理工具。
 
+#Golang #Gin #PostgreSQL #Angular #PrimeNG #Swagger #S3
+
 ## 專案連結
 
 * 前端畫面：[點我查看](http://hsxxnil.notion.site/PMIP-11c5b51f95f5816e904ec80bdb5a9023)
