@@ -75,7 +75,7 @@ make update_lib
 ```bash
 make migration
 ```
-> 下圖為本專案的 ERD（Entity Relationship Diagram）
+> 下圖為本專案目前的 ERD（Entity Relationship Diagram）
 
 ![ERD](https://github.com/user-attachments/assets/ed9606ba-8476-40d9-89a4-f5f61f44685c)
 
