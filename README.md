@@ -1,4 +1,4 @@
-# PMIP APIs
+## 📍 PMIP APIs
 
 一套以 **Golang** + **PostgreSQL** 為後端、**Angular** 為前端框架開發的 **甘特圖式專案管理平台**，平台核心功能為將專案中各項任務流程視覺化，透過動態甘特圖呈現，有效掌握專案全貌與進度。
 此平台可協助使用者：
@@ -11,12 +11,12 @@
 
 #Golang #Gin #PostgreSQL #Angular #PrimeNG #EssentialJS2 #Swagger #S3
 
-## 專案連結
+## 🔗 專案連結
 
 * 前端畫面：[點我查看](http://hsxxnil.notion.site/PMIP-11c5b51f95f5816e904ec80bdb5a9023)
 * Swagger API 文件：[點我查看](https://hsxxnil.github.io/swagger-ui/?urls.primaryName=Gantt)
 
-## 安裝
+## 🛠️ 安裝
 1. 下載專案
 
 ```bash
@@ -69,19 +69,23 @@ config/debug_config.go
 make update_lib
 ```
 
-## 資料庫遷移
+## 📁 資料庫遷移
 
 > 執行以下指令使用[golang-migrate](https://github.com/golang-migrate/migrate)做資料庫遷移及做資料表版控：
 ```bash
 make migration
 ```
+> 下圖為本專案的 ERD（Entity Relationship Diagram）
 
-## 執行
+![ERD](https://github.com/user-attachments/assets/ed9606ba-8476-40d9-89a4-f5f61f44685c)
+
+
+## 🚀 執行
 > 執行以下指令在本地端啟動伺服器並自動重載：
 ```bash
 make air
 ```
 
-## License
+## 🗒️ License
 
 本專案使用的 [Vodka](https://github.com/dylanlyu/vodka) 採用 [MIT License](https://opensource.org/licenses/MIT) 授權。
