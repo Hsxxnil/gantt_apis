@@ -9,7 +9,7 @@
   
 透過前後端分離架構設計，系統具備良好的擴充性與維護性，致力於打造一個高效、直覺的專案管理工具。
 
-#Golang #Gin #PostgreSQL #Angular #PrimeNG #EssentialJS2 #Swagger #S3 #SMTP
+#Golang #Gin #PostgreSQL #Angular #PrimeNG #EssentialJS2 #Swagger #Casbin #SMTP #S3
 
 ## 🔗 專案連結
 
